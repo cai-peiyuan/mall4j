@@ -12,6 +12,12 @@ Page({
   data: {
     phonenum:'',
     code:'',
+    sendTelCodeBtnText : '发送验证码',
+    sendCodeStatus : 0,
+    sendLeftTime : 60,
+    sending : 0,
+    sendLeftTimeIntervalFunc : null,
+    getting : 0,
   },
 
   /**
@@ -74,6 +80,7 @@ Page({
   },
 
   getCodeNumber:function(){
+      let _this = this;
     if (!this.data.phonenum) {
       wx.showToast({
         title: '请输入手机号',
@@ -89,7 +96,24 @@ Page({
         // code: this.data.code
         mobile: this.data.phonenum
       },
-      callBack: (res) => {}
+      callBack: (res) => {
+        wx.showToast({
+            title: '验证码已发送',
+            icon: "none"
+          })
+        _this.sendCodeStatus = 1;
+        _this.sendLeftTimeIntervalFunc = setInterval(function(){
+            _this.sendLeftTime = _this.sendLeftTime - 1;
+            _this.sendTelCodeBtnText = "("+_this.sendLeftTime+")秒后重发";
+            if(_this.sendLeftTime == 0 && _this.sendLeftTimeIntervalFunc ){
+                clearInterval(_this.sendLeftTimeIntervalFunc);
+                _this.sendTelCodeBtnText = '发送验证码';
+                _this.sending = 0;
+                //news.sendCodeStatus = 0;
+            }
+        },1000);
+
+      }
     };
     http.request(params);
   },
@@ -107,6 +131,7 @@ Page({
    * 绑定
    */
   bindMobile() {
+      let _this = this;
     var params = {
       // url: '/user/registerOrBindUser',
       url: '/p/user/bindUserPhoneNum',
@@ -123,6 +148,9 @@ Page({
           url: '/pages/index/index'
         });*/
         if (res == null || res == '') {
+        _this.setData({
+            userMobile: _this.data.phonenum
+        });
           wx.showModal({
             title: '提示',
             content: '绑定成功',

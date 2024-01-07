@@ -173,6 +173,12 @@ Page({
   },
 
   /**
+   * 申请退款
+   */
+  onRefund: function(e){
+    console.log('申请退款', e)
+  },
+  /**
    * 付款
    */
   onPayAgain: function(e) {
@@ -202,6 +208,10 @@ Page({
           },
           fail: function(err) {
             //console.log("支付失败");
+            //这里模拟跳转到支付结果页面
+            wx.navigateTo({
+                url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' +  + e.currentTarget.dataset.ordernum + "&orderType=" + this.data.orderType,
+              })
           }
         })
 

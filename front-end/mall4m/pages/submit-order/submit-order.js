@@ -194,6 +194,7 @@ Page({
             })
           },
           fail: err => {
+            console.log('支付失败')
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })

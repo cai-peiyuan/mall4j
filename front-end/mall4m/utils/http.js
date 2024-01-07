@@ -86,7 +86,7 @@ function request(params, isGetTonken) {
     fail: function(err) {
       wx.hideLoading();
       wx.showToast({
-        title: "服务器出了点小差",
+        title: "网络故障",
         icon: "none"
       });
     }

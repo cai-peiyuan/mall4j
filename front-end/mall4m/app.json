@@ -57,5 +57,6 @@
             }
         ]
     },
+    "requiredPrivateInfos": ["chooseAddress"],
     "sitemapLocation": "sitemap.json"
 }
