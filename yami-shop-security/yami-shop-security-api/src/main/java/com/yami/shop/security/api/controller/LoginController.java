@@ -2,10 +2,10 @@ package com.yami.shop.security.api.controller;
 
 import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.jfinal.kit.HttpKit;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PrincipalUtil;
@@ -134,10 +134,11 @@ public class LoginController {
     public ServerResponseEntity<Object> wxLogin(@Valid @RequestBody WxLoginDTO wxLoginDTO) {
         String wxLoginCode = wxLoginDTO.getWxLoginCode();
         String jscode2sessionUrl = "https://api.weixin.qq.com/sns/jscode2session";
-        String secret = "344919e8ce00ee3677d58978017fff1b";
-        String appId = "wxdb1987e43c9d4d38";
+        String secret = "032c5873129b0bef34e835c4c259e76c";
+        String appId = "wxa6a1e944be3cc470";
         String grantType = "authorization_code";
-        String jscode2SessionResultStr = HttpKit.get(jscode2sessionUrl, new HashMap() {
+
+        String jscode2SessionResultStr = HttpUtil.get(jscode2sessionUrl, new HashMap() {
             {
                 this.put("appid", appId);
                 this.put("secret", secret);
@@ -145,6 +146,7 @@ public class LoginController {
                 this.put("js_code", wxLoginCode);
             }
         });
+
         JSONObject jsonObject = JSON.parseObject(jscode2SessionResultStr);
         String openId = jsonObject.getString("openid");
         String session_key = jsonObject.getString("session_key");

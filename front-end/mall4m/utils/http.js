@@ -123,7 +123,8 @@ var wxLogin = function (wxLoginCode) {
         //没有获取到用户昵称，说明服务器没有保存用户的昵称，也就是用户授权的信息并没有传到服务器
         if (!result.userInfoInToken.nickName) {
           //updateUserInfo();
-          _this.setData({
+          _this.
+          ({
             nickName: '微信用户'
           });
         }
