@@ -14,7 +14,7 @@
           v-if="scope.row.pic"
           class="avue-crud__img"
         >
-          <el-icon><Document /></el-icon>
+          <el-image :src="scope.row.pic"></el-image>
         </span>
         <span v-else>-</span>
       </template>

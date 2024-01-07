@@ -20,6 +20,10 @@ export const tableOption = {
     value: 'value'
   },
   column: [{
+    label: '注册手机号',
+    prop: 'userMobile',
+    search: true
+  }, {
     label: '用户昵称',
     prop: 'nickName',
     search: true
