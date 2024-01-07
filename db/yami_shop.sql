@@ -4686,7 +4686,7 @@ CREATE TABLE `tz_sys_log` (
   `username` varchar(50) DEFAULT NULL COMMENT '用户名',
   `operation` varchar(50) DEFAULT NULL COMMENT '用户操作',
   `method` varchar(200) DEFAULT NULL COMMENT '请求方法',
-  `params` varchar(5000) DEFAULT NULL COMMENT '请求参数',
+  `params` text DEFAULT NULL COMMENT '请求参数',
   `time` bigint(20) NOT NULL COMMENT '执行时长(毫秒)',
   `ip` varchar(64) DEFAULT NULL COMMENT 'IP地址',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
@@ -5805,6 +5805,9 @@ CREATE TABLE `tz_user` (
   `pic` varchar(255) DEFAULT NULL COMMENT '头像图片路径',
   `status` int(1) NOT NULL DEFAULT '1' COMMENT '状态 1 正常 0 无效',
   `score` int(11) DEFAULT NULL COMMENT '用户积分',
+  `open_id` varchar(50) DEFAULT NULL COMMENT '小程序用户openid',
+  `app_id` varchar(50) DEFAULT NULL COMMENT '小程序appid',
+  `session_key` varchar(255) DEFAULT NULL COMMENT 'sessionKey',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `ud_user_mail` (`user_mail`),
   UNIQUE KEY `ud_user_unique_mobile` (`user_mobile`)
