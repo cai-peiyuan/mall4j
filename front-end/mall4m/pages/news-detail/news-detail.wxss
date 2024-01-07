@@ -9,6 +9,8 @@
   font-weight: bold;
   line-height: 50rpx;
   padding: 20rpx;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .news-detail .news-detail-text {

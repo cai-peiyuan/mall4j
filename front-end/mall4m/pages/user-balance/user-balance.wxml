@@ -1,0 +1,3 @@
+<!--pages/user-balance/user-balance.wxml 用户储值余额页面-->
+<text>pages/user-balance/user-balance.wxml</text>
+<view bindtap="toUserBalanceDetailPage">余额明细</view>

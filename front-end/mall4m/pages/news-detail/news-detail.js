@@ -38,6 +38,9 @@ Page({
         this.setData({
           news: res
         });
+        wx.setNavigationBarTitle({
+            title: res.title
+          });
       }
     };
     http.request(params);

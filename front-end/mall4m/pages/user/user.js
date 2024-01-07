@@ -172,14 +172,14 @@ Page({
   toCouponCenter: function() {
     wx.showToast({
       icon: "none",
-      title: '该功能未开源'
+      title: '即将上线'
     })
   },
 
   toMyCouponPage: function() {
     wx.showToast({
       icon: "none",
-      title: '该功能未开源'
+      title: '即将上线'
     })
   },
 
@@ -187,6 +187,15 @@ Page({
     wx.navigateTo({
       url: '/pages/delivery-address/delivery-address',
     })
+  },
+
+  /**
+   * 关于我们
+   */
+  toAboutUsPage: function() {
+    wx.navigateTo({
+        url: '/pages/news-detail/news-detail?id=1',
+      })
   },
 
   // 跳转绑定手机号
@@ -236,11 +245,25 @@ Page({
     });
   },
 
+  /**
+   * 跳转订单列表页面
+   * @param {} e 
+   */
   toOrderListPage: function(e) {
     var sts = e.currentTarget.dataset.sts;
     wx.navigateTo({
       url: '/pages/orderList/orderList?sts=' + sts,
     })
+  },
+
+  /**
+   * 跳转余额页面
+   * @param {} e 
+   */
+  toUserBalancePage: function(e){
+    wx.navigateTo({
+        url: '/pages/user-balance/user-balance',
+      })
   },
   /**
    * 查询所有的收藏量
