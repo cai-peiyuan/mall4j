@@ -15,14 +15,14 @@
           v-if="!sidebarFold"
           class="site-navbar-lg"
         >
-          mall4j建站后台
+          网上商城---
         </span>
         <span
           v-else
           class="site-navbar-mini"
           :style="fontCloseSize"
         >
-          mall4j
+          网上商城
         </span>
       </div>
       <!--右侧数据-->

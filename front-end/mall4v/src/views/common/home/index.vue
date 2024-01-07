@@ -1,12 +1,9 @@
 <template>
   <div class="mod-home">
-    <p>一个基于spring boot、spring oauth2.0、mybatis、redis的轻量级、前后端分离、拥有完整sku和下单流程的完全开源商城</p>
-    <p>&nbsp;</p>
-    <p>该项目仅供学习参考、可供个人学习使用、如需商用联系作者进行授权，否则必将追究法律责任</p>
+    <p>一个基于spring boot、spring oauth2.0、mybatis、redis的轻量级、前后端分离、拥有完整sku和下单流程的商城</p>
     <p>&nbsp;</p>
     <h2>前言</h2>
     <p>
-      <code>mall4j商城</code>项目致力于为中小企业打造一个完整、易于维护的开源的电商系统，采用现阶段流行技术实现。后台管理系统包含商品管理、订单管理、运费模板、规格管理、会员管理、运营管理、内容管理、统计报表、权限管理、设置等模块。
     </p>
     <p>&nbsp;</p>
     <h2>技术选型</h2>
@@ -111,12 +108,6 @@
     </figure>
     <h3>2.启动</h3>
     <ul>
-      <li>推荐使用idea，安装lombok插件，使用idea导入maven项目</li>
-      <li>
-        将shop.sql导入到mysql中，修改
-        <code>application-dev.yml</code>更改 datasource.url、user、password
-      </li>
-      <li>启动redis</li>
       <li>
         通过
         <code>WebApplication</code>启动项目后台接口，
