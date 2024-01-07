@@ -2,9 +2,12 @@
 //获取应用实例
 var http = require("../../utils/http.js");
 var config = require("../../utils/config.js");
+var myBehavior = require('../../utils/my-behavior.js')
+
 const app = getApp()
 
 Page({
+  behaviors: [myBehavior],
   data: {
     indicatorDots: true,
     indicatorColor: '#d1e5fb',
@@ -25,7 +28,24 @@ Page({
     })
   },
   onLoad: function() {
-    this.getAllData();
+    // this.getAllData();
+    // 页面创建时执行
+    const version = wx.getSystemInfoSync().SDKVersion
+    if (config.debug) {
+      console.log('SDKVersion', version);
+      console.log('wx.getSystemInfoSync()', wx.getSystemInfoSync());
+      console.log(this.data.sharedText);
+    }
+    if (config.compareVersion(version, '1.1.0') >= 0) {
+      //wx.openBluetoothAdapter()
+      this.getAllData();
+    } else {
+      // 如果希望用户在最新版本的客户端上体验您的小程序，可以这样子提示
+      wx.showModal({
+        title: '提示',
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+      })
+    }
   },
 
   // 页面滚动到指定位置指定元素固定在顶部
@@ -47,7 +67,7 @@ Page({
   toCouponCenter: function() {
     wx.showToast({
       icon:"none",
-      title: '该功能未开源'
+      title: '等待实现'
     })
   },
 
@@ -75,7 +95,7 @@ Page({
   toLimitedTimeOffer: function(e) {
     wx.showToast({
       icon:"none",
-      title: '该功能未开源'
+      title: '等待实现'
     })
   },
 
@@ -85,11 +105,35 @@ Page({
       url: '/pages/recent-news/recent-news',
     })
   },
-
-  onShow: function() {
+  onShow: function () {
+    // 页面出现在前台时执行
+  },
+  onReady: function () {
+    // 页面首次渲染完毕时执行
+  },
+  onHide: function () {
+    // 页面从前台变为后台时执行
+  },
+  onUnload: function () {
+    // 页面销毁时执行
+  },
+  onReachBottom: function () {
+    // 页面触底时执行
+  },
+  onShareAppMessage: function () {
+    // 页面被用户分享时执行
+  },
+  onResize: function () {
+    // 页面尺寸变化时执行
+  },
+  onTabItemTap(item) {
+    // tab 点击时执行
+    console.log(item.index)
+    console.log(item.pagePath)
+    console.log(item.text)
   },
   getAllData() {
-    http.getCartCount(); //重新计算购物车总数量
+    // http.getCartCount(); //重新计算购物车总数量
     this.getIndexImgs();
     this.getNoticeList();
     this.getTag();
@@ -222,7 +266,7 @@ Page({
   //     })
   // },
 
-  onPullDownRefresh: function() {
+/*  onPullDownRefresh: function() {
 
     // wx.showNavigationBarLoading() //在标题栏中显示加载
 
@@ -238,6 +282,19 @@ Page({
 
     }, 100);
 
+  },*/
+
+  onPullDownRefresh: function () {
+    // 触发下拉刷新时执行
+    wx.showNavigationBarLoading();
+    //在标题栏中显示加载
+    //模拟加载
+    var ths = this;
+    setTimeout(function () {
+      ths.getAllData();
+      wx.hideNavigationBarLoading() //完成停止加载
+      wx.stopPullDownRefresh() //停止下拉刷新
+    }, 500);
   },
 
   /**

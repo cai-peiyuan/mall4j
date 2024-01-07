@@ -9,7 +9,8 @@
       <view class='item '>
         <text class='item-tip'>验证码：</text>
         <input placeholder='输入验证码' type='number' value="{{code}}" bindinput="onCodeInput" ></input>
-        <text class='get-code gray' bindtap='getCodeNumber'>获取验证码</text>
+        <text class='get-code gray' bindtap='getCodeNumber' wx:if="{{phonenum.length == 11}}">获取验证码</text>
+        <text class='get-code red' wx:if="{{phonenum.length != 11}}">输入手机号</text>
       </view>
     <!-- </block> -->
   </view>

@@ -46,6 +46,10 @@ page {
   color: #3eb370;
 }
 
+.binding-phone .item .get-code.red {
+  color: #ff0000;
+}
+
 .btn-box {
   padding: 0 20rpx;
   margin-top: 60rpx;

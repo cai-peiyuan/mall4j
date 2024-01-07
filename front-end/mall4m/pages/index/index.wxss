@@ -301,7 +301,7 @@ line-height:44rpx;
 /* 商城热卖 */
 
 .hot-sale {
-  /* margin: 15rpx 0; */
+   margin: 15rpx 0;
 }
 
 .hot-sale .prod-items {

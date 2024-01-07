@@ -28,6 +28,12 @@ Page({
     this.setData({
       isRegister: options.isRegister == 0
     })
+    wx.setNavigationBarTitle({
+      title: options.isRegister == 0 ? '会员注册' : '会员登录',
+      success: (res) => {},
+      fail: (res) => {},
+      complete: (res) => {},
+    })
   },
 
   /**

@@ -1,6 +1,6 @@
 <!--pages/login/login.wxml-->
-<image src='http://img-test.gz-yami.com/mini/logo.jpg' class='c-logo'></image>
-<view class="title">mall4j</view>
+<image src='https://www.bhgk.cc/mall/static/img/wes-logo.png' class='c-logo'></image>
+<view class="title">小岛优选</view>
 <view class="login-form">
     <view class="item">
         <view class="account">

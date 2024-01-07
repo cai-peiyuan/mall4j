@@ -2,22 +2,26 @@
 
 var http = require("../../utils/http.js");
 var util = require("../../utils/util.js");
+var myBehavior = require('../../utils/my-behavior.js')
+var config = require("../../utils/config.js");
 Page({
-
+  behaviors: [myBehavior],
   /**
    * 页面的初始数据
    */
   data: {
     orderAmount: '',
     sts: '',
-    collectionCount: 0
+    collectionCount: 0,
+    openSource: true,
+    newNickName: '',
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-
+    let userInfo = this.getLoginedUserInfo();
   },
 
   /**
@@ -86,6 +90,78 @@ Page({
 
   },
 
+  /**
+   * 获取用户详细信息
+   */
+  onChooseAvatar(e) {
+    const {
+      avatarUrl
+    } = e.detail;
+    console.log(e, e.detail, avatarUrl);
+    this.updateAvatarUrl(avatarUrl);
+    this.setData({
+      avatarUrl: avatarUrl,
+    })
+  },
+  setInputValue: function (e) {
+    console.log("写入：", e.detail.value);
+    let newNickName = e.detail.value;
+    if (newNickName != '' && this.data.nickName != newNickName) {
+      console.log("更新用户名称", newNickName);
+      this.updateNickName(newNickName);
+    }
+  },
+  /**
+   * 更新用户头像
+   * @param {}} avatarUrl
+   */
+  updateAvatarUrl(avatarUrl) {
+    let _this = this;
+    wx.uploadFile({
+      url: `${config.domain}/p/user/uploadAvatarImg`,
+      filePath: avatarUrl,
+      name: 'file',
+      header: {
+        'Authorization': wx.getStorageSync('token')
+      },
+      success(res) {
+        console.log('图片上传成功回调', res.data)
+        _this.setData({
+          avatarUrl: res.data
+        });
+        let userInfoInToken = wx.getStorageSync('userInfoInToken');
+        userInfoInToken.pic = res.data;
+        wx.setStorageSync('userInfoInToken', userInfoInToken);
+      },
+      fail(err) {
+        console.log('图片上传失败回调', err)
+      }
+    })
+  },
+  /**
+   * 更新用户名称
+   */
+  updateNickName(newNickName) {
+    let _this = this;
+    let avatarUrl = this.data.avatarUrl;
+    http.request({
+      url: "/p/user/setUserInfo",
+      method: "PUT",
+      data: {
+        avatarUrl: avatarUrl,
+        nickName: newNickName
+      },
+      callBack: function (res) {
+        _this.setData({
+          nickName: newNickName
+        });
+        let userInfoInToken = wx.getStorageSync('userInfoInToken');
+        userInfoInToken.nickName = newNickName;
+        wx.setStorageSync('userInfoInToken', userInfoInToken);
+      }
+    });
+  },
+
   toDistCenter: function () {
     wx.showToast({
       icon: "none",
@@ -150,6 +226,14 @@ Page({
         }, 1000)
       }
     })
+  },
+
+  syncInputValue(e) {
+    console.log("输入：", e.detail.value);
+    let newNickName = e.detail.value;
+    this.setData({
+      newNickName: newNickName
+    });
   },
 
   toOrderListPage: function(e) {

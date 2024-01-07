@@ -61,6 +61,7 @@ page {
 /* 功能按钮 */
 
 .btn-box {
+  display: flex;
   padding: 5px 10px;
   width: 100%;
   text-align: center;
@@ -72,7 +73,7 @@ page {
 }
 
 .btn-box .clear.btn, .keep.btn {
-  width: 60%;
+  width: 25%;
   height: 80rpx;
   line-height: 80rpx;
   margin: auto;
@@ -88,7 +89,9 @@ page {
 }
 
 .btn-box .clear.btn {
+  /*
   margin-top: 40rpx;
+  */
   color: #eb2444;
   background-color: #f8f0f1b6;
 }

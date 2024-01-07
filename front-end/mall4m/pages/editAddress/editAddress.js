@@ -29,7 +29,7 @@ Page({
   },
 
   onLoad: function (options) {
-    if (options.addrId) {
+    if (options && options.addrId) {
       wx.showLoading();
       var params = {
         url: "/p/address/addrInfo/" + options.addrId,
@@ -284,6 +284,35 @@ Page({
     })
   },
 
+  /**
+   * 获取微信收货地址
+   *  cityName: "广州市"
+   countyName: "海珠区"
+   detailInfo: "新港中路397号"
+   errMsg: "chooseAddress:ok"
+   nationalCode: "510000"
+   postalCode: "510000"
+   provinceName: "广东省"
+   telNumber: "020-81167888"
+   userName: "张三"
+   */
+  chooseAddress() {
+    wx.chooseAddress({
+      success: (res) => {
+        this.setData({
+          receiver: res.userName,
+          addr: res.detailInfo,
+          mobile: res.telNumber,
+          province: res.provinceName,
+          city: res.cityName,
+          area: res.countyName
+        })
+      },
+      fail(err) {
+        console.log(err)
+      }
+    })
+  },
 
   /**
    * 保存地址

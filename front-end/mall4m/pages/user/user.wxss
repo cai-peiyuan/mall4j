@@ -5,6 +5,20 @@ page {
   padding-bottom: 60rpx;
 }
 
+.avatar-wrapper {
+  padding: 0;
+  width: 66px !important;
+  border-radius: 8px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.avatar {
+  display: block;
+  width: 66px;
+  height: 66px;
+}
+
 /* 用户信息 */
 
 .userinfo {
@@ -16,6 +30,16 @@ page {
 }
 
 .userinfo .userinfo-avatar {
+  overflow: hidden;
+  display: block;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  margin: auto;
+}
+
+.userinfo .userinfo-avatar-img {
   overflow: hidden;
   display: block;
   width: 160rpx;
@@ -39,6 +63,8 @@ page {
   padding: 0 30rpx;
   border-top: 2rpx solid #f7f7f7;
   border-bottom: 2rpx solid #f7f7f7;
+  text-align: center;
+  font-weight: bold;
 }
 
 .binding-phone .show-tip {

@@ -2,17 +2,43 @@
 <view class='container'>
   <!-- 用户信息 -->
   <view class='userinfo'>
+
+      <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{avatarUrl}}"></image>
+      </button>
+      <view class='userinfo-name'>
+        <input type="nickname" class='userinfo-name' placeholder="请输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
+
+      </view>
+      <view class='userinfo-name'>
+        <text bindtap='toBindingPhone'>{{userMobile}}</text>
+      </view>
+    </view>
+    <view class='userinfo' wx:if="{{openSource == false}}">
+
     <view class='userinfo-avatar'>
-      <open-data type="userAvatarUrl"></open-data>
+      <!-- <open-data type="userAvatarUrl"></open-data> -->
+      <image class='userinfo-avatar-img' src='{{avatarUrl}}'></image>
     </view>
     <view class='userinfo-name'>
-      <open-data type="userNickName"></open-data>
+      <view>{{nickName}}</view>
+      <!-- <open-data type="userNickName"></open-data> -->
+    </view>
+    <view class='userinfo-name'>
+      <view>{{userMobile}}</view>
     </view>
   </view>
   <!-- <view class='binding-phone'>
     <text class='show-tip'>绑定手机号后可查看订单和领取优惠券，</text>
     <text class='gotobinding' bindtap='toBindingPhone'>去绑定</text>
   </view> -->
+
+    <!-- 不显示 -->
+    <view class='binding-phone' wx:if="{{userMobile == null || userMobile == ''}}">
+      <text class='show-tip'>绑定手机号，</text>
+      <text class='gotobinding' bindtap='toBindingPhone'>去绑定</text>
+    </view>
+
   <!-- end 用户信息 -->
 
   <view class='list-cont'>
@@ -50,7 +76,7 @@
     </view>
     <!--end 订单状态 -->
 
-    <view class="prod-col">
+    <view class="prod-col" wx:if="{{openSource == false}}">
       <view class="col-item" bindtap='myCollectionHandle'>
         <view class="num">{{collectionCount}}</view>
         <view class="tit">我的收藏</view>
@@ -66,27 +92,36 @@
     </view>
 
     <view class='my-menu'>
-      <view class='memu-item' bindtap='toDistCenter'>
+      <view class='memu-item' bindtap='toDistCenter' wx:if="{{openSource == false}}">
         <view class="i-name">
           <image src='../../images/icon/promotion.png'></image>
           <text>分销中心</text>
         </view>
         <view class='arrowhead'></view>
       </view>
-      <view class='memu-item' bindtap='toCouponCenter'>
+      <view class='memu-item' bindtap='toCouponCenter' wx:if="{{openSource == false}}">
         <view class="i-name">
           <image src='../../images/icon/getCoupon.png'></image>
           <text>领券中心</text>
         </view>
         <view class='arrowhead'></view>
       </view>
-      <view class='memu-item' bindtap='toMyCouponPage'>
+      <view class='memu-item' bindtap='toMyCouponPage' wx:if="{{openSource == false}}">
         <view class="i-name">
           <image src='../../images/icon/myCoupon.png'></image>
           <text>我的优惠券</text>
         </view>
         <view class='arrowhead'></view>
       </view>
+
+    <view class='memu-item' bindtap='myCollectionHandle'>
+      <view class="i-name">
+        <image src='../../images/icon/promotion.png'></image>
+        <text>收藏商品</text>
+      </view>
+      <view class='arrowhead'></view>
+    </view>
+
       <view class='memu-item' bindtap='toAddressList'>
         <view class="i-name">
           <image src='../../images/icon/myAddr.png'></image>
@@ -94,7 +129,9 @@
         </view>
         <view class='arrowhead'></view>
       </view>
+
     </view>
+
     <!--end 列表项 -->
   </view>
 

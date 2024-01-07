@@ -1,5 +1,8 @@
 //app.js
 var http = require("utils/http.js");
+var http = require("./utils/http.js");
+let config = require("./utils/config");
+
 App({
   onLaunch: function () {
     console.log('mall4j.v230313')
@@ -13,6 +16,25 @@ App({
     //     }
     //   }
     // })
+
+    wx.onThemeChange((result) => {
+      this.setData({
+        theme: result.theme
+      })
+    });
+    http.getToken();
+    wx.getSetting({
+      success(res) {
+        if(config.debug){
+          console.log('wx.getSetting', res);
+        }
+        // if (!res.authSetting['scope.userInfo']) {
+        //   wx.navigateTo({
+        //     url: '/pages/login/login',
+        //   })
+        // }
+      }
+    })
   },
   globalData: {
     // 定义全局请求队列

@@ -53,12 +53,16 @@
   <!-- end input列表 -->
   <!-- 功能按钮 -->
   <view class='btn-box'>
+    <view class='keep btn' bindtap='chooseAddress'>
+      <text>微信地址</text>
+    </view>
+
     <view class='keep btn' bindtap='onSaveAddr'>
-      <text>保存收货地址</text>
+      <text>保存地址</text>
     </view>
 
     <view class='clear btn' bindtap="onDeleteAddr"  wx:if="{{addrId!=0}}">
-      <text>删除收货地址</text>
+      <text>删除地址</text>
     </view>
   </view>
   <!-- end 功能按钮 -->

@@ -32,10 +32,11 @@ function request(params, isGetTonken) {
 
       // A00004 未授权
       if (responseData.code === 'A00004') {
-        wx.navigateTo({
+        /*wx.navigateTo({
           url: '/pages/login/login',
-        })
-				return
+        })*/
+        getToken();
+        return
       }
 
       // A00005 服务器出了点小差
@@ -92,9 +93,53 @@ function request(params, isGetTonken) {
   })
 }
 
+/**
+ * 微信登录
+ * @param {*} wxLoginCode
+ */
+var wxLogin = function (wxLoginCode) {
+  let _this = this;
+  // 发送 res.code 到后台换取 openId, sessionKey, unionId
+  request({
+    login: true,
+    url: '/wxLogin?grant_type=mini_app',
+    data: {
+      grantType: 'mini_app',
+      wxLoginCode: wxLoginCode
+    },
+    callBack: result => {
+      if (!result.userInfoInToken.enabled) {
+        wx.showModal({
+          showCancel: false,
+          title: '提示',
+          content: '您已被禁用，不能购买，请联系客服'
+        })
+        wx.setStorageSync('token', '');
+      } else {
+        wx.setStorageSync('token', result.accessToken);
+        wx.setStorageSync('refreshToken', result.refreshToken);
+        wx.setStorageSync('userInfoInToken', result.userInfoInToken);
+        //把token存入缓存，请求接口数据时要用
+        //没有获取到用户昵称，说明服务器没有保存用户的昵称，也就是用户授权的信息并没有传到服务器
+        if (!result.userInfoInToken.nickName) {
+          //updateUserInfo();
+          _this.setData({
+            nickName: '微信用户'
+          });
+        }
+      }
+      var globalData = getApp().globalData;
+      globalData.isLanding = false;
+      while (globalData.requestQueue.length) {
+        request(globalData.requestQueue.pop());
+      }
+    }
+  }, true)
+}
+
 //通过code获取token,并保存到缓存
 var getToken = function() {
-  wx.login({
+/*  wx.login({
     success: res => {
       // 发送 res.code 到后台换取 openId, sessionKey, unionId
       request({
@@ -128,6 +173,20 @@ var getToken = function() {
 
     }
   })
+*/
+  wx.login({
+    success: res => {
+      if (config.debug) {
+        console.log('wx.login -> res', res);
+      }
+      try {
+        wx.setStorageSync('wxLoginCode', res.code)
+      } catch (e) {
+        console.error(e);
+      }
+      wxLogin(res.code);
+    }
+  })
 }
 
 // 更新用户头像昵称
@@ -135,6 +194,7 @@ function updateUserInfo() {
   wx.getUserInfo({
     success: (res) => {
       var userInfo = JSON.parse(res.rawData)
+      wx.setStorageSync('userInfo', userInfo);
       request({
         url: "/p/user/setUserInfo",
         method: "PUT",
