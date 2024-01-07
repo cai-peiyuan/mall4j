@@ -11,6 +11,7 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yami.shop.bean.app.param.BindPhoneParam;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.UserRegisterParam;
 
@@ -32,4 +33,11 @@ public interface UserService extends IService<User> {
      * @param checkRegisterSmsFlag
      */
     void validate(UserRegisterParam userRegisterParam, String checkRegisterSmsFlag);
+
+    /**
+     * 绑定微信用户手机号
+     * @param userId
+     * @param bindPhoneParam
+     */
+    void bindUserPhoneNum(String userId, BindPhoneParam bindPhoneParam);
 }

@@ -39,6 +39,7 @@ public class UserInfoInTokenBO {
 
     /**
      * 系统类型
+     *
      * @see com.yami.shop.security.common.enums.SysTypeEnum
      */
     private Integer sysType;
@@ -65,4 +66,15 @@ public class UserInfoInTokenBO {
      */
     private Long otherId;
 
+
+    /**
+     * 头像url
+     */
+    private String pic;
+
+
+    /**
+     * 会员手机号
+     */
+    private String userMobile;
 }

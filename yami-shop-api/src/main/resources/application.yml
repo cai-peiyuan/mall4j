@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: /mall-wx-api
 spring:
   # 环境 dev|test|prod
   profiles:

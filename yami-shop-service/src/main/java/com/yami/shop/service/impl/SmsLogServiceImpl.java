@@ -113,6 +113,7 @@ public class SmsLogServiceImpl extends ServiceImpl<SmsLogMapper, SmsLog> impleme
         try {
             this.sendSms(mobile, smsType.getTemplateCode(), params);
         } catch (ClientException e) {
+            log.error(e.getLocalizedMessage());
             throw new YamiShopBindException("发送短信失败，请稍后再试");
         }
 

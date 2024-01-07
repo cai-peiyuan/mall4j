@@ -27,7 +27,11 @@ public class SecurityUtils {
      * 获取用户
      */
     public YamiUser getUser() {
-        if (!HttpContextUtils.getHttpServletRequest().getRequestURI().startsWith(USER_REQUEST)) {
+        String requestURI = HttpContextUtils.getHttpServletRequest().getRequestURI();
+        String requestURL = HttpContextUtils.getHttpServletRequest().getRequestURL().toString();
+        String contextPath = HttpContextUtils.getHttpServletRequest().getContextPath();
+        String servletPath = HttpContextUtils.getHttpServletRequest().getServletPath();
+        if (!servletPath.startsWith(USER_REQUEST)) {
             // 用户相关的请求，应该以/p开头！！！
             throw new RuntimeException("yami.user.request.error");
         }

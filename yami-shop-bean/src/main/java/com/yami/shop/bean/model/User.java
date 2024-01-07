@@ -132,4 +132,19 @@ public class User implements Serializable {
      */
     private Integer score;
 
+    /**
+     * openid
+     */
+    private String openId;
+
+    /**
+     * appid
+     */
+    private String appId;
+
+    /**
+     * sessionKey
+     */
+    private String sessionKey;
+
 }

@@ -10,18 +10,27 @@
 
 package com.yami.shop.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yami.shop.bean.app.param.BindPhoneParam;
+import com.yami.shop.bean.enums.SmsType;
+import com.yami.shop.bean.model.SmsLog;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.UserRegisterParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.RedisUtil;
+import com.yami.shop.dao.SmsLogMapper;
 import com.yami.shop.dao.UserMapper;
 import com.yami.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -33,6 +42,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private SmsLogMapper smsLogMapper;
 
     @Override
     @Cacheable(cacheNames = "user", key = "#userId")
@@ -57,5 +68,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new YamiShopBindException("验证码已过期，请重新发送验证码校验");
             }
         }
+    }
+
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Override
+    public void bindUserPhoneNum(String userId, BindPhoneParam bindPhoneParam) {
+        SmsLog smsLog = smsLogMapper.selectOne(new LambdaQueryWrapper<SmsLog>()
+                .gt(SmsLog::getRecDate, DateUtil.beginOfDay(new Date()))
+                .lt(SmsLog::getRecDate, DateUtil.endOfDay(new Date()))
+                .eq(SmsLog::getUserId, userId)
+                .eq(SmsLog::getType, SmsType.VALID.value())
+                .eq(SmsLog::getUserPhone, bindPhoneParam.getMobile())
+                .eq(SmsLog::getStatus, 1)
+        );
+        if (smsLog == null) {
+            throw new YamiShopBindException("验证码已失效");
+        }
+        smsLog.setStatus(0);
+        smsLogMapper.updateById(smsLog);
+        User user = new User();
+        user.setUserId(userId);
+        user.setUserMobile(bindPhoneParam.getMobile());
+        userMapper.updateById(user);
     }
 }

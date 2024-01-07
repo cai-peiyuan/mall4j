@@ -79,6 +79,32 @@ public class AttachFileServiceImpl extends ServiceImpl<AttachFileMapper, AttachF
 		}
 	}
 
+
+	/**
+	 * 上传文件到七牛
+	 * @param bytes
+	 * @param originalName
+	 * @return
+	 * @throws QiniuException
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public String uploadFile(byte[] bytes,String originalName) throws QiniuException {
+		String extName = FileUtil.extName(originalName);
+		String fileName =DateUtil.format(new Date(), NORM_MONTH_PATTERN)+ IdUtil.simpleUUID() + "." + extName;
+		AttachFile attachFile = new AttachFile();
+		attachFile.setFilePath(fileName);
+		attachFile.setFileSize(bytes.length);
+		attachFile.setFileType(extName);
+		attachFile.setUploadTime(new Date());
+		attachFileMapper.insert(attachFile);
+
+		String upToken = auth.uploadToken(qiniu.getBucket(),fileName);
+		Response response = uploadManager.put(bytes, fileName, upToken);
+		Json.parseObject(response.bodyString(),  DefaultPutRet.class);
+		return fileName;
+	}
+
 	@Override
 	public void deleteFile(String fileName){
 		attachFileMapper.delete(new LambdaQueryWrapper<AttachFile>().eq(AttachFile::getFilePath,fileName));

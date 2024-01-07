@@ -163,6 +163,7 @@ public class TokenStore {
         tokenInfoVO.setAccessToken(tokenInfoBO.getAccessToken());
         tokenInfoVO.setRefreshToken(tokenInfoBO.getRefreshToken());
         tokenInfoVO.setExpiresIn(tokenInfoBO.getExpiresIn());
+        tokenInfoVO.setUserInfoInToken(userInfoInToken);
         return tokenInfoVO;
     }
 

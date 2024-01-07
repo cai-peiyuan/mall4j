@@ -31,6 +31,14 @@ public interface AttachFileService extends IService<AttachFile> {
 	String uploadFile(MultipartFile file) throws IOException;
 
 	/**
+	 * 上传文件到七牛
+	 * @param bytes
+	 * @param originalName
+	 * @throws IOException e
+	 * @return
+	 */
+	String uploadFile(byte[] bytes,String originalName) throws IOException;
+	/**
 	 * 删除文件
 	 * @param fileName 文件名称
 	 */

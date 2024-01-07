@@ -9,6 +9,7 @@
  */
 package com.yami.shop.security.common.vo;
 
+import com.yami.shop.security.common.bo.UserInfoInTokenBO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -29,4 +30,7 @@ public class TokenInfoVO {
 
     @Schema(description = "在多少秒后过期" )
     private Integer expiresIn;
+
+    @Schema(description = "用户基本信息")
+    UserInfoInTokenBO userInfoInToken;
 }
