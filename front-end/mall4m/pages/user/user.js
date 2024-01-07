@@ -127,7 +127,7 @@ Page({
       success(res) {
         console.log('图片上传成功回调', res.data)
         _this.setData({
-          avatarUrl: res.data
+          avatarUrl: res.data.data
         });
         let userInfoInToken = wx.getStorageSync('userInfoInToken');
         userInfoInToken.pic = res.data;

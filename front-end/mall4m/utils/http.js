@@ -24,7 +24,7 @@ function request(params, isGetTonken) {
 
       // 00000 请求成功
       if (responseData.code === '00000') {
-        if (params.callBack) {
+        if (params && params.callBack) {
           params.callBack(responseData.data);
         }
         return
@@ -123,10 +123,9 @@ var wxLogin = function (wxLoginCode) {
         //没有获取到用户昵称，说明服务器没有保存用户的昵称，也就是用户授权的信息并没有传到服务器
         if (!result.userInfoInToken.nickName) {
           //updateUserInfo();
-          _this.
-          ({
-            nickName: '微信用户'
-          });
+          // _this.setData({
+          //   nickName: '微信用户'
+          // });
         }
       }
       var globalData = getApp().globalData;

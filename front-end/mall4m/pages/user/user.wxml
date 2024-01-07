@@ -135,10 +135,10 @@
     <!--end 列表项 -->
   </view>
 
-  <view class="log-out" bindtap="logout" wx:if="isAuthInfo">
-    <view class="log-out-n">
+  <!-- <view class="log-out" bindtap="logout" wx:if="isAuthInfo">
+    <view class="log-out-n" wx:if="false">
       <text>退出登录</text>
     </view>
-  </view>
+  </view> -->
 
 </view>
