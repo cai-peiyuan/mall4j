@@ -1,5 +1,5 @@
 <template>
-  <div class="mod-home">
+  <div class="mod-home" v-if="false">
     <p>一个基于spring boot、spring oauth2.0、mybatis、redis的轻量级、前后端分离、拥有完整sku和下单流程的商城</p>
     <p>&nbsp;</p>
     <h2>前言</h2>

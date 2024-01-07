@@ -4,7 +4,7 @@
       <div class="top">
         <div class="logo">
           <img
-            src="~@/assets/img/login-logo.png"
+            src="~@/assets/img/login-logo.jpeg"
             alt=""
           >
         </div>
