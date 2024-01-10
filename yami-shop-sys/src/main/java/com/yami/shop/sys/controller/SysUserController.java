@@ -87,9 +87,9 @@ public class SysUserController {
 
         // 开源版代码，禁止用户修改admin 的账号密码
         // 正式使用时，删除此部分代码即可
-        if (Objects.equals(1L,userId) && StrUtil.isNotBlank(param.getNewPassword())) {
-            throw new YamiShopBindException("禁止修改admin的账号密码");
-        }
+//        if (Objects.equals(1L,userId) && StrUtil.isNotBlank(param.getNewPassword())) {
+//            throw new YamiShopBindException("禁止修改admin的账号密码");
+//        }
 		SysUser dbUser = sysUserService.getSysUserById(userId);
 		String password = passwordManager.decryptPassword(param.getPassword());
 		if (!passwordEncoder.matches(password, dbUser.getPassword())) {

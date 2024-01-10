@@ -33,6 +33,12 @@ public class Area implements Serializable {
     @Schema(description = "地区名称" ,required=true)
     private String areaName;
 
+    @Schema(description = "启用状态" ,required=true)
+    /**
+     * 状态 1 正常 0 无效
+     */
+    private Integer status;
+
     @Schema(description = "地区上级id" ,required=true)
     private Long parentId;
 

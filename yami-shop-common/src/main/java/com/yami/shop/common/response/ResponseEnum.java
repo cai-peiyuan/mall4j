@@ -36,9 +36,9 @@ public enum ResponseEnum {
     UNAUTHORIZED("A00004", "Unauthorized"),
 
     /**
-     * 服务器出了点小差
+     * 请求出错 请联系管理员
      */
-    EXCEPTION("A00005", "服务器出了点小差"),
+    EXCEPTION("A00005", "服务出错请联系管理员"),
     /**
      * 方法参数没有校验，内容由输入内容决定
      */
