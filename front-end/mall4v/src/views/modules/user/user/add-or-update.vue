@@ -36,6 +36,15 @@
         />
       </el-form-item>
       <el-form-item
+        label="手机号"
+        prop="userMobile"
+      >
+        <el-input
+          v-model="dataForm.userMobile"
+          placeholder="手机号"
+        />
+      </el-form-item>
+      <el-form-item
         label="状态"
         prop="status"
       >
@@ -70,6 +79,7 @@ const emit = defineEmits(['refreshDataList'])
 
 const visible = ref(false)
 const dataForm = ref({
+  userMobile: '',
   userId: 0,
   nickName: '',
   pic: '',
@@ -118,6 +128,7 @@ const onSubmit = Debounce(() => {
         data: http.adornData({
           userId: dataForm.value.userId || undefined,
           nickName: dataForm.value.nickName,
+          userMobile: dataForm.value.userMobile,
           status: dataForm.value.status
         })
       })

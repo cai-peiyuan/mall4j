@@ -36,6 +36,19 @@
           @change="handleChange"
         />
       </el-form-item>
+      <el-form-item
+        label="状态"
+        prop="status"
+      >
+        <el-radio-group v-model="dataForm.status">
+          <el-radio :label="0">
+            禁用
+          </el-radio>
+          <el-radio :label="1">
+            正常
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
@@ -72,6 +85,7 @@ const areaList = ref([])
 const dataForm = ref({
   areaId: '',
   areaName: null,
+  status: 0,
   parentId: null,
   level: null
 })

@@ -29,6 +29,33 @@ export const tableOption = {
     label: '顺序',
     prop: 'seq'
   }, {
+    label: '描述',
+    prop: 'des'
+  }, {
+    label: '标题',
+    prop: 'title'
+  }, {
+    label: '链接',
+    prop: 'link'
+  }, {
+    width: 150,
+    label: '点击类型',
+    prop: 'type',
+    search: true,
+    type: 'select',
+    dicData: [
+      {
+        label: '无',
+        value: -1
+      }, {
+        label: '商品',
+        value: 0
+      }, {
+        label: '链接',
+        value: 1
+      }
+    ]
+  }, {
     width: 150,
     label: '状态',
     prop: 'status',

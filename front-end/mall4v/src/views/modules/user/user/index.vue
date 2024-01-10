@@ -14,7 +14,7 @@
           v-if="scope.row.pic"
           class="avue-crud__img"
         >
-          <el-image :src="scope.row.pic"></el-image>
+          <el-image :src="scope.row.pic" :preview-src-list="picSrcList"></el-image>
         </span>
         <span v-else>-</span>
       </template>
@@ -66,6 +66,7 @@ const page = reactive({
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
 })
+const picSrcList = ref([])
 /**
  * 获取数据列表
  */
@@ -88,6 +89,10 @@ const getDataList = (pageParam, params, done) => {
       dataList.value = data.records
       page.total = data.total
       dataListLoading.value = false
+      picSrcList.value = []
+      data.records.forEach((row, idx) => {
+        // picSrcList.value[idx] = row.pic
+      })
       if (done) done()
     })
 }
@@ -118,3 +123,7 @@ const selectionChange = (val) => {
   dataListSelections.value = val
 }
 </script>
+
+<style lang="scss" scoped>
+
+</style>

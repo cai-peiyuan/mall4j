@@ -15,7 +15,7 @@
           v-if="!sidebarFold"
           class="site-navbar-lg"
         >
-          网上商城---
+          小岛优选商城
         </span>
         <span
           v-else

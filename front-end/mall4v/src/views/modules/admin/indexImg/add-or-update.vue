@@ -27,6 +27,12 @@
           <el-input v-model="dataForm.seq" />
         </el-form-item>
         <el-form-item
+          label="标题"
+          prop="title"
+        >
+          <el-input v-model="dataForm.title" />
+        </el-form-item>
+        <el-form-item
           label="状态"
           prop="status"
         >
@@ -49,6 +55,9 @@
             </el-radio>
             <el-radio :label="0">
               商品
+            </el-radio>
+            <el-radio :label="1">
+              页面
             </el-radio>
           </el-radio-group>
           <div v-if="dataForm.relation!=null">
@@ -82,6 +91,22 @@
             </el-button>
           </div>
         </el-form-item>
+        <el-form-item
+          v-if=" dataForm.type == 1"
+          label="链接"
+          prop="link"
+        >
+          <el-select
+            v-model="dataForm.link"
+            clearable
+            placeholder="请选跳转页面"
+          >
+            <el-option
+              label="账户充值"
+              value="/pages/user-balance/user-balance"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
@@ -108,11 +133,13 @@ import { Debounce } from '@/utils/debounce'
 const emit = defineEmits(['refreshDataList'])
 const dataForm = ref({
   status: 1,
-  des: '',
+  title: '', // 标题
+  link: '', // 链接
+  des: '', // 描述
   imgUrl: '',
   seq: 0,
   imgId: 0,
-  type: -1,
+  type: -1, // -1 无  0 商品  1 页面链接
   relation: null
 })
 const dataRule = reactive({

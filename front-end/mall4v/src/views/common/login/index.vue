@@ -4,7 +4,7 @@
       <div class="top">
         <div class="logo">
           <img
-            src="~@/assets/img/login-logo.jpeg"
+            src="~@/assets/img/login-logo-island-selected.png"
             alt=""
           >
         </div>
@@ -15,16 +15,17 @@
           :model="dataForm"
           :rules="dataRule"
           status-icon
+          label-width="60px"
           @keyup.enter="dataFormSubmit()"
         >
-          <el-form-item prop="userName">
+          <el-form-item prop="userName" label="账号">
             <el-input
               v-model="dataForm.userName"
               class="info"
               placeholder="帐号"
             />
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" label="密码">
             <el-input
               v-model="dataForm.password"
               class="info"
@@ -44,7 +45,7 @@
         </el-form>
       </div>
       <div class="bottom">
-        Copyright © 2019 广州市蓝海创新科技有限公司
+        Copyright © 2024 秦皇岛袋鼠优选商贸有限公司
       </div>
     </div>
     <Verify
@@ -168,8 +169,9 @@ const getCaptcha = () => {
     .mid {
       font-size: 14px;
       .item-btn {
-        width: 410px;
+        width: 300px;
         margin-top: 20px;
+        margin: 0 auto;
         input {
           border: 0;
           width: 100%;
@@ -191,7 +193,8 @@ const getCaptcha = () => {
   }
 }
 .info {
-  width: 410px;
+  width: 300px;
+  margin: 0 auto;
 }
 :deep(.login-captcha) {
   height: 40px;
