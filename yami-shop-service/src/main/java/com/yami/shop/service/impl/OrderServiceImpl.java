@@ -95,10 +95,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
+    /**
+     * 订单发货
+     * @param order
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delivery(Order order) {
         orderMapper.updateById(order);
+        // 发送用户发货通知
+        Map<String, String> params = new HashMap<>(16);
+        params.put("orderNumber", order.getOrderNumber());
+        //		Delivery delivery = deliveryMapper.selectById(order.getDvyId());
+        //		params.put("dvyName", delivery.getDvyName());
+        //		params.put("dvyFlowId", order.getDvyFlowId());
+        //		smsLogService.sendSms(SmsType.NOTIFY_DVY, order.getUserId(), order.getMobile(), params);
+
     }
 
     @Override

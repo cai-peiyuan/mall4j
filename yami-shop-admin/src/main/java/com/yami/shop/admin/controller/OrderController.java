@@ -118,6 +118,7 @@ public class OrderController {
         orderParam.setStatus(OrderStatus.CONSIGNMENT.value());
         orderParam.setUserId(order.getUserId());
 
+        //订单发货
         orderService.delivery(orderParam);
 
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(deliveryOrderParam.getOrderNumber());
