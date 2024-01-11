@@ -56,5 +56,10 @@ public class IndexImgDto {
     private Long relation;
 
 
+    /**
+     * 链接
+     */
+    @Schema(description = "小程序链接页面url" , required = true)
+    private String link;
 
 }

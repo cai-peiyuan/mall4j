@@ -55,6 +55,34 @@ Page({
     })
   },
 
+  /**
+   * 跳转到对应的链接页面
+   * type == 0 商品页面
+   * type == 1 充值页面
+   * 
+   * @param {*} e 
+   */
+  toSwiperLinkPage: function(e) {
+    var item = e.currentTarget.dataset.item;
+    //跳转到指定页面
+    if(item.type == 1){
+        wx.navigateTo({
+            url: item.link,
+        })
+    }else if(item.type == 0){
+        //跳转到商品页面
+        if (item.prodid) {
+            wx.navigateTo({
+              url: '/pages/prod/prod?prodid=' + item.prodid,
+            })
+          }
+    }
+  },
+
+  /**
+   * 跳转到商品页面
+   * @param {*} e 
+   */
   toProdPage: function(e) {
     var prodid = e.currentTarget.dataset.prodid;
     if (prodid) {

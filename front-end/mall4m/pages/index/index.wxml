@@ -15,7 +15,10 @@
       <block wx:for='{{indexImgs}}' wx:key='imgUrl'>
         <swiper-item class="banner-item">
           <view class='img-box'>
-            <image src='{{item.imgUrl}}' data-prodid='{{item.relation}}' bindtap='toProdPage' class='banner'></image>
+            <image src='{{item.imgUrl}}' data-prodid='{{item.relation}}' 
+            data-type='{{item.type}}' 
+            data-item='{{item}}' 
+            bindtap='toSwiperLinkPage' class='banner'></image>
           </view>
         </swiper-item>
       </block>
