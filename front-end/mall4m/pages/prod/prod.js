@@ -574,6 +574,18 @@ Page({
     });
   },
 
+  /**
+   * 在页面使用客服消息
+    需要将 button 组件 open-type 的值设置为 contact，当用户点击后就会进入客服会话，如果用户在会话中点击了小程序消息，则会返回到小程序，开发者可以通过 bindcontact 事件回调获取到用户所点消息的页面路径 path 和对应的参数 query，开发者需根据路径自行跳转。此外，开发者可以通过设置 session-from 将会话来源透传到客服。
+   * @param {*} e 
+   */
+  handleContact: function(e){
+    console.log(e.detail.path)
+    console.log(e.detail.query)
+  },
 
+  toConcatPage: function(e){
+    console.log(e)
+  }
 
 })

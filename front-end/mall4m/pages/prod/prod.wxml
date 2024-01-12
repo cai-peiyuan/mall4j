@@ -107,6 +107,11 @@
       购物车
       <view class='badge badge-1' wx:if="{{totalCartNum>0}}">{{totalCartNum}}</view>
     </view>
+    <view class="btn icon" bindtap='toConcatPage'>
+      <image src="../../images/tabbar/message.png"></image>
+      联系客服
+      <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contactBtn">联系客服</button>
+    </view>
     <view class="btn cart" bindtap='showSku'>
       <text>加入购物车</text>
     </view>

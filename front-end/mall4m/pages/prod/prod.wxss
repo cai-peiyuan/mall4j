@@ -538,7 +538,7 @@ img {
 .cart-footer .btn.icon {
   flex-grow: 0;
   flex-shrink: 0;
-  width: 125rpx;
+  width: 100rpx;
   font-size: 20rpx;
   color: #666;
 }
@@ -887,3 +887,7 @@ img {
   background: #ddd;
 }
 
+/* 客服按钮样式 */
+.contactBtn {
+ display: none;
+}
