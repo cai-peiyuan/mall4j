@@ -52,7 +52,7 @@ Component({
      * 立即使用
      */
     useCoupon() {
-      var url = '/pages/prod-classify/prod-classify?sts=' + this.data.stsType;
+      var url = '/pages/prods/pages/prod-classify/prod-classify?sts=' + this.data.stsType;
       var id = this.data.item.couponId;
       var title = "优惠券活动商品";
       if (id) {

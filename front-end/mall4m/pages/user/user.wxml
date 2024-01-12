@@ -162,18 +162,7 @@
                 </view>
                 <view class='arrowhead'></view>
             </view>
-            
-            <view class='memu-item' >
-                <view class="i-name">
-                    <image src='../../images/icon/myAddr.png'></image>
-                    <button open-type="contact" bindcontact="handleContact" session-from="sessionFrom">asdasd</button>
-                </view>
-                <view class='arrowhead'></view>
-            </view>
-
         </view>
-
-
     <!--end 列表项 -->
 </view>
 

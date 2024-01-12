@@ -130,11 +130,11 @@ Page({
     http.request(params);
   },
 
-//跳转商品详情页
+  //跳转商品详情页
   toProdPage: function (e) {
     var prodid = e.currentTarget.dataset.prodid;
     wx.navigateTo({
-      url: '/pages/prod/prod?prodid=' + prodid,
+      url: '/pages/prods/pages/prod/prod?prodid=' + prodid,
     })
   },
 })

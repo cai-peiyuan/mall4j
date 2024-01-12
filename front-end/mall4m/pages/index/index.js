@@ -73,7 +73,7 @@ Page({
         //跳转到商品页面
         if (item.prodid) {
             wx.navigateTo({
-              url: '/pages/prod/prod?prodid=' + item.prodid,
+              url: '/pages/prods/pages/prod/prod?prodid=' + item.prodid,
             })
           }
     }
@@ -87,7 +87,7 @@ Page({
     var prodid = e.currentTarget.dataset.prodid;
     if (prodid) {
       wx.navigateTo({
-        url: '/pages/prod/prod?prodid=' + prodid,
+        url: '/pages/prods/pages/prod/prod?prodid=' + prodid,
       })
     }
   },
@@ -102,7 +102,7 @@ Page({
   // 跳转搜索页
   toSearchPage: function() {
     wx.navigateTo({
-      url: '/pages/search-page/search-page',
+      url: '/pages/search/pages/search-page/search-page',
     })
   },
 
@@ -130,7 +130,7 @@ Page({
   //跳转公告列表页面
   onNewsPage: function() {
     wx.navigateTo({
-      url: '/pages/recent-news/recent-news',
+      url: '/pages/news/pages/recent-news/recent-news',
     })
   },
   onShow: function () {
@@ -332,7 +332,7 @@ Page({
     let relation = e.currentTarget.dataset.relation;
     if (relation) {
       wx.navigateTo({
-        url: 'pages/prod/prod',
+        url: 'pages/prods/pages/prod/prod',
       })
     }
   }

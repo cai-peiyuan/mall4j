@@ -23,7 +23,7 @@ Component({
     toProdPage: function (e) {
       var prodid = e.currentTarget.dataset.prodid;
       wx.navigateTo({
-        url: '/pages/prod/prod?prodid=' + prodid,
+        url: '/pages/prods/pages/prod/prod?prodid=' + prodid,
       })
     },
   }

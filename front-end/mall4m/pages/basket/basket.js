@@ -300,9 +300,14 @@ Page({
         }
       })
     }
-
-
-  }
+  },
+  //跳转商品详情页
+  toProdPage: function (e) {
+    var prodid = e.currentTarget.dataset.prodid;
+    wx.navigateTo({
+      url: '/pages/prods/pages/prod/prod?prodid=' + prodid,
+    })
+  },
 
 
 })

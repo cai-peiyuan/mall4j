@@ -8,7 +8,6 @@
       </view>
     </view>
   </view>
-
   <view class='content'>
     <!-- swiper -->
     <swiper autoplay="{{autoplay}}" indicator-color="{{indicatorColor}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicatorActiveColor}} " circular='true' class='pic-swiper' indicator-dots previous-margin='20rpx' next-margin='20rpx'>

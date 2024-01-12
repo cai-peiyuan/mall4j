@@ -5,21 +5,60 @@
         "pages/user/user",
         "pages/basket/basket",
         "pages/category/category",
-        "pages/search-page/search-page",
-        "pages/delivery-address/delivery-address",
-        "pages/editAddress/editAddress",
-        "pages/orderList/orderList",
-        "pages/order-detail/order-detail",
         "pages/submit-order/submit-order",
-        "pages/binding-phone/binding-phone",
         "pages/express-delivery/express-delivery",
         "pages/pay-result/pay-result",
-        "pages/search-prod-show/search-prod-show",
-        "pages/prod/prod",
-        "pages/login/login",
-        "pages/prod-classify/prod-classify",
-        "pages/recent-news/recent-news",
-        "pages/news-detail/news-detail"
+        "pages/login/login"
+    ],
+    "subPackages": [
+      {
+        "root": "pages/balance/",
+        "pages": [
+          "pages/user-balance/user-balance",
+          "pages/user-balance-detail/user-balance-detail"
+        ]
+      },
+      {
+        "root": "pages/address/",
+        "pages": [
+          "pages/delivery-address/delivery-address",
+          "pages/editAddress/editAddress"
+        ]
+      },
+      {
+        "root": "pages/user-info/",
+        "pages": [
+          "pages/binding-phone/binding-phone"
+        ]
+      },
+      {
+        "root": "pages/news/",
+        "pages": [
+          "pages/recent-news/recent-news",
+          "pages/news-detail/news-detail"
+        ]
+      },
+      {
+        "root": "pages/search/",
+        "pages": [
+          "pages/search-page/search-page",
+          "pages/search-prod-show/search-prod-show"
+        ]
+      },
+      {
+        "root": "pages/prods",
+        "pages": [
+          "pages/prod/prod",
+          "pages/prod-classify/prod-classify"
+        ]
+      },
+      {
+        "root": "pages/orders",
+        "pages": [
+          "pages/orderList/orderList",
+          "pages/order-detail/order-detail"
+        ]
+      }
     ],
     "window": {
         "backgroundTextStyle": "light",

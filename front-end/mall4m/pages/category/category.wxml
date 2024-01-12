@@ -15,7 +15,7 @@
   <view class="main">
     <!-- 左侧菜单start -->
     <scroll-view scroll-y="true" class='leftmenu'>
-      <block wx:for='{{ categoryList}}' wx:key=''>
+      <block wx:for='{{ categoryList}}' wx:key='item'>
         <view class='menu-item {{selIndex==index?"active":""}} ' data-index="{{index}}" data-id="{{item.categoryId}}" bindtap='onMenuTab'>
           {{item.categoryName}}
         </view>
@@ -32,7 +32,7 @@
         </view>
       </view>
       <view class='cont-item'>
-        <block wx:for='{{productList}}' wx:key=''>
+        <block wx:for='{{productList}}' wx:key='item'>
           <view class='show-item'  bindtap='toProdPage' data-prodid="{{item.prodId}}">
             <view class='more-prod-pic'>
               <image src='{{item.pic}}' class='more-pic'mode='widthFix'></image>

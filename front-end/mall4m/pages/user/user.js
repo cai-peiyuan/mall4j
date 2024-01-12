@@ -185,7 +185,7 @@ Page({
 
   toAddressList: function() {
     wx.navigateTo({
-      url: '/pages/delivery-address/delivery-address',
+      url: '/pages/address/pages/delivery-address/delivery-address',
     })
   },
 
@@ -194,14 +194,14 @@ Page({
    */
   toAboutUsPage: function() {
     wx.navigateTo({
-        url: '/pages/news-detail/news-detail?id=1',
+        url: '/pages/news/pages/news-detail/news-detail?id=1',
       })
   },
 
   // 跳转绑定手机号
   toBindingPhone: function() {
     wx.navigateTo({
-      url: '/pages/binding-phone/binding-phone',
+      url: '/pages/user-info/pages/binding-phone/binding-phone',
     })
   },
 
@@ -252,7 +252,7 @@ Page({
   toOrderListPage: function(e) {
     var sts = e.currentTarget.dataset.sts;
     wx.navigateTo({
-      url: '/pages/orderList/orderList?sts=' + sts,
+      url: '/pages/orders/pages/orderList/orderList?sts=' + sts,
     })
   },
 
@@ -262,7 +262,7 @@ Page({
    */
   toUserBalancePage: function(e){
     wx.navigateTo({
-        url: '/pages/user-balance/user-balance',
+        url: '/pages/balance/pages/user-balance/user-balance',
       })
   },
   /**
@@ -288,7 +288,7 @@ Page({
    * 我的收藏跳转
    */
   myCollectionHandle: function() {
-    var url = '/pages/prod-classify/prod-classify?sts=5';
+    var url = '/pages/prods/pages/prod-classify/prod-classify?sts=5';
     var id = 0;
     var title = "我的收藏商品";
     if (id) {
