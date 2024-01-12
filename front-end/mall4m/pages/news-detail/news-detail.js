@@ -32,8 +32,8 @@ Page({
       // },
       // callBack: function(news){
       callBack: res => {
-        res.content = res.content.replace(/width=/gi, 'sss=');
-        res.content = res.content.replace(/height=/gi, 'sss=');
+        // res.content = res.content.replace(/width=/gi, 'sss=');
+        // res.content = res.content.replace(/height=/gi, 'sss=');
         res.content = res.content.replace(/ \/\>/gi, ' style="max-width:100% !important;display:block;" \/\>');
         this.setData({
           news: res
