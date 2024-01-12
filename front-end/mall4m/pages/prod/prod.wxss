@@ -888,6 +888,10 @@ img {
 }
 
 /* 客服按钮样式 */
-.contactBtn {
- display: none;
-}
+.contact-btn {
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    background: salmon;
+    opacity: 0;
+  }
