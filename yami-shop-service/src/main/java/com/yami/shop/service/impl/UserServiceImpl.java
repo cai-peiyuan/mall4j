@@ -14,6 +14,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.app.param.BindPhoneParam;
 import com.yami.shop.bean.enums.SmsType;
 import com.yami.shop.bean.model.SmsLog;
@@ -91,5 +92,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUserId(userId);
         user.setUserMobile(bindPhoneParam.getMobile());
         userMapper.updateById(user);
+    }
+
+    /**
+     * 获取用户基础信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserInfoDto getUserInfoById(String userId) {
+        User user = getById(userId);
+        return UserInfoDto.builder()
+                .userId(user.getUserId())
+                .userMobile(user.getUserMobile())
+                .pic(user.getPic())
+                .realName(user.getRealName())
+                .nickName(user.getNickName())
+                .build();
     }
 }

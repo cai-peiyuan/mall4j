@@ -29,6 +29,7 @@ import com.yami.shop.dao.OrderMapper;
 import com.yami.shop.dao.ProductMapper;
 import com.yami.shop.dao.SkuMapper;
 import com.yami.shop.service.OrderService;
+import com.yami.shop.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -46,6 +47,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+
+    private final UserService userService;
 
     private final OrderMapper orderMapper;
 
@@ -97,6 +100,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 订单发货
+     *
      * @param order
      */
     @Override
@@ -166,6 +170,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public IPage<Order> pageOrdersDetailByOrderParam(Page<Order> page, OrderParam orderParam) {
         page.setRecords(orderMapper.listOrdersDetailByOrderParam(new PageAdapter(page), orderParam));
         page.setTotal(orderMapper.countOrderDetail(orderParam));
+        for (Order order : page.getRecords()) {
+            order.setUserInfo(userService.getUserInfoById(order.getUserId()));
+        }
         return page;
     }
 

@@ -67,20 +67,26 @@
       <div class="content">
         <div class="tit">
           <el-row style="width:100%">
-            <el-col :span="10">
+            <el-col :span="6">
               <span class="item product">商品</span>
             </el-col>
             <el-col :span="3">
               <span class="item">成交单价/购买数量</span>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="2">
               <span class="item">实付金额</span>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="2">
               <span class="item">支付方式</span>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="2">
               <span class="item">订单状态</span>
+            </el-col>
+            <el-col :span="2">
+              <span class="item">下单用户</span>
+            </el-col>
+            <el-col :span="2">
+              <span class="item">收货地址</span>
             </el-col>
             <el-col :span="2">
               <span class="item">操作</span>
@@ -98,7 +104,7 @@
           </div>
           <div class="prod-cont">
             <el-row style="width:100%">
-              <el-col :span="12">
+              <el-col :span="9">
                 <div class="prod-item">
                   <div
                     v-for="orderItem in order.orderItems"
@@ -109,7 +115,7 @@
                       <img
                         alt=""
                         :src="resourcesUrl + orderItem.pic"
-                        style="height:100px;width: 100px;"
+                        style="height:60px;width: 60px;"
                       >
                     </div>
                     <div class="prod-name">
@@ -124,7 +130,7 @@
                 </div>
               </el-col>
               <el-col
-                :span="3"
+                :span="2"
                 style="height: 100%;"
               >
                 <div class="item">
@@ -136,19 +142,20 @@
                 </div>
               </el-col>
               <el-col
-                :span="3"
+                :span="2"
                 style="height: 100%;"
               >
                 <div class="item">
                   <div>
                     <span v-if="order.payType === 1">微信支付</span>
                     <span v-else-if="order.payType === 2">支付宝</span>
+                    <span v-else-if="order.payType === 3">储值卡</span>
                     <span v-else>手动代付</span>
                   </div>
                 </div>
               </el-col>
               <el-col
-                :span="3"
+                :span="2"
                 style="height: 100%;"
               >
                 <div class="item">
@@ -178,7 +185,40 @@
                 </div>
               </el-col>
               <el-col
-                :span="3"
+                :span="2"
+                style="height: 100%;"
+              >
+                <div class="item">
+                  <div>
+                    <span>
+                      <div>
+                        <img
+                          alt=""
+                          :src="order.userInfo.pic"
+                          style="height:60px;width: 60px;"
+                        >
+                      </div>
+                    </span>
+                    <span>{{ order.userInfo.nickName }}</span>
+                    <span>{{ order.userInfo.realName }}</span>
+                    <span>{{ order.userInfo.userMobile }}</span>
+                  </div>
+                </div>
+              </el-col>
+              <el-col
+                :span="2"
+                style="height: 100%;"
+              >
+                <div class="item">
+                  <div>
+                    <span>{{ order.userAddrOrder.receiver }}</span>
+                    <span>{{ order.userAddrOrder.mobile }}</span>
+                    <span>{{ order.userAddrOrder.province }}{{ order.userAddrOrder.city }}{{ order.userAddrOrder.area }}{{ order.userAddrOrder.addr }}</span>
+                  </div>
+                </div>
+              </el-col>
+              <el-col
+                :span="2"
                 style="height: 100%;"
               >
                 <div class="item">
@@ -189,6 +229,13 @@
                       @click="onAddOrUpdate(order.orderNumber)"
                     >
                       查看
+                    </el-button>
+                    <el-button
+                      v-if="isAuth('order:order:print')"
+                      type="text"
+                      @click="printOrder(order.orderNumber)"
+                    >
+                      打印订单
                     </el-button>
                   </div>
                 </div>
@@ -329,6 +376,7 @@ const currentChangeHandle = (val) => {
 
 const addOrUpdateRef = ref(null)
 const addOrUpdateVisible = ref(false)
+
 /**
  * 新增 / 修改
  * @param val
@@ -338,6 +386,12 @@ const onAddOrUpdate = (val) => {
   nextTick(() => {
     addOrUpdateRef.value?.init(val)
   })
+}
+/**
+ * 新增 / 修改
+ * @param val
+ */
+const printOrder = (val) => {
 }
 
 const consignmentInfoRef = ref(null)
@@ -504,12 +558,12 @@ const getSoldExcel = () => {
 
   .prod-image {
     margin-right: 20px;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
 
     img {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
     }
   }
 
@@ -555,5 +609,8 @@ const getSoldExcel = () => {
     margin: 50px 0;
     color: #999;
   }
+}
+.content .el-col {
+  text-align: center;
 }
 </style>

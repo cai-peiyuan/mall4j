@@ -11,6 +11,7 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.app.param.BindPhoneParam;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.UserRegisterParam;
@@ -40,4 +41,11 @@ public interface UserService extends IService<User> {
      * @param bindPhoneParam
      */
     void bindUserPhoneNum(String userId, BindPhoneParam bindPhoneParam);
+
+    /**
+     * 获取用户基础信息
+     * @param userId
+     * @return
+     */
+    UserInfoDto getUserInfoById(String userId);
 }

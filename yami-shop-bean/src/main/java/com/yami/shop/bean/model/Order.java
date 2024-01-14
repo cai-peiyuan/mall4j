@@ -13,6 +13,7 @@ package com.yami.shop.bean.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.yami.shop.bean.app.dto.UserInfoDto;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -190,4 +191,9 @@ public class Order implements Serializable {
      */
     @TableField(exist = false)
     private UserAddrOrder userAddrOrder;
+    /**
+     * 用户基本信息
+     */
+    @TableField(exist = false)
+    private UserInfoDto userInfo;
 }
