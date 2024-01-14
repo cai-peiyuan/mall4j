@@ -190,7 +190,7 @@ Page({
           success: e => {
             // console.log("支付成功");
             wx.navigateTo({
-              url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
+              url: '/pagespay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
           },
           fail: err => {
@@ -286,7 +286,7 @@ Page({
    */
   toAddrListPage: function() {
     wx.navigateTo({
-      url: '/pages/delivery-address/delivery-address?order=0',
+      url: '/pages/address/pages/delivery-address/delivery-address?order=0',
     })
   },
   /**
