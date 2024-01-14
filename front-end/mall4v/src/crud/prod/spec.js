@@ -9,7 +9,7 @@ export const tableOption = {
   menuWidth: 350,
   align: 'center',
   refreshBtn: true,
-  searchSize: 'mini',
+  searchSize: 'small',
   addBtn: false,
   editBtn: false,
   viewBtn: false,
