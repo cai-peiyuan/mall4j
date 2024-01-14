@@ -123,7 +123,7 @@ public interface OrderService extends IService<Order> {
      * 打印订单信息
      * @param order
      */
-    void printOrder(Order order);
+    String printOrder(Order order);
 
     /**
      * 设置订单附加信息

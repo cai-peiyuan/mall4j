@@ -284,6 +284,7 @@
 import AddOrUpdate from './components/order-info.vue'
 import ConsignmentInfo from './components/consignment-info.vue'
 import { isAuth } from '@/utils'
+import { ElMessage } from 'element-plus'
 const resourcesUrl = import.meta.env.VITE_APP_RESOURCES_URL
 const dataForm = ref({})
 const dateRange = ref([])
@@ -399,6 +400,27 @@ const printOrder = (orderNumber) => {
     params: http.adornParams()
   }).then(({ data }) => {
     console.log(data)
+    if (!data) {
+      ElMessage({
+        message: '打印失败，打印接口返回数据为' + data,
+        type: 'error',
+        duration: 1.5 * 1000
+      })
+      return
+    }
+    if (data.error === 0) {
+      ElMessage({
+        message: '打印成功' || data.error_description,
+        type: 'success',
+        duration: 1.5 * 1000
+      })
+    } else {
+      ElMessage({
+        message: '打印失败' || data.error_description,
+        type: 'error',
+        duration: 1.5 * 1000
+      })
+    }
   })
 }
 

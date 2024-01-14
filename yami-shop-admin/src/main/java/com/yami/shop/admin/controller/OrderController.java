@@ -16,6 +16,7 @@ import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
 import com.yami.shop.bean.enums.OrderStatus;
@@ -65,11 +66,12 @@ public class OrderController {
 
     /**
      * 分页获取订单信息
+     *
      * @author cpy
      */
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('order:order:page')")
-    public ServerResponseEntity<IPage<Order>> page(OrderParam orderParam,PageParam<Order> page) {
+    public ServerResponseEntity<IPage<Order>> page(OrderParam orderParam, PageParam<Order> page) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         orderParam.setShopId(shopId);
         IPage<Order> orderPage = orderService.pageOrdersDetailByOrderParam(page, orderParam);
@@ -80,6 +82,7 @@ public class OrderController {
 
     /**
      * 获取订单详细信息
+     *
      * @author cpy
      */
     @GetMapping("/orderInfo/{orderNumber}")
@@ -93,20 +96,22 @@ public class OrderController {
         orderService.setOrderExtraInfo(order);
         return ServerResponseEntity.success(order);
     }
+
     /**
      * 打印订单
+     *
      * @author cpy
      */
     @GetMapping("/printOrder/{orderNumber}")
     @PreAuthorize("@pms.hasPermission('order:order:info')")
-    public ServerResponseEntity<Void> printOrder(@PathVariable("orderNumber") String orderNumber) {
+    public ServerResponseEntity<Object> printOrder(@PathVariable("orderNumber") String orderNumber) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         Order order = orderService.getOrderByOrderNumber(orderNumber);
         if (!Objects.equal(shopId, order.getShopId())) {
             throw new YamiShopBindException("您没有权限获取该订单信息");
         }
-        orderService.printOrder(order);
-        return ServerResponseEntity.success();
+        String printResult = orderService.printOrder(order);
+        return ServerResponseEntity.success().setData(JSON.parse(printResult));
     }
 
     /**
@@ -135,7 +140,7 @@ public class OrderController {
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(deliveryOrderParam.getOrderNumber());
         for (OrderItem orderItem : orderItems) {
             productService.removeProductCacheByProdId(orderItem.getProdId());
-            skuService.removeSkuCacheBySkuId(orderItem.getSkuId(),orderItem.getProdId());
+            skuService.removeSkuCacheBySkuId(orderItem.getSkuId(), orderItem.getProdId());
         }
         return ServerResponseEntity.success();
     }
@@ -281,6 +286,7 @@ public class OrderController {
 
     /**
      * 输出excel
+     *
      * @param response
      * @param writer
      */

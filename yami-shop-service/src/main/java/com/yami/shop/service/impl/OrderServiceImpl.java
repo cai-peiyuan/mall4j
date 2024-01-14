@@ -12,6 +12,9 @@ package com.yami.shop.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -25,6 +28,7 @@ import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
 import com.yami.shop.bean.model.UserAddrOrder;
 import com.yami.shop.bean.param.OrderParam;
+import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageAdapter;
 import com.yami.shop.dao.OrderItemMapper;
 import com.yami.shop.dao.OrderMapper;
@@ -34,12 +38,14 @@ import com.yami.shop.service.OrderItemService;
 import com.yami.shop.service.OrderService;
 import com.yami.shop.service.UserAddrOrderService;
 import com.yami.shop.service.UserService;
+import com.yly.print_sdk_library.RequestMethod;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +75,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     private final OrderItemService orderItemService;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public Order getOrderByOrderNumber(String orderNumber) {
@@ -199,19 +207,50 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 打印订单信息
+     *
      * @param order
      */
     @Override
-    public void printOrder(Order order) {
+    public String printOrder(Order order) {
+        String print_order_auto = (String) redisTemplate.opsForHash().get("sys:config", "print_order_auto");
+        String print_machine_code = (String) redisTemplate.opsForHash().get("sys:config", "print_machine_code");
+        String print_order_content_template = (String) redisTemplate.opsForHash().get("sys:config", "print_order_content_template");
 
+        if (StrUtil.isBlank(print_machine_code)) {
+            throw new YamiShopBindException("请在系统参数中设置系统打印机设备编码[" + print_machine_code + "]");
+        }
+        String printer = (String) redisTemplate.opsForHash().get("sys:printer", print_machine_code);
+
+        if (StrUtil.isBlank(printer)) {
+            throw new YamiShopBindException("请在系统打印机中设置系统打印机设备编码[" + print_machine_code + "]");
+        }
+
+        if (StrUtil.isBlank(print_order_content_template)) {
+            throw new YamiShopBindException("请在系统参数中设置系统订单打印模板[" + print_order_content_template + "]");
+        }
+
+        JSONObject jsonObject = JSON.parseObject(printer);
+        String accessToken = jsonObject.getString("accessToken");
+        String clientId = jsonObject.getString("clientId");
+        String clientSecret = jsonObject.getString("clientSecret");
+        RequestMethod.init(clientId, clientSecret);
+        RequestMethod instance = RequestMethod.getInstance();
+        try {
+            //{"error":0,"error_description":"success","timestamp":1705251051,"body":{"id":2540003905,"origin_id":"1"}}
+            String printResult = instance.printIndex(accessToken, print_machine_code, print_order_content_template, order.getOrderNumber());
+            return printResult;
+        } catch (Exception e) {
+            throw new YamiShopBindException("打印订单出错，订单编号[" + order.getOrderNumber() + "]，错误信息[" + e.getLocalizedMessage() + "]");
+        }
     }
 
     /**
      * 设置订单附加信息
+     *
      * @param order
      */
     @Override
-    public void setOrderExtraInfo(Order order){
+    public void setOrderExtraInfo(Order order) {
         //订单商品信息
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(order.getOrderNumber());
         order.setOrderItems(orderItems);

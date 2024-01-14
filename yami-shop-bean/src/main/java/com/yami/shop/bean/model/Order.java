@@ -172,6 +172,12 @@ public class Order implements Serializable {
      */
     private Integer refundSts;
 
+
+    /**
+     * 打印次数
+     */
+    private Integer printTimes;
+
     /**
      * 优惠总额
      */
