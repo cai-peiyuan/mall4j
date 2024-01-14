@@ -13,6 +13,7 @@ package com.yami.shop.common.config;
 import com.yami.shop.common.bean.AliDaYu;
 import com.yami.shop.common.bean.ImgUpload;
 import com.yami.shop.common.bean.Qiniu;
+import com.yami.shop.common.bean.YlyPrint;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -48,5 +49,10 @@ public class ShopBasicConfig {
 	 * 本地文件上传配置
 	 */
 	private ImgUpload imgUpload;
+
+	/**
+	 * 易联云打印机配置参数
+	 */
+	private YlyPrint ylyPrint;
 
 }
