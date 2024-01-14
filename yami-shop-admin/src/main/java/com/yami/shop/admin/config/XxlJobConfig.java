@@ -40,26 +40,46 @@ public class XxlJobConfig {
     @Value("${xxl-job.logPath}")
     private String logPath;
 
+    @Value("${xxl-job.logretentiondays}")
+    private int logRetentionDays;
+
     @Value("${server.port}")
     private int port;
 
     @Autowired
     private InetUtils inetUtils;
 
-//    @Bean
-//    public XxlJobSpringExecutor xxlJobExecutor() {
-//
-//        logger.info(">>>>>>>>>>> xxl-job config init.");
-//        XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-//        xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
-//        xxlJobSpringExecutor.setAppname("mall4j");
-//        // 针对多网卡、容器内部署等情况，可借助 "spring-cloud-commons" 提供的 "InetUtils" 组件灵活定制注册IP
-//        xxlJobSpringExecutor.setIp(inetUtils.findFirstNonLoopbackAddress().getHostAddress());
-//        xxlJobSpringExecutor.setPort(port + 1000);
-//        xxlJobSpringExecutor.setAccessToken(accessToken);
-//        xxlJobSpringExecutor.setLogPath(logPath);
-//        xxlJobSpringExecutor.setLogRetentionDays(3);
-//        return xxlJobSpringExecutor;
-//    }
+    @Bean
+    public XxlJobSpringExecutor xxlJobExecutor() {
 
+        logger.info(">>>>>>>>>>> xxl-job config init.");
+        XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
+        xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
+        xxlJobSpringExecutor.setAppname("mall4j");
+        xxlJobSpringExecutor.setAddress("");
+        // 针对多网卡、容器内部署等情况，可借助 "spring-cloud-commons" 提供的 "InetUtils" 组件灵活定制注册IP
+        xxlJobSpringExecutor.setIp(inetUtils.findFirstNonLoopbackAddress().getHostAddress());
+        xxlJobSpringExecutor.setPort(port + 1000);
+        xxlJobSpringExecutor.setAccessToken(accessToken);
+        xxlJobSpringExecutor.setLogPath(logPath);
+        xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
+        return xxlJobSpringExecutor;
+    }
+
+    /**
+     * 针对多网卡、容器内部署等情况，可借助 "spring-cloud-commons" 提供的 "InetUtils" 组件灵活定制注册IP；
+     *
+     *      1、引入依赖：
+     *          <dependency>
+     *             <groupId>org.springframework.cloud</groupId>
+     *             <artifactId>spring-cloud-commons</artifactId>
+     *             <version>${version}</version>
+     *         </dependency>
+     *
+     *      2、配置文件，或者容器启动变量
+     *          spring.cloud.inetutils.preferred-networks: 'xxx.xxx.xxx.'
+     *
+     *      3、获取IP
+     *          String ip_ = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
+     */
 }
