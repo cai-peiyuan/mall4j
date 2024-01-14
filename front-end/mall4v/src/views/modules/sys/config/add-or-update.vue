@@ -25,6 +25,8 @@
         prop="paramValue"
       >
         <el-input
+          type="textarea"
+          autosize
           v-model="dataForm.paramValue"
           placeholder="参数值"
         />
