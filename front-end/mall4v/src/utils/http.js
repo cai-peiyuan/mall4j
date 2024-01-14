@@ -67,7 +67,7 @@ http.interceptors.response.use(
       // eslint-disable-next-line no-console
       console.error('============== 请求异常 ==============', '\n', `接口地址: ${response.config.url.replace(import.meta.env.VITE_APP_BASE_API, '')}`, '\n', `异常信息: ${res}`, '\n', '============== 请求异常 end ==========')
       ElMessage({
-        message: '服务器出了点小差，请稍后再试',
+        message: res.msg,
         type: 'error',
         duration: 1.5 * 1000,
         customClass: 'element-error-message-zindex'
@@ -101,7 +101,7 @@ http.interceptors.response.use(
         break
       case 500:
         ElMessage({
-          message: '服务器出了点小差，请稍后再试',
+          message: '服务出错请联系管理员~~~',
           type: 'error',
           duration: 1500,
           customClass: 'element-error-message-zindex'
