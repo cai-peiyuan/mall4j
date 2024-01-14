@@ -388,10 +388,18 @@ const onAddOrUpdate = (val) => {
   })
 }
 /**
- * 新增 / 修改
- * @param val
+ * 打印订单
+ * @param orderNumber
  */
-const printOrder = (val) => {
+const printOrder = (orderNumber) => {
+  // 请求打印订单接口
+  http({
+    url: http.adornUrl(`/order/order/printOrder/${orderNumber}`),
+    method: 'get',
+    params: http.adornParams()
+  }).then(({ data }) => {
+    console.log(data)
+  })
 }
 
 const consignmentInfoRef = ref(null)

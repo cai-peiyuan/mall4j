@@ -118,4 +118,16 @@ public interface OrderService extends IService<Order> {
      * @return
      */
     OrderCountData getOrderCount(String userId);
+
+    /**
+     * 打印订单信息
+     * @param order
+     */
+    void printOrder(Order order);
+
+    /**
+     * 设置订单附加信息
+     * @param order
+     */
+    void setOrderExtraInfo(Order order);
 }

@@ -18,11 +18,9 @@ import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
-import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
-import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.model.UserAddrOrder;
 import com.yami.shop.bean.param.DeliveryOrderParam;
 import com.yami.shop.bean.param.OrderParam;
@@ -30,8 +28,10 @@ import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.security.admin.util.SecurityUtils;
-import com.yami.shop.service.*;
-import com.yami.shop.sys.service.SysUserService;
+import com.yami.shop.service.OrderItemService;
+import com.yami.shop.service.OrderService;
+import com.yami.shop.service.ProductService;
+import com.yami.shop.service.SkuService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -56,19 +56,10 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private OrderItemService orderItemService;
-
-    @Autowired
-    private UserAddrOrderService userAddrOrderService;
-
-    @Autowired
-    private UserService userService;
-
     @Autowired
     private ProductService productService;
-
     @Autowired
     private SkuService skuService;
 
@@ -89,6 +80,7 @@ public class OrderController {
 
     /**
      * 获取订单详细信息
+     * @author cpy
      */
     @GetMapping("/orderInfo/{orderNumber}")
     @PreAuthorize("@pms.hasPermission('order:order:info')")
@@ -98,17 +90,23 @@ public class OrderController {
         if (!Objects.equal(shopId, order.getShopId())) {
             throw new YamiShopBindException("您没有权限获取该订单信息");
         }
-        //订单商品信息
-        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(orderNumber);
-        order.setOrderItems(orderItems);
-        //订单收货地址
-        UserAddrOrder userAddrOrder = userAddrOrderService.getById(order.getAddrOrderId());
-        order.setUserAddrOrder(userAddrOrder);
-        //订单用户信息
-        UserInfoDto userInfoDto = userService.getUserInfoById(order.getUserId());
-
-        order.setUserInfo(userInfoDto);
+        orderService.setOrderExtraInfo(order);
         return ServerResponseEntity.success(order);
+    }
+    /**
+     * 打印订单
+     * @author cpy
+     */
+    @GetMapping("/printOrder/{orderNumber}")
+    @PreAuthorize("@pms.hasPermission('order:order:info')")
+    public ServerResponseEntity<Void> printOrder(@PathVariable("orderNumber") String orderNumber) {
+        Long shopId = SecurityUtils.getSysUser().getShopId();
+        Order order = orderService.getOrderByOrderNumber(orderNumber);
+        if (!Objects.equal(shopId, order.getShopId())) {
+            throw new YamiShopBindException("您没有权限获取该订单信息");
+        }
+        orderService.printOrder(order);
+        return ServerResponseEntity.success();
     }
 
     /**

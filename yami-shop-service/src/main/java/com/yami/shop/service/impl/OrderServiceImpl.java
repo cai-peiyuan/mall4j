@@ -17,20 +17,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
+import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.event.CancelOrderEvent;
 import com.yami.shop.bean.event.ReceiptOrderEvent;
 import com.yami.shop.bean.event.SubmitOrderEvent;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
+import com.yami.shop.bean.model.UserAddrOrder;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.common.util.PageAdapter;
 import com.yami.shop.dao.OrderItemMapper;
 import com.yami.shop.dao.OrderMapper;
 import com.yami.shop.dao.ProductMapper;
 import com.yami.shop.dao.SkuMapper;
+import com.yami.shop.service.OrderItemService;
 import com.yami.shop.service.OrderService;
+import com.yami.shop.service.UserAddrOrderService;
 import com.yami.shop.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -59,6 +64,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final ProductMapper productMapper;
 
     private final ApplicationEventPublisher eventPublisher;
+
+    private final UserAddrOrderService userAddrOrderService;
+
+    private final OrderItemService orderItemService;
+
 
     @Override
     public Order getOrderByOrderNumber(String orderNumber) {
@@ -187,5 +197,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return orderMapper.getOrderCount(userId);
     }
 
+    /**
+     * 打印订单信息
+     * @param order
+     */
+    @Override
+    public void printOrder(Order order) {
+
+    }
+
+    /**
+     * 设置订单附加信息
+     * @param order
+     */
+    @Override
+    public void setOrderExtraInfo(Order order){
+        //订单商品信息
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(order.getOrderNumber());
+        order.setOrderItems(orderItems);
+        //订单收货地址
+        UserAddrOrder userAddrOrder = userAddrOrderService.getById(order.getAddrOrderId());
+        order.setUserAddrOrder(userAddrOrder);
+        //订单用户信息
+        UserInfoDto userInfoDto = userService.getUserInfoById(order.getUserId());
+        order.setUserInfo(userInfoDto);
+    }
 
 }
