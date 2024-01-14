@@ -96,6 +96,7 @@
             }
         ]
     },
+    "lazyCodeLoading": "requiredComponents",
     "requiredPrivateInfos": ["chooseAddress"],
     "sitemapLocation": "sitemap.json"
 }
