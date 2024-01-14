@@ -12,6 +12,7 @@
         <result column="pay_type" jdbcType="INTEGER" property="payType"/>
         <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="print_times" jdbcType="INTEGER" property="printTimes"/>
         <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
         <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
         <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
@@ -81,6 +82,7 @@
         <result column="pay_type" jdbcType="INTEGER" property="payType"/>
         <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="print_times" jdbcType="INTEGER" property="printTimes"/>
         <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
         <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
         <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
@@ -124,6 +126,7 @@
         <result column="pay_type" jdbcType="INTEGER" property="payType"/>
         <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="print_times" jdbcType="INTEGER" property="printTimes"/>
         <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
         <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
         <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>

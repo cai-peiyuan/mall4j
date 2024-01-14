@@ -230,8 +230,9 @@
                     >
                       查看
                     </el-button>
+                    <span v-if="order.printTimes > 0">已打印次数：{{ order.printTimes }}</span>
                     <el-button
-                      v-if="isAuth('order:order:print')"
+                      v-if="isAuth('order:order:print') && order.printTimes == 0"
                       type="text"
                       @click="printOrder(order.orderNumber)"
                     >
