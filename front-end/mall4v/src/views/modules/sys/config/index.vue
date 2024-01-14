@@ -11,6 +11,7 @@
     >
       <template #menu-left>
         <el-button
+          v-if="isAuth('sys:config:save')"
           type="primary"
           icon="el-icon-plus"
           @click.stop="onAddOrUpdate()"
@@ -54,9 +55,15 @@
 </template>
 
 <script setup>
+import { isAuth } from '@/utils'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { tableOption } from '@/crud/sys/config.js'
+import AddOrUpdate from './add-or-update.vue'
+
 const dataList = ref([])
+const dataListLoading = ref(false)
+const dataListSelections = ref([])
+const addOrUpdateVisible = ref(false)
 const page = reactive({
   total: 0, // 总页数
   currentPage: 1, // 当前页数
@@ -82,6 +89,7 @@ const getDataList = (pageParam, params, done) => {
     .then(({ data }) => {
       dataList.value = data.records
       page.total = data.total
+      dataListLoading.value = false
       if (done) done()
     })
 }
@@ -92,7 +100,6 @@ const onSearch = (params, done) => {
   getDataList(page, params, done)
 }
 
-const dataListSelections = ref([])
 /**
  * 多选变化
  */
@@ -100,15 +107,15 @@ const selectionChange = (val) => {
   dataListSelections.value = val
 }
 
-const addOrUpdateVisible = ref(false)
-const addOrUpdate = ref(null)
+const addOrUpdateRef = ref(null)
+
 /**
  * 新增 / 修改
  */
 const onAddOrUpdate = (id) => {
   addOrUpdateVisible.value = true
   nextTick(() => {
-    addOrUpdate.value?.init(id)
+    addOrUpdateRef.value?.init(id)
   })
 }
 /**
