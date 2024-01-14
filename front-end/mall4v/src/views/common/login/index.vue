@@ -18,14 +18,20 @@
           label-width="60px"
           @keyup.enter="dataFormSubmit()"
         >
-          <el-form-item prop="userName" label="账号">
+          <el-form-item
+            prop="userName"
+            label="账号"
+          >
             <el-input
               v-model="dataForm.userName"
               class="info"
               placeholder="帐号"
             />
           </el-form-item>
-          <el-form-item prop="password" label="密码">
+          <el-form-item
+            prop="password"
+            label="密码"
+          >
             <el-input
               v-model="dataForm.password"
               class="info"
