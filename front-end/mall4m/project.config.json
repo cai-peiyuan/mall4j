@@ -1,7 +1,8 @@
 {
     "description": "项目配置文件",
     "packOptions": {
-        "ignore": []
+        "ignore": [],
+        "include": []
     },
     "setting": {
         "urlCheck": true,
@@ -29,34 +30,22 @@
         "minifyWXSS": true,
         "disableUseStrict": false,
         "ignoreUploadUnusedFiles": true,
-        "minifyWXML": true
+        "minifyWXML": true,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
+        }
     },
     "compileType": "miniprogram",
     "libVersion": "2.23.2",
-    "appid": "wx6fa71e69231a4fa4",
+    "appid": "wxa6a1e944be3cc470",
     "projectname": "mall4m",
-    "debugOptions": {
-        "hidedInDevtools": []
-    },
-    "isGameTourist": false,
     "simulatorType": "wechat",
     "simulatorPluginLibVersion": {},
-    "condition": {
-        "search": {
-            "list": []
-        },
-        "conversation": {
-            "list": []
-        },
-        "plugin": {
-            "list": []
-        },
-        "game": {
-            "currentL": -1,
-            "list": []
-        },
-        "miniprogram": {
-            "list": []
-        }
+    "condition": {},
+    "editorSetting": {
+        "tabIndent": "insertSpaces",
+        "tabSize": 4
     }
 }
