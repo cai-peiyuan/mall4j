@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.yami.shop</groupId>
         <artifactId>yami-shop</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.24.0115</version>
     </parent>
 
 

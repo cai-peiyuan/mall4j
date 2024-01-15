@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.yami.shop</groupId>
     <artifactId>yami-shop</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.24.0115</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <yami.shop.version>0.0.1-SNAPSHOT</yami.shop.version>
+        <yami.shop.version>1.24.0115</yami.shop.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>

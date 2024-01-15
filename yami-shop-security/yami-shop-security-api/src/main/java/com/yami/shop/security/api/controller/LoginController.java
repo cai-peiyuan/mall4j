@@ -107,7 +107,7 @@ public class LoginController {
         UserInfoInTokenBO userInfoInTokenBO = new UserInfoInTokenBO();
         userInfoInTokenBO.setUserId(user.getUserId());
         userInfoInTokenBO.setNickName(user.getNickName());
-        // userInfoInTokenBO.setUserMobile(DesensitizedUtil.mobilePhone(user.getUserMobile()));
+        userInfoInTokenBO.setUserMobile(DesensitizedUtil.mobilePhone(user.getUserMobile()));
         userInfoInTokenBO.setUserMobile(user.getUserMobile());
         userInfoInTokenBO.setPic(user.getPic());
         userInfoInTokenBO.setSysType(SysTypeEnum.ORDINARY.value());
