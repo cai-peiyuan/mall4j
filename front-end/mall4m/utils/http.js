@@ -1,11 +1,11 @@
 var config = require("config.js");
 
 //统一的网络请求方法
-function request(params, isGetTonken) {
+function request(params, isGetToken) {
   // 全局变量
   var globalData = getApp().globalData;
   // 如果正在进行登陆，就将非登陆请求放在队列中等待登陆完毕后进行调用
-  // if (!isGetTonken && globalData.isLanding) {
+  // if (!isGetToken && globalData.isLanding) {
   //   globalData.requestQueue.push(params);
   //   return;
   // }
@@ -50,7 +50,7 @@ function request(params, isGetTonken) {
           return
         }
         wx.showToast({
-          title: '服务器出了点小差~',
+          title: responseData.msg,
           icon: 'none'
         })
       }
@@ -97,7 +97,7 @@ function request(params, isGetTonken) {
  * 微信登录
  * @param {*} wxLoginCode
  */
-var wxLogin = function (wxLoginCode) {
+const wxLogin = function (wxLoginCode) {
   let _this = this;
   // 发送 res.code 到后台换取 openId, sessionKey, unionId
   request({

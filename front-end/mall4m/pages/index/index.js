@@ -160,6 +160,9 @@ Page({
     console.log(item.pagePath)
     console.log(item.text)
   },
+  /**
+   * 获取首页数据
+   */
   getAllData() {
     // http.getCartCount(); //重新计算购物车总数量
     this.getIndexImgs();

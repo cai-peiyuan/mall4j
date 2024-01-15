@@ -8,12 +8,9 @@
         "pages/submit-order/submit-order",
         "pages/express-delivery/express-delivery",
         "pages/pay-result/pay-result",
-        "pages/login/login",
-        "pages/user-info/pages/ticketCenter/ticketCenter",
-        "pages/user-info/pages/myTicket/myTicket"
+        "pages/login/login"
     ],
-    "subPackages": [
-        {
+    "subPackages": [{
             "root": "pages/balance/",
             "pages": [
                 "pages/user-balance/user-balance",
@@ -25,6 +22,14 @@
             "pages": [
                 "pages/delivery-address/delivery-address",
                 "pages/editAddress/editAddress"
+            ]
+        },
+        {
+            "root": "pages/user-info/",
+            "pages": [
+                "pages/binding-phone/binding-phone",
+                "pages/ticketCenter/ticketCenter",
+                "pages/myTicket/myTicket"
             ]
         },
         {
@@ -65,8 +70,7 @@
     "tabBar": {
         "selectedColor": "#3a86b9",
         "color": "#b8b8b8",
-        "list": [
-            {
+        "list": [{
                 "pagePath": "pages/index/index",
                 "text": "首页",
                 "iconPath": "images/tabbar/homepage.png",

@@ -15,6 +15,7 @@ Page({
     collectionCount: 0,
     openSource: true,
     newNickName: '',
+    phonenum: '',
     closeEye:true,
   },
 
@@ -23,6 +24,10 @@ Page({
    */
   onLoad: function(options) {
     let userInfo = this.getLoginedUserInfo();
+    let userMobile = this.data.userMobile;
+    this.setData({
+        phonenum: userMobile
+      });
   },
 
   /**
@@ -104,9 +109,13 @@ Page({
       avatarUrl: avatarUrl,
     })
   },
+
+  /**
+   * 打开隐藏显示手机号
+   */
   changeEye(){
-      this.setData({closeEye:!this.data.closeEye})
-        console.log(this.data.closeEye)
+    this.setData({closeEye:!this.data.closeEye})
+    console.log(this.data.closeEye)
   },
   setInputValue: function (e) {
     console.log("写入：", e.detail.value);
@@ -216,6 +225,10 @@ Page({
     })
   },
 
+  desensitiveMobile: function(theMobile){
+    console.log('加密手机号', theMobile);
+    return theMobile;
+  },
   /**
  * 退出登录
  */

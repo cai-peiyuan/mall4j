@@ -10,13 +10,15 @@
                 <view class='userinfo-name' style="margin-top: 0;">
                     <input type="nickname" style="color:#fff; text-align: left;" placeholder-style="color:#fff" class='userinfo-name' placeholder="请输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
                 </view>
-                <view class='userinfo-name' wx:if="{{closeEye == true}}" style="padding-right: 7vw; justify-content: flex-start;">
-                    <text bindtap='toBindingPhone'>{{userMobile.length==11? userMobile.substr(0, 3) + '****' + userMobile.substr(7):null}}</text>
-                    <image src="/images/icon/eye-close.png" mode="widthFix" style="width:3vw;margin-left: 2vw;" bindtap="changeEye"/>
-                </view>
-                <view class='userinfo-name' wx:if="{{closeEye == false}}" style="padding-right: 7vw; justify-content: flex-start">
-                    <text bindtap='toBindingPhone'>{{userMobile}}</text>
-                    <image src="/images/icon/eye-open.png" mode="widthFix" style="width:3vw;margin-left: 2vw" bindtap="changeEye"/>
+                <view wx:if="userMobile">
+                    <view class='userinfo-name' wx:if="{{userMobile !=null && closeEye == true}}" style="padding-right: 7vw; justify-content: flex-start;">
+                        <text bindtap='toBindingPhone'>{{desensitiveMobile(phonenum)}}</text>
+                        <image src="/images/icon/eye-close.png" mode="widthFix" style="width:3vw;margin-left: 2vw;" bindtap="changeEye" />
+                    </view>
+                    <view class='userinfo-name' wx:if="{{closeEye == false}}" style="padding-right: 7vw; justify-content: flex-start">
+                        <text bindtap='toBindingPhone'>{{userMobile}}</text>
+                        <image src="/images/icon/eye-open.png" mode="widthFix" style="width:3vw;margin-left: 2vw" bindtap="changeEye" />
+                    </view>
                 </view>
             </view>
         </view>
@@ -26,24 +28,24 @@
             <view>
                 <view style="display: flex; justify-content: space-around;color:#fff">
                     <view class='userinfo-name' bindtap='toUserBalancePage' style="flex-direction: column;">
-                        <view style="font-size:22px; font-weight:600;">
+                        <view style="font-size:22px;">
                             888.00
                         </view>
                         <view>
                             余额
                         </view>
-                        
+
                     </view>
-                    <view class='userinfo-name'  style="flex-direction: column;">
-                        <view style="font-size:22px; font-weight:600;">
+                    <view class='userinfo-name' style="flex-direction: column;">
+                        <view style="font-size:22px;">
                             888
                         </view>
                         <view>
                             积分
                         </view>
                     </view>
-                    <view class='userinfo-name'  style="flex-direction: column;">
-                        <view style="font-size:22px; font-weight:600;">
+                    <view class='userinfo-name' style="flex-direction: column;">
+                        <view style="font-size:22px;">
                             3
                         </view>
                         <view>
@@ -51,7 +53,7 @@
                         </view>
                     </view>
                 </view>
-               
+
 
                 <view class='userinfo-name'>
                 </view>
@@ -181,7 +183,7 @@
                 <view class='arrowhead'></view>
             </view>
 
-            
+
             <view class='memu-item' bindtap='toAboutUsPage'>
                 <view class="i-name">
                     <image src='../../images/icon/myAddr.png'></image>
@@ -190,10 +192,10 @@
                 <view class='arrowhead'></view>
             </view>
         </view>
-    <!--end 列表项 -->
-</view>
+        <!--end 列表项 -->
+    </view>
 
-<!-- <view class="log-out" bindtap="logout" wx:if="isAuthInfo">
+    <!-- <view class="log-out" bindtap="logout" wx:if="isAuthInfo">
     <view class="log-out-n" wx:if="false">
       <text>退出登录</text>
     </view>
