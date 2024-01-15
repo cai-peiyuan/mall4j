@@ -14,7 +14,7 @@ Page({
      */
     toUserBalanceDetailPage: function(e){
         wx.navigateTo({
-            url: 'pages/user-balance-detail/user-balance-detail',
+            url: '/pages/balance/pages/user-balance-detail/user-balance-detail',
           })
     },
     /**
