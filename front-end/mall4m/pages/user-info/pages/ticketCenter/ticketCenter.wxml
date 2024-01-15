@@ -1,0 +1,38 @@
+<!--pages/user-info/pages/myTicket/myTicket.wxml-->
+<view class="container">
+    <view class="couponList" style="padding:3vw;">
+        <view class="couponItem" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+            <view class="couponName">
+                {{index}}满200减30券
+            </view>
+            <view class="couponRange">
+                使用范围：XXXXXXXXX
+            </view>
+            <view class="availDate">
+                有效期：2020年03月03日 至 2024年1月1日
+            </view>
+            <view class="seperateLine">
+            </view>
+            <view class="gettingDate">
+                <button size="mini">立即领取</button>
+            </view>
+        </view>
+        <view class="couponItem couponed" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+            <image src="/images/icon/conponed.png" mode="widthFix" class="conponedImg"/>
+            <view class="couponName">
+                {{index}}满200减30券
+            </view>
+            <view class="couponRange">
+                使用范围：XXXXXXXXX
+            </view>
+            <view class="availDate">
+                有效期：2020年03月03日 至 2024年1月1日
+            </view>
+            <view class="seperateLine">
+            </view>
+            <view class="gettingDate">
+                <button size="mini" style="background-color: #eee;" disabled="true">已领取</button>
+            </view>
+        </view>
+    </view>
+</view>

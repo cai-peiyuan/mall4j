@@ -2,20 +2,20 @@
 <view class='container'>
     <!-- 用户信息 -->
     <view class='userinfo' style="box-sizing:border-box;background:linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);">
-        <view style="display: flex; justify-content: flex-start; ">
-            <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" style="min-width: 66px;">
+        <view style="display: flex; justify-content: flex-start; height: 66px; padding-bottom: 1vw;">
+            <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" style="min-width: 66px; margin-right: 0;">
                 <image class="avatar" src="{{avatarUrl}}"></image>
             </button>
-            <view style="color:#fff;">
-                <view class='userinfo-name'>
-                    <input type="nickname" style="color:#fff;" placeholder-style="color:#fff" class='userinfo-name' placeholder="请输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
+            <view style="color:#fff; padding-left: 7vw;">
+                <view class='userinfo-name' style="margin-top: 0;">
+                    <input type="nickname" style="color:#fff; text-align: left;" placeholder-style="color:#fff" class='userinfo-name' placeholder="请输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
                 </view>
-                <view class='userinfo-name' wx:if="{{closeEye == true}}" style="padding-right: 7vw; justify-content: flex-end;">
-                    <text bindtap='toBindingPhone'>{{userMobile?"186****9890":"****"}}</text>
+                <view class='userinfo-name' wx:if="{{closeEye == true}}" style="padding-right: 7vw; justify-content: flex-start;">
+                    <text bindtap='toBindingPhone'>{{userMobile.length==11? userMobile.substr(0, 3) + '****' + userMobile.substr(7):null}}</text>
                     <image src="/images/icon/eye-close.png" mode="widthFix" style="width:3vw;margin-left: 2vw;" bindtap="changeEye"/>
                 </view>
-                <view class='userinfo-name' wx:if="{{closeEye == false}}" style="padding-right: 7vw; justify-content: flex-end">
-                    <text bindtap='toBindingPhone'>{{userMobile?"18630389890":"18630389890"}}</text>
+                <view class='userinfo-name' wx:if="{{closeEye == false}}" style="padding-right: 7vw; justify-content: flex-start">
+                    <text bindtap='toBindingPhone'>{{userMobile}}</text>
                     <image src="/images/icon/eye-open.png" mode="widthFix" style="width:3vw;margin-left: 2vw" bindtap="changeEye"/>
                 </view>
             </view>

@@ -1,0 +1,72 @@
+/* pages/user-info/pages/ticketCenter/ticketCenter.wxss */
+/* pages/user-info/pages/myTicket/myTicket.wxss */
+/* .container{min-height: 100vh;} */
+.couponItem{
+    box-sizing: border-box;
+    margin: 0 auto 4vw;
+    width:92vw;
+    min-height:40vw; 
+    background-color: #f57a5f;
+    border-radius: 4vw;
+    color:#fff;
+    position: relative;
+}
+.couponName{
+    font-size: 20px; 
+    color:#fff;
+    padding:4vw 4vw 0;
+}
+.couponRange{
+    padding:2vw 4vw;
+    font-size: 14px;
+    height: 8vw;
+}
+.availDate{
+    padding:0 4vw;
+    font-size: 12px; 
+    /* margin-top: 0vw; */
+}
+.gettingDate{
+    position: absolute;
+    bottom:1vw;
+    right:4vw;
+    color:#000;
+    font-size: 12px; 
+}
+.couponItemDisable{
+    background-color: rgb(175, 172, 172);
+}
+.seperateLine{
+    border-bottom: dashed 1px #eee;
+    margin-top: 3vw;
+    position:relative;
+}
+.seperateLine::before,.seperateLine::after{
+    content: "";
+    width:5vw;
+    height: 5vw;
+    border-radius: 50%;
+    /* border:solid 1px red; */
+    position:absolute;
+    left:-2.5vw;
+    top:-2.5vw;
+    background-color: #fff;
+}
+.seperateLine::after{
+    left:auto;
+    right:-2.5vw;
+}
+.outDateImg{
+    position: absolute;
+    right: 3vw;
+    top: 3vw;
+}
+.couponed{background-color: rgb(243, 196, 196);}
+.conponedImg{
+    width:25vw;
+    height: 25vw;
+    position: absolute;
+    z-index: 999;
+    top:2vw;
+    right:3vw;
+}

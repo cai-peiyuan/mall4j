@@ -175,16 +175,22 @@ Page({
   },
 
   toCouponCenter: function() {
-    wx.showToast({
-      icon: "none",
-      title: '即将上线'
+    // wx.showToast({
+    //   icon: "none",
+    //   title: '即将上线'
+    // })
+    wx.navigateTo({
+        url: '/pages/user-info/pages/ticketCenter/ticketCenter',
     })
   },
 
   toMyCouponPage: function() {
-    wx.showToast({
-      icon: "none",
-      title: '即将上线'
+    // wx.showToast({
+    //   icon: "none",
+    //   title: '即将上线'
+    // })
+    wx.navigateTo({
+        url: '/pages/user-info/pages/myTicket/myTicket',
     })
   },
 
