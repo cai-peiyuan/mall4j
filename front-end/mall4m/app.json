@@ -9,6 +9,7 @@
         "pages/express-delivery/express-delivery",
         "pages/pay-result/pay-result",
         "pages/login/login"
+		
     ],
     "subPackages": [
       {
