@@ -1,3 +1,44 @@
 <!--pages/user-balance/user-balance.wxml 用户储值余额页面-->
-<text>pages/user-balance/user-balance.wxml</text>
-<view bindtap="toUserBalanceDetailPage">余额明细</view>
+<!-- <text>pages/user-balance/user-balance.wxml</text> -->
+<view class='container'>
+  <view class="pageHead">
+    <view class="cardNo">
+      <view class="cardNoLeft"> No.1000000000</view>
+      <view style="font-size: 12px;" bindtap="toUserBalanceDetailPage">明细</view>
+    </view>
+    <view style="margin-top: 2vw;">账户余额</view>
+    <view class="bananceNum">¥79.10</view>
+  </view>
+  <view style="display: flex; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
+    <view class="activeTab">在线储值</view>
+    <view>储值券</view>
+  </view>
+  <view style="display: flex; padding:3vw; flex-wrap: wrap;">
+    <view class="rechargeItem rechargeItemActive">
+        <view class="rechargeNum"><span class="RMB">¥</span>100</view>
+        <view class="salePrice">售价¥100</view>
+    </view>
+    <view class="rechargeItem">
+        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
+        <view class="salePrice">售价¥300</view>
+    </view>
+    <view class="rechargeItem">
+        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
+        <view class="salePrice">售价¥300</view>
+    </view>
+    <view class="rechargeItem">
+        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
+        <view class="salePrice">售价¥300</view>
+    </view>
+    <view class="rechargeItem">
+        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
+        <view class="salePrice">售价¥300</view>
+    </view>
+  </view>
+  <view class="footerMenu" >
+    <view style="font-size: 14px; display: flex; align-items:baseline;">实付金额
+      <view style="display: flex; align-items:baseline; font-weight: bold; margin-left: 2vw;">¥ <view style="font-size: 26px; margin-left: 2vw; position: relative; top:0.5vw;">300</view></view> 
+    </view>
+    <view class="btnCharge">立即充值</view>
+  </view>
+</view>
