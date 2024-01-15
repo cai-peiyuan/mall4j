@@ -266,6 +266,7 @@ Page({
    * @param {} e 
    */
   toUserBalancePage: function(e){
+      console.log(1234);
     wx.navigateTo({
         url: '/pages/balance/pages/user-balance/user-balance',
       })
