@@ -79,6 +79,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 从文件中读取Java对象
+     *
      * @return order
      */
     public static Order testReadObject() {
@@ -304,6 +305,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         String print_order_auto = (String) redisTemplate.opsForHash().get("sys:config", "print_order_auto");
         String print_machine_code = (String) redisTemplate.opsForHash().get("sys:config", "print_machine_code");
         String print_order_content_template = (String) redisTemplate.opsForHash().get("sys:config", "print_order_content_template");
+        String service_tel = (String) redisTemplate.opsForHash().get("sys:config", "service_tel");
 
         if (StrUtil.isBlank(print_machine_code)) {
             throw new YamiShopBindException("请在系统参数中设置系统打印机设备编码[" + print_machine_code + "]");
@@ -326,8 +328,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         RequestMethod instance = RequestMethod.getInstance();
         try {
             //{"error":0,"error_description":"success","timestamp":1705251051,"body":{"id":2540003905,"origin_id":"1"}}
-            String printOrderContent = renderOrderPrintContentEnjoy(print_order_content_template, order, new HashMap());
-            String printResult = instance.printIndex(accessToken, print_machine_code, print_order_content_template, order.getOrderNumber());
+            String printOrderContent = renderOrderPrintContentEnjoy(print_order_content_template, order, new HashMap() {{
+                put("service_tel", service_tel);
+            }});
+            String printResult = instance.printIndex(accessToken, print_machine_code, printOrderContent, order.getOrderNumber());
             JSONObject jsonObject1 = JSON.parseObject(printResult);
             JSONObject body = jsonObject1.getJSONObject("body");
             int errorCode = jsonObject1.getInteger("error");
@@ -338,7 +342,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderMapper.updateOrdersPrintTimes(Lists.newArrayList(order));
                 // 添加打印日志
                 Map printLogMap = new HashMap();
-                printLogMap.put("print_content", print_order_content_template);
+                printLogMap.put("print_content", printOrderContent);
                 printLogMap.put("origin_id", origin_id);
                 printLogMap.put("machine_code", print_machine_code);
                 printLogMap.put("print_id", printId);

@@ -36,7 +36,7 @@ public class YlyTest {
         String s3 = instance.printGetVersion(accessToken, machineCode);
         System.out.println(s3);
         String content = "<FH><FB><center>袋鼠优选</center></FB></FH>\n" +
-                "********************************\\r\n" +
+                "********************************\n" +
                 "<FH>\n" +
                 "配送方式：商家配送\\r\n" +
                 "收件人：#(order?.userAddrOrder?.receiver)\\r\n" +
@@ -44,24 +44,25 @@ public class YlyTest {
                 "收货地址：#(order?.userAddrOrder?.province)#(order?.userAddrOrder?.city)#(order?.userAddrOrder?.area)#(order?.userAddrOrder?.addr)\\r\n" +
                 "下单时间：#(com.jfinal.ext.kit.DateKit::toStr(order?.createTime,\"yyyy-MM-dd HH:mm:ss\"))\\r\n" +
                 "订单号：#(order?.orderNumber)</FH>\\r\n" +
-                "********************************\\r<FH>\n" +
+                "*************商品***************\\r<FW>\n" +
                 "名称\t单价\t数量\t总价\n" +
                 "#for(item : order.getOrderItems())\n" +
-                "   #(item.prodName)\n" +
+                "#(com.yly.print_sdk_library.Utils::wrapString(item.prodName+'',4))\t#(item.price)\t#('x'+item.prodCount)\t#(item.productTotalAmount)\n" +
                 "#end\n" +
-                "果冻橙\t10\t10\t100\n" +
+                // "商家备注：\\r\n" +
+                "</FW>\n" +
+                "................................\n" +
                 "买家备注：#(order?.remarks)\n" +
-                "商家备注：\\r\n" +
-                "</FH>\n" +
-                "********************************\\r\n" +
                 "<FH>\n" +
                 "数量：#(order?.productNums)\\r" +
-                "订单总价：#(order?.total)\\r" +
                 "运费：#(order?.freightAmount)\\r" +
+                "原价：#(order?.total)\\r" +
                 "优惠：#(order?.reduceAmount)\\r" +
-                "<right>支付方式：#(order?.payType)</right>\n" +
-                "<right>支付时间：#(com.jfinal.ext.kit.DateKit::toStr(order?.payTime,\"yyyy-MM-dd HH:mm:ss\"))</right>\n" +
-                "<right>支付金额：#(order?.actualTotal)</right>\n" +
+                "总价：#(order?.actualTotal)\\r" +
+                "********************************\\r" +
+                "支付金额：#(order?.actualTotal)\n" +
+                "支付方式：#(com.yly.print_sdk_library.Utils::getPayType(order?.payType))\n" +
+                "支付时间：#(com.jfinal.ext.kit.DateKit::toStr(order?.payTime,\"yyyy-MM-dd HH:mm:ss\"))\n" +
                 "</FH>\n" +
                // "<BR>#(order?.orderNumber)</BR>\n" +
                // "<BR2>#(order?.orderNumber)</BR2>\n" +
@@ -76,6 +77,7 @@ public class YlyTest {
         Map map = new HashMap();
         map.put("service_tel","13102523363");
         String s4 = OrderServiceImpl.renderOrderPrintContentEnjoy(content, order, map);
+        s4 = instance.printIndex(accessToken, machineCode, s4, "1");
         System.out.println(s4);
         System.out.println(order);
         //{"error":0,"error_description":"success","timestamp":1705219209,"body":{"client_id":"1095183543","access_token":"10b26f4a88a54aceb1a4212ffcc5d97f","refresh_token":"d4900cc0bce74b2f9b491dd5816a71e8","machine_code":"","expires_in":2592000,"refresh_expires_in":3024000,"scope":"all"}}

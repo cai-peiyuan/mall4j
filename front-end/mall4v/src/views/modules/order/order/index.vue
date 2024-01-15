@@ -149,7 +149,7 @@
                   <div>
                     <span v-if="order.payType === 1">微信支付</span>
                     <span v-else-if="order.payType === 2">支付宝</span>
-                    <span v-else-if="order.payType === 3">储值卡</span>
+                    <span v-else-if="order.payType === 3">储值余额</span>
                     <span v-else>手动代付</span>
                   </div>
                 </div>
