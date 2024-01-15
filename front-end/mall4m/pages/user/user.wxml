@@ -25,7 +25,7 @@
         <view>
             <view>
                 <view style="display: flex; justify-content: space-around;color:#fff">
-                    <view class='userinfo-name' bindtap='toUserBalancePage'>
+                    <view class='userinfo-name' bindtap='toUserBalancePage' style="flex-direction: column;">
                         <view style="font-size:22px; font-weight:600;">
                             888.00
                         </view>
@@ -34,7 +34,7 @@
                         </view>
                         
                     </view>
-                    <view class='userinfo-name'>
+                    <view class='userinfo-name'  style="flex-direction: column;">
                         <view style="font-size:22px; font-weight:600;">
                             888
                         </view>
@@ -42,7 +42,7 @@
                             积分
                         </view>
                     </view>
-                    <view class='userinfo-name'>
+                    <view class='userinfo-name'  style="flex-direction: column;">
                         <view style="font-size:22px; font-weight:600;">
                             3
                         </view>
