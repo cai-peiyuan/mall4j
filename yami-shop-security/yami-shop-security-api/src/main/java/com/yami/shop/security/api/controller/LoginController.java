@@ -95,67 +95,20 @@ public class LoginController {
     }
 
 
-    /**
-     * 根据appid和 openid获取用户信息
-     *
-     * @param appId
-     * @param openId
-     * @param session_key
-     * @return
-     */
-    private User getUserByAppIdAndOpenId(String appId, String openId, String session_key) {
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getAppId, appId).eq(User::getOpenId, openId));
-        if (user == null) {
-            Date now = new Date();
-            user = new User();
-            user.setModifyTime(now);
-            user.setUserRegtime(now);
-            user.setStatus(1);
-            // user.setNickName(openId);
-            // user.setUserMail(openId);
-            user.setUserId(openId);
-            user.setOpenId(openId);
-            user.setAppId(appId);
-            user.setSessionKey(session_key);
-            userService.save(user);
-        } else {
-            if (!StrUtil.equals(user.getSessionKey(), session_key)) {
-                User upUser = new User();
-                upUser.setUserId(user.getUserId());
-                upUser.setSessionKey(session_key);
-                userService.updateById(upUser);
-            }
-        }
-        return user;
-    }
 
     @PostMapping("/wxLogin")
     @Operation(summary = "微信小程序登录", description = "通过账号/手机号/用户名密码登录，还要携带用户的类型，也就是用户所在的系统")
     public ServerResponseEntity<Object> wxLogin(@Valid @RequestBody WxLoginDTO wxLoginDTO) {
         String wxLoginCode = wxLoginDTO.getWxLoginCode();
-        String jscode2sessionUrl = "https://api.weixin.qq.com/sns/jscode2session";
-        String secret = "032c5873129b0bef34e835c4c259e76c";
-        String appId = "wxa6a1e944be3cc470";
-        String grantType = "authorization_code";
+        // 1. 通过小程序获取的微信用户信息 将微信用户写入数据库 并返回数据库中的用户数据
+        User user = userService.wxLogin(wxLoginCode);
 
-        String jscode2SessionResultStr = HttpUtil.get(jscode2sessionUrl, new HashMap() {
-            {
-                this.put("appid", appId);
-                this.put("secret", secret);
-                this.put("grant_type", grantType);
-                this.put("js_code", wxLoginCode);
-            }
-        });
-
-        JSONObject jsonObject = JSON.parseObject(jscode2SessionResultStr);
-        String openId = jsonObject.getString("openid");
-        String session_key = jsonObject.getString("session_key");
-        User user = getUserByAppIdAndOpenId(appId, openId, session_key);
         // 2. 登录
         UserInfoInTokenBO userInfoInTokenBO = new UserInfoInTokenBO();
         userInfoInTokenBO.setUserId(user.getUserId());
         userInfoInTokenBO.setNickName(user.getNickName());
-        userInfoInTokenBO.setUserMobile(DesensitizedUtil.mobilePhone(user.getUserMobile()));
+        // userInfoInTokenBO.setUserMobile(DesensitizedUtil.mobilePhone(user.getUserMobile()));
+        userInfoInTokenBO.setUserMobile(user.getUserMobile());
         userInfoInTokenBO.setPic(user.getPic());
         userInfoInTokenBO.setSysType(SysTypeEnum.ORDINARY.value());
         userInfoInTokenBO.setIsAdmin(0);

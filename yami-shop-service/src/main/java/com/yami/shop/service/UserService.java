@@ -23,6 +23,7 @@ import com.yami.shop.bean.param.UserRegisterParam;
 public interface UserService extends IService<User> {
     /**
      * 根据用户id获取用户信息
+     *
      * @param userId
      * @return
      */
@@ -30,6 +31,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 校验验证码
+     *
      * @param userRegisterParam
      * @param checkRegisterSmsFlag
      */
@@ -37,6 +39,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 绑定微信用户手机号
+     *
      * @param userId
      * @param bindPhoneParam
      */
@@ -44,8 +47,28 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取用户基础信息
+     *
      * @param userId
      * @return
      */
     UserInfoDto getUserInfoById(String userId);
+
+    /**
+     * 微信小程序登录
+     *
+     * @param wxLoginCode
+     * @return
+     */
+    User wxLogin(String wxLoginCode);
+
+
+    /**
+     * 通过小程序的appid和登录小程序的用户openid 获取本地数据库中存储的用户信息
+     * @param appId
+     * @param openId
+     * @param session_key
+     * @return
+     */
+    User getUserByAppIdAndOpenId(String appId, String openId, String session_key);
+
 }
