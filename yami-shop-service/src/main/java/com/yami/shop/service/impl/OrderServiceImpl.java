@@ -18,6 +18,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.app.dto.UserInfoDto;
@@ -30,10 +31,7 @@ import com.yami.shop.bean.model.UserAddrOrder;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageAdapter;
-import com.yami.shop.dao.OrderItemMapper;
-import com.yami.shop.dao.OrderMapper;
-import com.yami.shop.dao.ProductMapper;
-import com.yami.shop.dao.SkuMapper;
+import com.yami.shop.dao.*;
 import com.yami.shop.service.OrderItemService;
 import com.yami.shop.service.OrderService;
 import com.yami.shop.service.UserAddrOrderService;
@@ -62,6 +60,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final UserService userService;
 
     private final OrderMapper orderMapper;
+
+    private final CommonMapper commonMapper;
 
     private final SkuMapper skuMapper;
 
@@ -209,6 +209,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * 打印订单信息
      *
      * @param order
+     * @return
      */
     @Override
     public String printOrder(Order order) {
@@ -238,8 +239,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         try {
             //{"error":0,"error_description":"success","timestamp":1705251051,"body":{"id":2540003905,"origin_id":"1"}}
             String printResult = instance.printIndex(accessToken, print_machine_code, print_order_content_template, order.getOrderNumber());
+            JSONObject jsonObject1 = JSON.parseObject(printResult);
+            JSONObject body = jsonObject1.getJSONObject("body");
+            int errorCode = jsonObject1.getInteger("error");
+            if (errorCode == 0 && body != null) {
+                String printId = body.getString("id");
+                String origin_id = body.getString("origin_id");
+                // 更新订单打印次数
+                orderMapper.updateOrdersPrintTimes(Lists.newArrayList(order));
+                // 添加打印日志
+                Map printLogMap = new HashMap();
+                printLogMap.put("print_content", print_order_content_template);
+                printLogMap.put("origin_id", origin_id);
+                printLogMap.put("machine_code", print_machine_code);
+                printLogMap.put("print_id", printId);
+                printLogMap.put("order_number", order.getOrderNumber());
+                List<Map> maps = Lists.newArrayList(printLogMap);
+                commonMapper.addPrinterLogs(maps);
+            }
             return printResult;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new YamiShopBindException("打印订单出错，订单编号[" + order.getOrderNumber() + "]，错误信息[" + e.getLocalizedMessage() + "]");
         }
     }

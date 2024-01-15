@@ -342,6 +342,14 @@
         </foreach>
     </update>
 
+    <update id="updateOrdersPrintTimes">
+        UPDATE tz_order SET `print_times` = `print_times` + 1
+        WHERE order_id IN
+        <foreach collection="orders" item="order" open="(" close=")" separator=",">
+            #{order.orderId}
+        </foreach>
+    </update>
+
     <select id="getOrderCount" resultType="com.yami.shop.bean.app.dto.OrderCountData">
         SELECT
         COUNT(o.order_id) all_count,

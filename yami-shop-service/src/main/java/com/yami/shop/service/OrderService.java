@@ -122,6 +122,7 @@ public interface OrderService extends IService<Order> {
     /**
      * 打印订单信息
      * @param order
+     * @return
      */
     String printOrder(Order order);
 

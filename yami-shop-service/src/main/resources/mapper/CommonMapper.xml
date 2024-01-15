@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.CommonMapper">
+    <insert id="addPrinterLogs">
+        insert into tz_sys_printer_log (print_time,print_content,origin_id,client_id,machine_code,print_id,order_number)
+        values
+        <foreach collection="maps" item="map" separator=",">
+            (now(),#{map.print_content},#{map.origin_id},#{map.client_id},#{map.machine_code},#{map.print_id},#{map.print_id})
+        </foreach>
+    </insert>
+</mapper>

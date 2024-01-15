@@ -126,6 +126,12 @@ public interface OrderMapper extends BaseMapper<Order> {
     void deleteOrders(@Param("orders") List<Order> orders);
 
     /**
+     * 更新订单打印次数
+     * @param orders
+     */
+    void updateOrdersPrintTimes(@Param("orders") List<Order> orders);
+
+    /**
      * 根据用户id获取各个状态的订单数量
      * @param userId
      * @return
