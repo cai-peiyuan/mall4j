@@ -13,12 +13,18 @@ package com.yami.shop.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.template.Template;
+import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
+import cn.hutool.extra.template.TemplateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import com.jfinal.kit.Kv;
+import com.jfinal.template.Engine;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.app.dto.UserInfoDto;
@@ -47,6 +53,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,26 +64,104 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
+
     private final UserService userService;
-
     private final OrderMapper orderMapper;
-
     private final CommonMapper commonMapper;
-
     private final SkuMapper skuMapper;
-
     private final OrderItemMapper orderItemMapper;
-
     private final ProductMapper productMapper;
-
     private final ApplicationEventPublisher eventPublisher;
-
     private final UserAddrOrderService userAddrOrderService;
-
     private final OrderItemService orderItemService;
-
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    /**
+     * 从文件中读取Java对象
+     * @return order
+     */
+    public static Order testReadObject() {
+        try {
+            // 创建输入流并指定文件路径
+            FileInputStream fileIn = new FileInputStream("order.javaObj");
+            // 创建对象输入流
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            // 从文件读取对象
+            Order order = (Order) in.readObject();
+            // 关闭输入流
+            in.close();
+            fileIn.close();
+            // 输出读取的对象
+            System.out.println(order);
+            return order;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 将Java对象写入到一个文件中
+     *
+     * @param order
+     */
+    public static void testWriteObject(Order order) {
+        try {
+            // 创建输出流并指定文件路径
+            FileOutputStream fileOut = new FileOutputStream("order.javaObj");
+            // 创建对象输出流
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            // 将对象写入文件
+            out.writeObject(order);
+            // 关闭输出流
+            out.close();
+            fileOut.close();
+            System.out.println("对象已成功写入文件！");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 根据设置的打印模板生成打印订单小票内容
+     *
+     * @param print_order_content_template
+     * @param order
+     * @return
+     */
+    public static String renderOrderPrintContent(String print_order_content_template, Order order) {
+        //默认配置就够用了
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig());
+        //资源，根据实现不同，此资源可以是模板本身，也可以是模板的相对路径
+        Template template = engine.getTemplate(print_order_content_template);
+        //给STRING_TEMPLATE绑定数据
+        Map<String, Object> bindingMap = new HashMap<>(8);
+        bindingMap.put("order", order);
+//        bindingMap.put("plateNo", plateNo);
+//        bindingMap.put("plateColor", plateColor);
+//        bindingMap.put("passTime", passTime);
+//        bindingMap.put("crossName", crossName);
+        //最终渲染出来的样子
+        String text = template.render(bindingMap);
+        return text;
+    }
+
+    /**
+     * 根据设置的打印模板生成打印订单小票内容
+     *
+     * @param print_order_content_template
+     * @return
+     */
+    public static String renderOrderPrintContentEnjoy(String print_order_content_template, Order order, Map map) {
+        Engine engine = Engine.use();
+        engine.setStaticMethodExpression(true);
+        engine.setDevMode(true);
+        engine.setToClassPathSourceFactory();
+        com.jfinal.template.Template template = engine.getTemplateByString(print_order_content_template);
+        String result = template.renderToString(Kv.by("order", order).set(map));
+        return result;
+    }
 
     @Override
     public Order getOrderByOrderNumber(String orderNumber) {
@@ -114,7 +199,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderItemMapper.insertBatch(orderItems);
         return orderList;
     }
-
 
     /**
      * 订单发货
@@ -213,6 +297,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      */
     @Override
     public String printOrder(Order order) {
+        //order 信息添加附加信息
+        setOrderExtraInfo(order);
+        // 写入文件 供测试使用
+        testWriteObject(order);
         String print_order_auto = (String) redisTemplate.opsForHash().get("sys:config", "print_order_auto");
         String print_machine_code = (String) redisTemplate.opsForHash().get("sys:config", "print_machine_code");
         String print_order_content_template = (String) redisTemplate.opsForHash().get("sys:config", "print_order_content_template");
@@ -238,6 +326,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         RequestMethod instance = RequestMethod.getInstance();
         try {
             //{"error":0,"error_description":"success","timestamp":1705251051,"body":{"id":2540003905,"origin_id":"1"}}
+            String printOrderContent = renderOrderPrintContentEnjoy(print_order_content_template, order, new HashMap());
             String printResult = instance.printIndex(accessToken, print_machine_code, print_order_content_template, order.getOrderNumber());
             JSONObject jsonObject1 = JSON.parseObject(printResult);
             JSONObject body = jsonObject1.getJSONObject("body");

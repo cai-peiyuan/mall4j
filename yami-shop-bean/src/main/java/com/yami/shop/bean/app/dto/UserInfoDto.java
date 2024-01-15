@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 用户基本信息
  *
@@ -21,7 +23,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class UserInfoDto {
+public class UserInfoDto implements Serializable {
 
     @Schema(description = "用户编号")
     private String userId;
