@@ -1,19 +1,22 @@
 <!--pages/user/user.wxml-->
 <view class='container'>
     <!-- 用户信息 -->
-    <view class='userinfo'>
-
+    <view class='userinfo' style="box-sizing:border-box;background:linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);">
         <view style="display: flex; justify-content: flex-start; ">
             <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" style="min-width: 66px;">
                 <image class="avatar" src="{{avatarUrl}}"></image>
             </button>
-            <view>
+            <view style="color:#fff;">
                 <view class='userinfo-name'>
-                    <input type="nickname" class='userinfo-name' placeholder="请输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
+                    <input type="nickname" style="color:#fff;" placeholder-style="color:#fff" class='userinfo-name' placeholder="请输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
                 </view>
-
-                <view class='userinfo-name'>
-                    <text bindtap='toBindingPhone'>{{userMobile}}</text>
+                <view class='userinfo-name' wx:if="{{closeEye == true}}" style="padding-right: 7vw; justify-content: flex-end;">
+                    <text bindtap='toBindingPhone'>{{userMobile?"186****9890":"****"}}</text>
+                    <image src="/images/icon/eye-close.png" mode="widthFix" style="width:3vw;margin-left: 2vw;" bindtap="changeEye"/>
+                </view>
+                <view class='userinfo-name' wx:if="{{closeEye == false}}" style="padding-right: 7vw; justify-content: flex-end">
+                    <text bindtap='toBindingPhone'>{{userMobile?"18630389890":"18630389890"}}</text>
+                    <image src="/images/icon/eye-open.png" mode="widthFix" style="width:3vw;margin-left: 2vw" bindtap="changeEye"/>
                 </view>
             </view>
         </view>
@@ -21,12 +24,36 @@
         <!-- 积分和余额 -->
         <view>
             <view>
-                <view class='userinfo-name' bindtap='toUserBalancePage'>
-                    余额：888.00
+                <view style="display: flex; justify-content: space-around;color:#fff">
+                    <view class='userinfo-name' bindtap='toUserBalancePage'>
+                        <view style="font-size:22px; font-weight:600;">
+                            888.00
+                        </view>
+                        <view>
+                            余额
+                        </view>
+                        
+                    </view>
+                    <view class='userinfo-name'>
+                        <view style="font-size:22px; font-weight:600;">
+                            888
+                        </view>
+                        <view>
+                            积分
+                        </view>
+                    </view>
+                    <view class='userinfo-name'>
+                        <view style="font-size:22px; font-weight:600;">
+                            3
+                        </view>
+                        <view>
+                            优惠券
+                        </view>
+                    </view>
                 </view>
+               
 
                 <view class='userinfo-name'>
-
                 </view>
             </view>
         </view>

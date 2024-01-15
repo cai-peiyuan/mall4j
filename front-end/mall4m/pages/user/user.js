@@ -15,6 +15,7 @@ Page({
     collectionCount: 0,
     openSource: true,
     newNickName: '',
+    closeEye:true,
   },
 
   /**
@@ -102,6 +103,10 @@ Page({
     this.setData({
       avatarUrl: avatarUrl,
     })
+  },
+  changeEye(){
+      this.setData({closeEye:!this.data.closeEye})
+        console.log(this.data.closeEye)
   },
   setInputValue: function (e) {
     console.log("写入：", e.detail.value);

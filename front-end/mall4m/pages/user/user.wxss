@@ -55,6 +55,8 @@ page {
   font-size: 30rpx;
   font-weight: bold;
   margin-top: 20rpx;
+  display: flex;
+  align-items: center;
 }
 
 .binding-phone {
