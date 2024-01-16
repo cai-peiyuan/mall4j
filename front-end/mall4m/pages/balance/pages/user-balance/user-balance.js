@@ -84,7 +84,7 @@ Page({
     changeCard(e){
         let index=e.currentTarget.dataset['index'];
         let money=e.currentTarget.dataset["money"];
-        if(index!=cardIndex){
+        if(index!=this.cardIndex){
             this.setData({cardIndex:index});
             this.setData({cardMoney:money});
         }
