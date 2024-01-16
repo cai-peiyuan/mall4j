@@ -10,6 +10,7 @@
     border-radius: 4vw;
     color:#fff;
     position: relative;
+    background-image: url(/images/icon/bg1.jpg);
 }
 .couponName{
     font-size: 20px; 

@@ -52,8 +52,7 @@ page {
 }
 
 .userinfo .userinfo-name {
-  font-size: 30rpx;
-  font-weight: bold;
+  font-size: 28rpx;
   margin-top: 20rpx;
   display: flex;
   align-items: center;
