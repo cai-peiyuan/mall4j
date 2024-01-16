@@ -10,35 +10,41 @@
     <view class="bananceNum">¥79.10</view>
   </view>
   <view style="display: flex; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
-    <view class="activeTab">在线储值</view>
-    <view>储值券</view>
+    <view class="{{activeTab==0?'activeTab':''}}" bindtap="changeActiveTab" data-index="{{0}}">在线储值</view>
+    <view class="{{activeTab==1?'activeTab':''}}" bindtap="changeActiveTab" data-index="{{1}}">储值券</view>
   </view>
-  <view style="display: flex; padding:3vw; flex-wrap: wrap;">
-    <view class="rechargeItem rechargeItemActive">
+  <view wx:if="{{activeTab==0}}" style="display: flex; padding:3vw; flex-wrap: wrap;">
+    <view class="rechargeItem {{cardIndex==0?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{0}}" data-money="{{100}}">
         <view class="rechargeNum"><span class="RMB">¥</span>100</view>
         <view class="salePrice">售价¥100</view>
     </view>
-    <view class="rechargeItem">
+    <view class="rechargeItem {{cardIndex==1?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{1}}" data-money="{{200}}">
+        <view class="rechargeNum"><span class="RMB">¥</span>200</view>
+        <view class="salePrice">售价¥300</view>
+    </view>
+    <view class="rechargeItem {{cardIndex==2?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{2}}" data-money="{{300}}">
         <view class="rechargeNum"><span class="RMB">¥</span>300</view>
         <view class="salePrice">售价¥300</view>
     </view>
-    <view class="rechargeItem">
-        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
+    <view class="rechargeItem {{cardIndex==3?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{3}}" data-money="{{400}}">
+        <view class="rechargeNum"><span class="RMB">¥</span>400</view>
         <view class="salePrice">售价¥300</view>
     </view>
-    <view class="rechargeItem">
-        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
-        <view class="salePrice">售价¥300</view>
-    </view>
-    <view class="rechargeItem">
-        <view class="rechargeNum"><span class="RMB">¥</span>300</view>
+    <view class="rechargeItem {{cardIndex==4?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{4}}" data-money="{{500}}">
+        <view class="rechargeNum"><span class="RMB">¥</span>500</view>
         <view class="salePrice">售价¥300</view>
     </view>
   </view>
-  <view class="footerMenu" >
+  <view wx:if="{{activeTab==1}}" class="centerFlex" style="margin-top: 5vw;">
+      券码：<input type="text" style="border:solid 1px #eee; border-radius:3vw; height:10vw; width:70vw"/>
+  </view>
+  <view class="footerMenu" wx:if="{{activeTab==0}}" >
     <view style="font-size: 14px; display: flex; align-items:baseline;">实付金额
-      <view style="display: flex; align-items:baseline; font-weight: bold; margin-left: 2vw;">¥ <view style="font-size: 26px; margin-left: 2vw; position: relative; top:0.5vw;">300</view></view> 
+      <view style="display: flex; align-items:baseline; font-weight: bold; margin-left: 2vw;">¥ <view style="font-size: 26px; margin-left: 2vw; position: relative; top:0.5vw;">{{cardMoney}}</view></view> 
     </view>
     <view class="btnCharge">立即充值</view>
+  </view>
+  <view class="footerMenu" wx:if="{{activeTab==1}}" >
+    <view class="btnCharge" style="width:90vw; justify-content: center;">立即兑换</view>
   </view>
 </view>

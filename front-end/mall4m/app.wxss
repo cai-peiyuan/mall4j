@@ -17,6 +17,7 @@ padding-left:10rpx;
 .flex{display: flex; align-items: center;}
 .spaceBetweenFlex{display: flex; justify-content: space-between; align-items: center;}
 .aroundFlex{display: flex; justify-content: space-around;align-items: center}
+.centerFlex{display: flex; justify-content: center; align-items: center;}
 
 /* 价格数字显示不同大小 */
 
