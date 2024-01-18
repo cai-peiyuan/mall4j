@@ -49,6 +49,9 @@ public class UserInfoInTokenBO {
      */
     private Integer isAdmin;
 
+    /**
+     * 业务用户编号
+     */
     private String bizUserId;
 
     /**
