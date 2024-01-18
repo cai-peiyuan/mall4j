@@ -44,7 +44,7 @@
                             积分
                         </view>
                     </view>
-                    <view class='userinfo-name' style="flex-direction: column;">
+                    <view class='userinfo-name' style="flex-direction: column;" bindtap='toMyCouponPage'>
                         <view style="font-size:22px;">
                             3
                         </view>

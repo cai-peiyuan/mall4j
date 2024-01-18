@@ -5,7 +5,7 @@ Page({
      * 页面的初始数据
      */
     data: {
-
+        tabIndex:0,
     },
 
     /**
@@ -62,5 +62,14 @@ Page({
      */
     onShareAppMessage() {
 
-    }
+    },
+    //修改tab标签 近一个月 or 全部
+    changeTab(e){
+        // console.log(index);
+        let index=e.currentTarget.dataset['index'];
+        if(index!==this.tabIndex){
+            this.setData({tabIndex:index})
+        }
+       
+    },
 })
