@@ -251,3 +251,13 @@ button.memu-btn.memu-item {
 button.memu-btn.memu-item:after {
   border: 0;
 }
+
+/* 客服按钮样式 */
+.contact-btn {
+  display: inline-block;
+  position: absolute;
+  width: 100%;
+  background: salmon;
+  opacity: 0;
+  height: 100%;
+}

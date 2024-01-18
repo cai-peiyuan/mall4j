@@ -77,7 +77,7 @@ swiper image {
   color: #999;
   font-size: 24rpx;
   margin-top: 6rpx;
-  margin-right: 104rpx;
+  margin-right: 140rpx;
 }
 
 .prod-price {

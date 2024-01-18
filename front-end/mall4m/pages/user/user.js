@@ -16,7 +16,7 @@ Page({
     openSource: true,
     newNickName: '',
     phonenum: '',
-    closeEye: true,
+    closeEye: false,
   },
 
   /**
@@ -28,6 +28,8 @@ Page({
     this.setData({
       phonenum: userMobile
     });
+    //从接口加载用户信息
+    this.loadUserInfo();
   },
 
   /**
@@ -36,12 +38,11 @@ Page({
   onReady: function () {
 
   },
-
+  
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
     //加载订单数字
     var ths = this;
     // var status = ths.data.status
@@ -97,7 +98,7 @@ Page({
   },
 
   /**
-   * 获取用户详细信息
+   * 选择用户头像
    */
   onChooseAvatar(e) {
     const {
@@ -111,6 +112,22 @@ Page({
   },
 
   /**
+   * 从小程序接口获取用户详细信息 
+   * 加载个人页面的信息
+   */
+  loadUserInfo() {
+    var params = {
+      url: "/p/userInfo",
+      method: "GET",
+      data: {},
+      callBack: function (res) {
+        ths.setData({
+        });
+      }
+    };
+    http.request(params);
+  },
+  /**
    * 打开隐藏显示手机号
    */
   changeEye() {
@@ -119,17 +136,23 @@ Page({
     })
     console.log(this.data.closeEye)
   },
+
+  /**
+   * 更新用户输入的用户名
+   * @param {} e 
+   */
   setInputValue: function (e) {
     console.log("写入：", e.detail.value);
     let newNickName = e.detail.value;
     if (newNickName != '' && this.data.nickName != newNickName) {
       console.log("更新用户名称", newNickName);
+      //通过接口更新用户名称
       this.updateNickName(newNickName);
     }
   },
   /**
    * 更新用户头像
-   * @param {}} avatarUrl
+   * @param {} avatarUrl
    */
   updateAvatarUrl(avatarUrl) {
     let _this = this;
@@ -185,6 +208,9 @@ Page({
     })
   },
 
+  /**
+   * 跳转领券中心页面
+   */
   toCouponCenter: function () {
     // wx.showToast({
     //   icon: "none",
@@ -195,12 +221,18 @@ Page({
     })
   },
 
+  /**
+   * 跳转到我的优惠券页面
+   */
   toMyCouponPage: function () {
     wx.navigateTo({
       url: '/pages/user-info/pages/myTicket/myTicket',
     })
   },
 
+  /**
+   * 跳转到我的收获地址页面
+   */
   toAddressList: function () {
     wx.navigateTo({
       url: '/pages/address/pages/delivery-address/delivery-address',
@@ -223,6 +255,10 @@ Page({
     })
   },
 
+  /**
+   * 加密手机号
+   * @param {} theMobile 
+   */
   desensitiveMobile: function (theMobile) {
     console.log('加密手机号', theMobile);
     return theMobile;
@@ -237,16 +273,13 @@ Page({
       method: 'post',
       callBack: res => {
         util.removeTabBadge()
-
         wx.removeStorageSync('loginResult');
         wx.removeStorageSync('token');
-
         // this.$Router.pushTab('/pages/index/index')
         wx.showToast({
           title: "退出成功",
           icon: "none"
         })
-
         this.setData({
           orderAmount: ''
         });
@@ -259,6 +292,10 @@ Page({
     })
   },
 
+  /**
+   * 同步用户输入的昵称
+   * @param {} e 
+   */
   syncInputValue(e) {
     console.log("输入：", e.detail.value);
     let newNickName = e.detail.value;
@@ -307,13 +344,14 @@ Page({
     };
     http.request(params);
   },
+
   /**
    * 我的收藏跳转
    */
   myCollectionHandle: function () {
     var url = '/pages/prods/pages/prod-classify/prod-classify?sts=5';
     var id = 0;
-    var title = "我的收藏商品";
+    var title = "商品收藏";
     if (id) {
       url += "&tagid=" + id + "&title=" + title;
     }
@@ -330,7 +368,21 @@ Page({
     var that = this;
     console.log('获取用户手机号', e)
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
-      
+        /**
+         * detail: code: "0b3f7cf7302e9245ed5a4998a69c804ba1b9de31baef938821bacb106d2f9a77"
+          encryptedData: "ME3pnlirrd2z4+yHMeaPC3hO1JH2HBkahOO+dSOJmpywsTTqmDLZuPrHTPJzqa/nH1375CoiWPT3wC+V6mLxa07/HzIAwMH/eudhboRoeMvFb5mfHkJVAqxXEWRHOwjQeETs2aHMEEsARCrjzNMNXBDGj1p9qrgoVtFUaAg+rPFy985aa1uDjqaNjj+xHR/A7fQqp5zUIvFRM+nJqYp77w=="
+          errMsg: "getPhoneNumber:ok"
+          iv: "PS5v8/xdITknqTnlbPmIQQ=="
+         */
+        var params = {
+          url: "/p/getPhoneNumber",
+          method: "GET",
+          data: e.detail,
+          callBack: function (res) {
+            console.log('获取小程序用户手机号',res);
+          }
+        };
+        http.request(params);
     }
   }
 })

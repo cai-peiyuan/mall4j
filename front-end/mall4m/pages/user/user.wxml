@@ -26,18 +26,17 @@
         <!-- 积分和余额 -->
         <view>
             <view>
-                <view style="display: flex; justify-content: space-around;color:#fff">
+                <view style="display: flex; justify-content: space-around;color:#fff; margin-top: 20rpx;">
                     <view class='userinfo-name' bindtap='toUserBalancePage' style="flex-direction: column;">
-                        <view style="font-size:22px;">
+                        <view>
                             888.00
                         </view>
                         <view>
                             余额
                         </view>
-
                     </view>
                     <view class='userinfo-name' style="flex-direction: column;">
-                        <view style="font-size:22px;">
+                        <view>
                             888
                         </view>
                         <view>
@@ -45,7 +44,7 @@
                         </view>
                     </view>
                     <view class='userinfo-name' style="flex-direction: column;" bindtap='toMyCouponPage'>
-                        <view style="font-size:22px;">
+                        <view>
                             3
                         </view>
                         <view>
@@ -86,22 +85,17 @@
         <text class='gotobinding' bindtap='toBindingPhone'>去绑定</text>
     </view>
     <view class='binding-phone' >
-        <text class='show-tip'>您还不是优选会员，建议</text>
-        <text class='gotobinding' bindtap='toBindingPhone'>绑定手机号</text>注册成为会员。
-        <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">绑定手机号</button>
+        <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="contact-btn"></button>
+        <text class='show-tip'>您还不是优选会员，获取微信手机号注册成为优选会员。</text>
     </view>
-
     <!-- end 用户信息 -->
 
     <view class='list-cont'>
-
         <!-- 订单状态 -->
         <view class='total-order'>
             <view class='order-tit'>
                 <text style='font-weight:bold'>我的订单
                 </text>
-
-
                 <view class='checkmore' bindtap='toOrderListPage' data-sts="0">
                     <text>查看全部 </text>
                     <text class='arrowhead'></text>
@@ -132,7 +126,7 @@
         </view>
         <!--end 订单状态 -->
 
-        <view class="prod-col" wx:if="{{openSource == false}}">
+        <view class="prod-col" wx:if="{{openSource == true}}">
             <view class="col-item" bindtap='myCollectionHandle'>
                 <view class="num">{{collectionCount}}</view>
                 <view class="tit">我的收藏</view>
@@ -148,7 +142,7 @@
         </view>
 
         <view class='my-menu'>
-            <view class='memu-item' bindtap='toDistCenter' wx:if="{{openSource == false}}">
+            <view class='memu-item' bindtap='toDistCenter' wx:if="{{openSource == true}}">
                 <view class="i-name">
                     <image src='../../images/icon/promotion.png'></image>
                     <text>分销中心</text>
@@ -188,13 +182,20 @@
                 <view class='arrowhead'></view>
             </view>
 
-
             <view class='memu-item' bindtap='toAboutUsPage'>
                 <view class="i-name">
-                    <image src='../../images/icon/about.png'></image>
+                    <image src='../../images/icon/about_line.png'></image>
                     <text>关于我们</text>
                 </view>
                 <view class='arrowhead'></view>
+            </view>
+
+            <view class='memu-item'>
+                <view class="i-name">
+                    <image src='../../images/icon/icon-msg.png'></image>
+                    <text>联系我们</text>
+                    <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系我们</button>
+                </view>
             </view>
         </view>
         <!--end 列表项 -->
