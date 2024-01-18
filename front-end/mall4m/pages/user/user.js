@@ -16,31 +16,31 @@ Page({
     openSource: true,
     newNickName: '',
     phonenum: '',
-    closeEye:true,
+    closeEye: true,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     let userInfo = this.getLoginedUserInfo();
     let userMobile = this.data.userMobile;
     this.setData({
-        phonenum: userMobile
-      });
+      phonenum: userMobile
+    });
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
 
     //加载订单数字
     var ths = this;
@@ -50,7 +50,7 @@ Page({
       url: "/p/myOrder/orderCount",
       method: "GET",
       data: {},
-      callBack: function(res) {
+      callBack: function (res) {
         wx.hideLoading();
         ths.setData({
           orderAmount: res
@@ -64,35 +64,35 @@ Page({
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
+  onUnload: function () {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function() {
+  onReachBottom: function () {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function() {
+  onShareAppMessage: function () {
 
   },
 
@@ -113,8 +113,10 @@ Page({
   /**
    * 打开隐藏显示手机号
    */
-  changeEye(){
-    this.setData({closeEye:!this.data.closeEye})
+  changeEye() {
+    this.setData({
+      closeEye: !this.data.closeEye
+    })
     console.log(this.data.closeEye)
   },
   setInputValue: function (e) {
@@ -183,23 +185,23 @@ Page({
     })
   },
 
-  toCouponCenter: function() {
+  toCouponCenter: function () {
     // wx.showToast({
     //   icon: "none",
     //   title: '即将上线'
     // })
     wx.navigateTo({
-        url: '/pages/user-info/pages/ticketCenter/ticketCenter',
+      url: '/pages/user-info/pages/ticketCenter/ticketCenter',
     })
   },
 
-  toMyCouponPage: function() {
+  toMyCouponPage: function () {
     wx.navigateTo({
-        url: '/pages/user-info/pages/myTicket/myTicket',
+      url: '/pages/user-info/pages/myTicket/myTicket',
     })
   },
 
-  toAddressList: function() {
+  toAddressList: function () {
     wx.navigateTo({
       url: '/pages/address/pages/delivery-address/delivery-address',
     })
@@ -208,27 +210,27 @@ Page({
   /**
    * 关于我们
    */
-  toAboutUsPage: function() {
+  toAboutUsPage: function () {
     wx.navigateTo({
-        url: '/pages/news/pages/news-detail/news-detail?id=1',
-      })
+      url: '/pages/news/pages/news-detail/news-detail?id=1',
+    })
   },
 
   // 跳转绑定手机号
-  toBindingPhone: function() {
+  toBindingPhone: function () {
     wx.navigateTo({
       url: '/pages/user-info/pages/binding-phone/binding-phone',
     })
   },
 
-  desensitiveMobile: function(theMobile){
+  desensitiveMobile: function (theMobile) {
     console.log('加密手机号', theMobile);
     return theMobile;
   },
   /**
- * 退出登录
- */
-  logout: function() {
+   * 退出登录
+   */
+  logout: function () {
     // 请求退出登陆接口
     http.request({
       url: '/logOut',
@@ -244,7 +246,7 @@ Page({
           title: "退出成功",
           icon: "none"
         })
-        
+
         this.setData({
           orderAmount: ''
         });
@@ -269,7 +271,7 @@ Page({
    * 跳转订单列表页面
    * @param {} e 
    */
-  toOrderListPage: function(e) {
+  toOrderListPage: function (e) {
     var sts = e.currentTarget.dataset.sts;
     wx.navigateTo({
       url: '/pages/orders/pages/orderList/orderList?sts=' + sts,
@@ -280,23 +282,23 @@ Page({
    * 跳转余额页面
    * @param {} e 
    */
-  toUserBalancePage: function(e){
-      console.log(1234);
+  toUserBalancePage: function (e) {
+    console.log(1234);
     wx.navigateTo({
-        url: '/pages/balance/pages/user-balance/user-balance',
-      })
+      url: '/pages/balance/pages/user-balance/user-balance',
+    })
   },
   /**
    * 查询所有的收藏量
    */
-  showCollectionCount: function() {
+  showCollectionCount: function () {
     var ths = this;
     wx.showLoading();
     var params = {
       url: "/p/user/collection/count",
       method: "GET",
       data: {},
-      callBack: function(res) {
+      callBack: function (res) {
         wx.hideLoading();
         ths.setData({
           collectionCount: res
@@ -308,7 +310,7 @@ Page({
   /**
    * 我的收藏跳转
    */
-  myCollectionHandle: function() {
+  myCollectionHandle: function () {
     var url = '/pages/prods/pages/prod-classify/prod-classify?sts=5';
     var id = 0;
     var title = "我的收藏商品";
@@ -318,7 +320,17 @@ Page({
     wx.navigateTo({
       url: url
     })
+  },
+
+  /**
+   * 获取用户的手机号
+   * @param {} e 
+   */
+  getPhoneNumber: function (e) {
+    var that = this;
+    console.log('获取用户手机号', e)
+    if (e.detail.errMsg == 'getPhoneNumber:ok') {
+      
+    }
   }
-
-
 })

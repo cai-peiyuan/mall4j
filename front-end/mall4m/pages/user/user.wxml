@@ -85,6 +85,11 @@
         <text class='show-tip'>绑定手机号，</text>
         <text class='gotobinding' bindtap='toBindingPhone'>去绑定</text>
     </view>
+    <view class='binding-phone' >
+        <text class='show-tip'>您还不是优选会员，建议</text>
+        <text class='gotobinding' bindtap='toBindingPhone'>绑定手机号</text>注册成为会员。
+        <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">绑定手机号</button>
+    </view>
 
     <!-- end 用户信息 -->
 
@@ -186,7 +191,7 @@
 
             <view class='memu-item' bindtap='toAboutUsPage'>
                 <view class="i-name">
-                    <image src='../../images/icon/myAddr.png'></image>
+                    <image src='../../images/icon/about.png'></image>
                     <text>关于我们</text>
                 </view>
                 <view class='arrowhead'></view>
