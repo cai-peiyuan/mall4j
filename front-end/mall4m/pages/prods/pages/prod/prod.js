@@ -453,7 +453,12 @@ Page({
         wx.hideLoading();
         wx.showToast({
           title: "加入购物车成功",
-          icon: "none"
+          icon: "none",
+          complete: ()=>{
+            ths.setData({
+                skuShow: false
+            });
+          }
         })
       }
     };
@@ -555,6 +560,10 @@ Page({
       }
     })
   },
+
+  /**
+   * 显示加入购物车
+   */
   showSku: function() {
     this.setData({
       skuShow: true

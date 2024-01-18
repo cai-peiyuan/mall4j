@@ -109,7 +109,7 @@ Page({
   // 跳转搜索页
   toSearchPage: function () {
     wx.navigateTo({
-      url: '/pages/search-page/search-page',
+      url: '/pages/search/pages/search-page/search-page',
     })
   },
   getProdList(categoryId) {

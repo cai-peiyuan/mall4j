@@ -40,15 +40,17 @@ swiper image {
 }
 
 .tit-wrap .col {
+  display: inline;
   position: absolute;
   top: 0;
   right: 0;
-  width: 80rpx;
+  width: 100rpx;
   color: #666;
   font-size: 20rpx;
   padding-left: 20rpx;
   text-align: center;
 }
+
 
 .tit-wrap .col image {
   display: block;
@@ -102,14 +104,16 @@ swiper image {
 
 .share-icon {
   position: absolute;
-  right: 50rpx;
-  top: 50rpx;
+  right: 10rpx;
+  top: 0rpx;
   background: none;
   line-height: 40rpx;
   border: none;
   outline: none;
   box-shadow: 0;
   padding: 0;
+  font-size: 20rpx;
+  color:#666
 }
 
 .share-icon::after {
