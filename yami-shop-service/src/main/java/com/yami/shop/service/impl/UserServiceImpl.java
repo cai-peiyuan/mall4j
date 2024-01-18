@@ -139,6 +139,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         JSONObject jsonObject = JSON.parseObject(jscode2SessionResultStr);
         String openId = jsonObject.getString("openid");
         String session_key = jsonObject.getString("session_key");
+        //如果openid没有返回，则没有用户信息
+        if (StrUtil.hasBlank(openId, session_key)) {
+            return null;
+        }
         User user = getUserByAppIdAndOpenId(appId, openId, session_key);
         return user;
     }

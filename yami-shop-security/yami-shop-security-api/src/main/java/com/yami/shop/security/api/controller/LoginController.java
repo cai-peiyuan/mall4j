@@ -103,16 +103,20 @@ public class LoginController {
         // 1. 通过小程序获取的微信用户信息 将微信用户写入数据库 并返回数据库中的用户数据
         User user = userService.wxLogin(wxLoginCode);
 
-        // 2. 登录
-        UserInfoInTokenBO userInfoInTokenBO = new UserInfoInTokenBO();
-        userInfoInTokenBO.setUserId(user.getUserId());
-        userInfoInTokenBO.setNickName(user.getNickName());
-        userInfoInTokenBO.setUserMobile(DesensitizedUtil.mobilePhone(user.getUserMobile()));
-        userInfoInTokenBO.setUserMobile(user.getUserMobile());
-        userInfoInTokenBO.setPic(user.getPic());
-        userInfoInTokenBO.setSysType(SysTypeEnum.ORDINARY.value());
-        userInfoInTokenBO.setIsAdmin(0);
-        userInfoInTokenBO.setEnabled(true);
-        return ServerResponseEntity.success(tokenStore.storeAndGetVo(userInfoInTokenBO));
+        if(user != null){
+            // 2. 登录
+            UserInfoInTokenBO userInfoInTokenBO = new UserInfoInTokenBO();
+            userInfoInTokenBO.setUserId(user.getUserId());
+            userInfoInTokenBO.setNickName(user.getNickName());
+            userInfoInTokenBO.setUserMobile(DesensitizedUtil.mobilePhone(user.getUserMobile()));
+            userInfoInTokenBO.setUserMobile(user.getUserMobile());
+            userInfoInTokenBO.setPic(user.getPic());
+            userInfoInTokenBO.setSysType(SysTypeEnum.ORDINARY.value());
+            userInfoInTokenBO.setIsAdmin(0);
+            userInfoInTokenBO.setEnabled(true);
+            return ServerResponseEntity.success(tokenStore.storeAndGetVo(userInfoInTokenBO));
+        }else{
+            return ServerResponseEntity.showFailMsg("微信小程序用户登录失败，请检查AppId设置情况");
+        }
     }
 }
