@@ -88,7 +88,9 @@ public class UserCollectionController {
 
     /**
      * 查询用户收藏商品数量
+     * 集成到userInfo接口中
      */
+    @Deprecated
     @GetMapping("count")
     @Operation(summary = "查询用户收藏商品数量" , description = "查询用户收藏商品数量")
     public ServerResponseEntity<Long> findUserCollectionCount() {

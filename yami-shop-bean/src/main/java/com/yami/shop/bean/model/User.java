@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+
 /**
  * @author lanhai
  */
@@ -70,14 +71,14 @@ public class User implements Serializable {
      * 修改时间
      */
 
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date modifyTime;
 
     /**
      * 注册时间
      */
 
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date userRegtime;
 
     /**
@@ -90,7 +91,7 @@ public class User implements Serializable {
      * 最后登录时间
      */
 
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date userLasttime;
 
     /**
@@ -114,7 +115,7 @@ public class User implements Serializable {
      * 例如：2009-11-27
      */
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String birthDate;
 
     /**

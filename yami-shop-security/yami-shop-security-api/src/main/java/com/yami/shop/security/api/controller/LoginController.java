@@ -95,7 +95,13 @@ public class LoginController {
     }
 
 
-
+    /**
+     * 微信小程序登录
+     * @param wxLoginDTO
+     * @return
+     * @author peiyuan.cai@mapabc.com
+     * @date 2024/1/19 21:29 星期五
+     */
     @PostMapping("/wxLogin")
     @Operation(summary = "微信小程序登录", description = "通过账号/手机号/用户名密码登录，还要携带用户的类型，也就是用户所在的系统")
     public ServerResponseEntity<Object> wxLogin(@Valid @RequestBody WxLoginDTO wxLoginDTO) {

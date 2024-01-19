@@ -25,10 +25,14 @@ import org.springframework.stereotype.Service;
 public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig> implements SysConfigService {
 
 	private final SysConfigMapper sysConfigMapper;
-	
+
 	@Override
 	public void updateValueByKey(String key, String value) {
 		sysConfigMapper.updateValueByKey(key, value);
+	}
+	@Override
+	public void updateRemarkByKey(String key, String remark) {
+		sysConfigMapper.updateRemarkByKey(key, remark);
 	}
 
 	@Override

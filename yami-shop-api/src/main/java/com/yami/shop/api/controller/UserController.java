@@ -11,14 +11,21 @@
 package com.yami.shop.api.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.UserDto;
+import com.yami.shop.bean.app.dto.UserInfoWxAppDto;
 import com.yami.shop.bean.app.param.BindPhoneParam;
+import com.yami.shop.bean.app.param.GetWxPhoneParam;
 import com.yami.shop.bean.app.param.UserInfoParam;
 import com.yami.shop.bean.model.User;
+import com.yami.shop.bean.model.UserCollection;
 import com.yami.shop.common.bean.Qiniu;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.security.api.util.SecurityUtils;
 import com.yami.shop.service.AttachFileService;
+import com.yami.shop.service.OrderService;
+import com.yami.shop.service.UserCollectionService;
 import com.yami.shop.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,6 +47,12 @@ public class UserController {
 
 
     @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private UserCollectionService userCollectionService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -51,12 +64,38 @@ public class UserController {
     /**
      * 查看用户接口
      */
+    @Deprecated
     @GetMapping("/userInfo")
     @Operation(summary = "查看用户信息", description = "根据用户ID（userId）获取用户信息")
     public ServerResponseEntity<UserDto> userInfo() {
         String userId = SecurityUtils.getUser().getUserId();
         User user = userService.getById(userId);
         UserDto userDto = BeanUtil.copyProperties(user, UserDto.class);
+        return ServerResponseEntity.success(userDto);
+    }
+
+    /**
+     * 微信小程序用户获取用户信息接口
+     */
+    @Deprecated
+    @GetMapping("/wxAppUserInfo")
+    @Operation(summary = "获取小程序用户信息", description = "获取小程序用户信息")
+    public ServerResponseEntity<UserInfoWxAppDto> wxAppUserInfo() {
+        // 从request中获取用户信息
+        String userId = SecurityUtils.getUser().getUserId();
+        // 获取用户详细信息
+        User user = userService.getById(userId);
+        // 将基本信息复制到dto中
+        UserInfoWxAppDto userDto = BeanUtil.copyProperties(user, UserInfoWxAppDto.class);
+
+        // 获取订单数量信息
+        OrderCountData orderCountMap = orderService.getOrderCount(userId);
+        userDto.setOrderCountData(orderCountMap);
+
+        // 获取收藏夹数量
+        long count = userCollectionService.count(new LambdaQueryWrapper<UserCollection>().eq(UserCollection::getUserId, userId));
+        userDto.setCollectionCount(count);
+
         return ServerResponseEntity.success(userDto);
     }
 
@@ -85,6 +124,23 @@ public class UserController {
         userService.bindUserPhoneNum(userId, bindPhoneParam);
         return ServerResponseEntity.success();
     }
+
+
+    /**
+     * 获取用户的微信绑定手机号
+     *
+     * @param getWxPhoneParam
+     * @return
+     */
+    @PostMapping("/getWxPhoneNumber")
+    @Operation(summary = "获取用户的微信绑定手机号", description = "获取用户的微信绑定手机号")
+    public ServerResponseEntity<Void> getWxPhoneNumber(@RequestBody GetWxPhoneParam getWxPhoneParam) {
+        String userId = SecurityUtils.getUser().getUserId();
+        userService.getWxPhoneParam(userId, getWxPhoneParam);
+        return ServerResponseEntity.success();
+    }
+
+
 
 
     /**

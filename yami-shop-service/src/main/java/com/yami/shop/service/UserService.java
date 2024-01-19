@@ -13,6 +13,7 @@ package com.yami.shop.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.app.param.BindPhoneParam;
+import com.yami.shop.bean.app.param.GetWxPhoneParam;
 import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.param.UserRegisterParam;
 
@@ -71,4 +72,12 @@ public interface UserService extends IService<User> {
      */
     User getUserByAppIdAndOpenId(String appId, String openId, String session_key);
 
+    /**
+     * 获取用户的微信绑定手机号
+     * @param userId
+     * @param getWxPhoneParam
+     * @author peiyuan.cai@mapabc.com
+     * @date 2024/1/19 21:52 星期五
+     */
+    void getWxPhoneParam(String userId, GetWxPhoneParam getWxPhoneParam);
 }

@@ -207,7 +207,9 @@ public class MyOrderController {
 
     /**
      * 获取我的订单订单数量
+     * 数据集成到userInfo接口中
      */
+    @Deprecated
     @GetMapping("/orderCount")
     @Operation(summary = "获取我的订单订单数量", description = "获取我的订单订单数量")
     public ServerResponseEntity<OrderCountData> getOrderCount() {

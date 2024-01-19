@@ -39,6 +39,14 @@ public interface SysConfigMapper extends BaseMapper<SysConfig>  {
 	int updateValueByKey(@Param("key") String key, @Param("value") String value);
 
 	/**
+	 * 根据key，更新remark
+	 * @param key
+	 * @param remark
+	 * @return 更新成功条数
+	 */
+	int updateRemarkByKey(@Param("key") String key, @Param("remark") String remark);
+
+	/**
 	 * 根据key查询系统配置信息
 	 * @param key
 	 * @return 系统配置信息列表
@@ -50,5 +58,5 @@ public interface SysConfigMapper extends BaseMapper<SysConfig>  {
 	 * @param ids 系统配置信息数组
 	 */
 	void deleteBatch(@Param("ids") Long[] ids);
-	
+
 }

@@ -17,9 +17,11 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.StrKit;
 import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.app.param.BindPhoneParam;
+import com.yami.shop.bean.app.param.GetWxPhoneParam;
 import com.yami.shop.bean.enums.SmsType;
 import com.yami.shop.bean.model.SmsLog;
 import com.yami.shop.bean.model.User;
@@ -193,5 +195,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
         return user;
+    }
+
+    /**
+     * 获取用户的微信绑定手机号
+     *
+     * @param userId
+     * @param getWxPhoneParam
+     * @author peiyuan.cai@mapabc.com
+     * @date 2024/1/19 21:52 星期五
+     */
+    @Override
+    public void getWxPhoneParam(String userId, GetWxPhoneParam getWxPhoneParam) {
+
+        /**
+         * 获取accessToken
+         */
+        String ACCESS_TOKEN = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_access_token");
+        String url = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=" + ACCESS_TOKEN;
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", getWxPhoneParam.getCode());
+        String post = HttpKit.post(url, jsonObject.toJSONString());
+        /**
+         * 错误码	错误描述	解决方案
+         * -1	system error	系统繁忙，此时请开发者稍候再试
+         * 40029	code 无效	js_code无效
+         * 45011	api minute-quota reach limit  mustslower  retry next minute	API 调用太频繁，请稍候再试
+         * 40013	invalid appid	请求appid身份与获取code的小程序appid不匹配
+         * {
+         *     "errcode":0,
+         *     "errmsg":"ok",
+         *     "phone_info": {
+         *         "phoneNumber":"xxxxxx",
+         *         "purePhoneNumber": "xxxxxx",
+         *         "countryCode": 86,
+         *         "watermark": {
+         *             "timestamp": 1637744274,
+         *             "appid": "xxxx"
+         *         }
+         *     }
+         * }
+         */
+        JSONObject getUserPhoneResult = JSON.parseObject(post);
+        /**
+         * 请求结果中获取手机号码
+         */
+        Integer errcode = getUserPhoneResult.getInteger("errcode");
+        if (errcode == 0) {
+
+            JSONObject phone_info = getUserPhoneResult.getJSONObject("phone_info");
+            String phoneNumber = phone_info.getString("phoneNumber");
+
+            /**
+             * 手机号码更新到数据库中
+             */
+            User user = new User();
+            user.setUserId(userId);
+            user.setUserMobile(phoneNumber);
+            userMapper.updateById(user);
+        }
+
     }
 }
