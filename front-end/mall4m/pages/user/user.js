@@ -117,7 +117,7 @@ Page({
    */
   loadUserInfo() {
     var params = {
-      url: "/p/userInfo",
+      url: "/p/user/wxAppUserInfo",
       method: "GET",
       data: {},
       callBack: function (res) {
@@ -375,11 +375,12 @@ Page({
           iv: "PS5v8/xdITknqTnlbPmIQQ=="
          */
         var params = {
-          url: "/p/getPhoneNumber",
-          method: "GET",
+          url: "/p/user/getWxPhoneNumber",
+          method: "POST",
           data: e.detail,
           callBack: function (res) {
             console.log('获取小程序用户手机号',res);
+            that.loadUserInfo();
           }
         };
         http.request(params);
