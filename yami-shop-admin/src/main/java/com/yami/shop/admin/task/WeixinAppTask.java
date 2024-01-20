@@ -10,6 +10,7 @@
 
 package com.yami.shop.admin.task;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.jfinal.kit.HttpKit;
@@ -59,7 +60,7 @@ public class WeixinAppTask {
 
         // secret = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_secret");
         // appid = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_appId");
-        String getAccessTokenResult = HttpKit.get(url, new HashMap<>() {{
+        String getAccessTokenResult = HttpUtil.get(url, new HashMap<>() {{
             put("grant_type", "client_credential");
             put("appid", appid);
             put("secret", secret);
@@ -70,6 +71,7 @@ public class WeixinAppTask {
          * "expires_in":7200
          * }
          */
+        logger.debug("获取微信access_token数据："+getAccessTokenResult);
         JSONObject jsonObject = JSON.parseObject(getAccessTokenResult);
         String access_token = jsonObject.getString("access_token");
         int expires_in = jsonObject.getInteger("expires_in");

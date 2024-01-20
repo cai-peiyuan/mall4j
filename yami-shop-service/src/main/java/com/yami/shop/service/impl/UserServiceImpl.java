@@ -17,7 +17,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.StrKit;
 import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.app.param.BindPhoneParam;
@@ -216,7 +215,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", getWxPhoneParam.getCode());
-        String post = HttpKit.post(url, jsonObject.toJSONString());
+        String post = HttpUtil.post(url, jsonObject.toJSONString());
+        // String post = HttpKit.post(url, jsonObject.toJSONString()); jfinal中javax.servlet.ServletInputStream类在jdk17中没有
         /**
          * 错误码	错误描述	解决方案
          * -1	system error	系统繁忙，此时请开发者稍候再试
@@ -237,6 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
          *     }
          * }
          */
+        log.debug("绑定用户手机号接口返回："+post);
         JSONObject getUserPhoneResult = JSON.parseObject(post);
         /**
          * 请求结果中获取手机号码
@@ -254,6 +255,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUserId(userId);
             user.setUserMobile(phoneNumber);
             userMapper.updateById(user);
+        } else {
+            String errmsg = getUserPhoneResult.getString("errmsg");
+            throw new YamiShopBindException("绑定微信用户手机号失败" + errmsg);
         }
 
     }

@@ -42,4 +42,25 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
     public UserBalance getUserBalanceByUserId(String userId) {
         return userBalanceMapper.selectById(userId);
     }
+
+    /**
+     * 根据用户id获取用户余额信息
+     *
+     * @param userId
+     * @param userMobile
+     * @return
+     */
+    @Override
+    public UserBalance getUserBalance(String userId, String userMobile) {
+        UserBalance userBalance = userBalanceMapper.selectById(userId);
+        if(userBalance == null){
+            userBalance = new UserBalance();
+            userBalance.setUserId(userId);
+            userBalance.setBalance(Double.valueOf(0.00));
+            userBalance.setCredits(0);
+            userBalance.setCardNumber(userMobile);
+            userBalanceMapper.insert(userBalance);
+        }
+        return userBalance;
+    }
 }

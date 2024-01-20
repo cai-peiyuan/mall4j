@@ -27,4 +27,12 @@ public interface UserBalanceService extends IService<UserBalance> {
      */
     UserBalance getUserBalanceByUserId(String userId);
 
+    /**
+     * 根据用户id获取用户余额信息
+     *
+     * @param userId
+     * @param userMobile
+     * @return
+     */
+    UserBalance getUserBalance(String userId, String userMobile);
 }
