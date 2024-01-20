@@ -60,12 +60,12 @@ page {
 
 .binding-phone {
   position: relative;
-  background: #fff;
   height: 80rpx;
   line-height: 80rpx;
   padding: 0 30rpx;
+  /* background: #fff;
   border-top: 2rpx solid #f7f7f7;
-  border-bottom: 2rpx solid #f7f7f7;
+  border-bottom: 2rpx solid #f7f7f7; */
   text-align: center;
   font-weight: bold;
 }

@@ -10,6 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    userBalance: {},
     orderAmount: '',
     sts: '',
     collectionCount: 0,
@@ -17,6 +18,8 @@ Page({
     newNickName: '',
     phonenum: '',
     closeEye: false,
+    wxUserInfo: {},
+    userBalance: {}
   },
 
   /**
@@ -28,8 +31,6 @@ Page({
     this.setData({
       phonenum: userMobile
     });
-    //从接口加载用户信息
-    this.loadUserInfo();
   },
 
   /**
@@ -38,7 +39,7 @@ Page({
   onReady: function () {
 
   },
-  
+
   /**
    * 生命周期函数--监听页面显示
    */
@@ -47,19 +48,21 @@ Page({
     var ths = this;
     // var status = ths.data.status
     wx.showLoading();
-    var params = {
-      url: "/p/myOrder/orderCount",
-      method: "GET",
-      data: {},
-      callBack: function (res) {
-        wx.hideLoading();
-        ths.setData({
-          orderAmount: res
-        });
-      }
-    };
-    http.request(params);
-    this.showCollectionCount();
+    //从接口加载用户信息
+    ths.loadUserInfo();
+    // var params = {
+    //   url: "/p/myOrder/orderCount",
+    //   method: "GET",
+    //   data: {},
+    //   callBack: function (res) {
+    //     wx.hideLoading();
+    //     ths.setData({
+    //       orderAmount: res
+    //     });
+    //   }
+    // };
+    // http.request(params);
+    //this.showCollectionCount();
   },
 
   /**
@@ -116,12 +119,23 @@ Page({
    * 加载个人页面的信息
    */
   loadUserInfo() {
+    let ths = this;
     var params = {
       url: "/p/user/wxAppUserInfo",
       method: "GET",
       data: {},
       callBack: function (res) {
+        wx.hideLoading();
         ths.setData({
+          wxUserInfo: res.userInfo,
+          userBalance: res.userBalance,
+          orderAmount: res.orderCountData,
+          collectionCount: res.collectionCount,
+        });
+        ths.setData({
+          avatarUrl: res.pic,
+          nickName: res.nickName,
+          userMobile: res.userMobile
         });
       }
     };
@@ -368,22 +382,22 @@ Page({
     var that = this;
     console.log('获取用户手机号', e)
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
-        /**
-         * detail: code: "0b3f7cf7302e9245ed5a4998a69c804ba1b9de31baef938821bacb106d2f9a77"
-          encryptedData: "ME3pnlirrd2z4+yHMeaPC3hO1JH2HBkahOO+dSOJmpywsTTqmDLZuPrHTPJzqa/nH1375CoiWPT3wC+V6mLxa07/HzIAwMH/eudhboRoeMvFb5mfHkJVAqxXEWRHOwjQeETs2aHMEEsARCrjzNMNXBDGj1p9qrgoVtFUaAg+rPFy985aa1uDjqaNjj+xHR/A7fQqp5zUIvFRM+nJqYp77w=="
-          errMsg: "getPhoneNumber:ok"
-          iv: "PS5v8/xdITknqTnlbPmIQQ=="
-         */
-        var params = {
-          url: "/p/user/getWxPhoneNumber",
-          method: "POST",
-          data: e.detail,
-          callBack: function (res) {
-            console.log('获取小程序用户手机号',res);
-            that.loadUserInfo();
-          }
-        };
-        http.request(params);
+      /**
+       * detail: code: "0b3f7cf7302e9245ed5a4998a69c804ba1b9de31baef938821bacb106d2f9a77"
+        encryptedData: "ME3pnlirrd2z4+yHMeaPC3hO1JH2HBkahOO+dSOJmpywsTTqmDLZuPrHTPJzqa/nH1375CoiWPT3wC+V6mLxa07/HzIAwMH/eudhboRoeMvFb5mfHkJVAqxXEWRHOwjQeETs2aHMEEsARCrjzNMNXBDGj1p9qrgoVtFUaAg+rPFy985aa1uDjqaNjj+xHR/A7fQqp5zUIvFRM+nJqYp77w=="
+        errMsg: "getPhoneNumber:ok"
+        iv: "PS5v8/xdITknqTnlbPmIQQ=="
+       */
+      var params = {
+        url: "/p/user/getWxPhoneNumber",
+        method: "POST",
+        data: e.detail,
+        callBack: function (res) {
+          console.log('获取小程序用户手机号', res);
+          that.loadUserInfo();
+        }
+      };
+      http.request(params);
     }
   }
 })
