@@ -1,25 +1,26 @@
-<!--pages/user-balance-detail/user-balance-detail.wxml-->
 <view class='container'>
 
-  <view class="pageHead">
-    <view class="cardHead">
-      <view class="cardNo">
-        <view class="cardNoLeft"> No.1000000000</view>
-      </view>
-      <view style="margin-top: 2vw;">账户余额</view>
-      <view class="bananceNum">¥79.10</view>
+    <view class="pageHead" wx:if="{{false}}">
+        <view class="cardHead">
+            <view class="cardNo">
+                <view class="cardNoLeft"> No.1000000000</view>
+            </view>
+            <view style="margin-top: 2vw;">账户余额</view>
+            <view class="bananceNum">¥79.10</view>
+        </view>
     </view>
-    
-  </view>
-  <view style="display: flex; position:fixed; z-index: 11; top:33vw;width:100%; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
-    <view class="{{tabIndex==0?'activeTab':''}}" bindtap="changeTab" data-index="{{0}}">近一个月</view>
-    <view class="{{tabIndex==1?'activeTab':''}}" bindtap="changeTab" data-index="{{1}}">全部</view>
-  </view>
-  <view class="consumeList">
-    <view class="consumeItem" wx:for="(item,index) in 30">
-      <view style="color:rgb(19, 133, 24)">-99元</view>
-      <view class="consumeDate">2023-12-02 20:09:09</view>
+
+    <view wx:if="{{false}}" style="display: flex; position:fixed; z-index: 11; top:0vw;width:100%; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
+        <view class="{{tabIndex==0?'activeTab':''}}" bindtap="changeTab" data-index="{{0}}">近一个月</view>
+        <view class="{{tabIndex==1?'activeTab':''}}" bindtap="changeTab" data-index="{{1}}">全部</view>
     </view>
-  </view>
-  
+
+    <view class="consumeList">
+        <view class="consumeItem" wx:for="{{userBalanceDetail}}">
+            <view style="color:rgb(19, 133, 24)">{{item.useBalance}}</view>
+            <view class="consumeDate">{{item.useTime}}</view>
+        </view>
+    </view>
+
+    <view wx:if="userBalanceDetail.length == 0">暂无数据</view>
 </view>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.UserBalanceMapper">
+  <resultMap id="BaseResultMap" type="com.yami.shop.bean.model.UserBalance">
+    <!--
+    -->
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="credits" jdbcType="INTEGER" property="credits" />
+    <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+</mapper>
