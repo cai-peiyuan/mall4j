@@ -259,5 +259,4 @@ button.memu-btn.memu-item:after {
   width: 100%;
   background: salmon;
   opacity: 0;
-  height: 100%;
 }
