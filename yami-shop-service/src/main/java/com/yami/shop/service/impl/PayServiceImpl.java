@@ -33,6 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 订单支付平台服务
  * @author lgh on 2018/09/15.
  */
 @Service
@@ -41,11 +42,8 @@ public class PayServiceImpl implements PayService {
     @Autowired
     private OrderMapper orderMapper;
 
-
-
     @Autowired
     private OrderSettlementMapper orderSettlementMapper;
-
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -55,12 +53,11 @@ public class PayServiceImpl implements PayService {
 
     /**
      * 不同的订单号，同一个支付流水号
+     * 支持多个订单合并付款
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PayInfoDto pay(String userId, PayParam payParam) {
-
-
         // 不同的订单号的产品名称
         StringBuilder prodName = new StringBuilder();
         // 支付单号

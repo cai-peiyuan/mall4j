@@ -79,5 +79,13 @@
             <artifactId>jfinal</artifactId>
             <version>5.0.8</version>
         </dependency>
+
+        <!--微信支付Java版本sdk-->
+        <dependency>
+            <groupId>com.github.wechatpay-apiv3</groupId>
+            <artifactId>wechatpay-java</artifactId>
+            <version>0.2.12</version>
+        </dependency>
+
     </dependencies>
 </project>

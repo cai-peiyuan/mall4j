@@ -37,7 +37,8 @@ public class PayController {
     private final PayService payService;
 
     /**
-     * 支付接口
+     * 小程序平台订单支付接口
+     *
      */
     @PostMapping("/pay")
     @Operation(summary = "根据订单号进行支付" , description = "根据订单号进行支付")

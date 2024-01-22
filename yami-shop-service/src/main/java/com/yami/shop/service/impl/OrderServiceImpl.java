@@ -172,12 +172,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     @CachePut(cacheNames = "ConfirmOrderCache", key = "#userId")
     public ShopCartOrderMergerDto putConfirmOrderCache(String userId, ShopCartOrderMergerDto shopCartOrderMergerDto) {
+        //仅仅是将shopCartOrderMergerDto 放入缓存
         return shopCartOrderMergerDto;
     }
 
     @Override
     @Cacheable(cacheNames = "ConfirmOrderCache", key = "#userId")
     public ShopCartOrderMergerDto getConfirmOrderCache(String userId) {
+        //从缓存中返回数据 不执行返回这个null
         return null;
     }
 
