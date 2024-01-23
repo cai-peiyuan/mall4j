@@ -99,7 +99,7 @@ public class LoginController {
      * 微信小程序登录
      * @param wxLoginDTO
      * @return
-     * @author peiyuan.cai@mapabc.com
+     * @author peiyuan.cai
      * @date 2024/1/19 21:29 星期五
      */
     @PostMapping("/wxLogin")

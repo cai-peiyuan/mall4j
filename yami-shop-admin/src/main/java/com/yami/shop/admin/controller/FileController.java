@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.admin.controller;
 
@@ -32,14 +24,14 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/admin/file")
 public class FileController {
-	
+
 	@Autowired
 	private AttachFileService attachFileService;
 	@Autowired
 	private Qiniu qiniu;
 	@Autowired
 	private ImgUploadUtil imgUploadUtil;
-	
+
 	@PostMapping("/upload/element")
 	public ServerResponseEntity<String> uploadElementFile(@RequestParam("file") MultipartFile file) throws IOException{
 		if(file.isEmpty()){
@@ -48,7 +40,7 @@ public class FileController {
 		String fileName = attachFileService.uploadFile(file);
         return ServerResponseEntity.success(fileName);
 	}
-	
+
 	@PostMapping("/upload/tinymceEditor")
 	public ServerResponseEntity<String> uploadTinymceEditorImages(@RequestParam("editorFile") MultipartFile editorFile) throws IOException{
 		String fileName =  attachFileService.uploadFile(editorFile);
@@ -60,5 +52,5 @@ public class FileController {
 		}
         return ServerResponseEntity.success(data);
 	}
-	
+
 }

@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.admin.task;
 
@@ -27,6 +19,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 
 
 /**
@@ -58,8 +52,8 @@ public class WeixinAppTask {
         String appid = sysConfigService.getValue("wxapp_appId");
         String secret = sysConfigService.getValue("wxapp_secret");
 
-        // secret = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_secret");
-        // appid = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_appId");
+        // secret = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxapp_secret");
+        // appid = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxapp_appId");
         String getAccessTokenResult = HttpUtil.get(url, new HashMap<>() {{
             put("grant_type", "client_credential");
             put("appid", appid);
@@ -79,7 +73,7 @@ public class WeixinAppTask {
         sysConfigService.updateValueByKey("wxapp_access_token", access_token);
         sysConfigService.updateRemarkByKey("wxapp_access_token", getAccessTokenResult);
         //放入redis缓存
-        redisTemplate.opsForHash().put("sys:config", "wxapp_access_token", access_token);
+        redisTemplate.opsForHash().put(KEY_SYS_CONFIG, "wxapp_access_token", access_token);
     }
 
 

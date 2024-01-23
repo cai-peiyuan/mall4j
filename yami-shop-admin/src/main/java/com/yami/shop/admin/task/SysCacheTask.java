@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.admin.task;
 
@@ -23,6 +15,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 
 
 /**
@@ -51,7 +45,7 @@ public class SysCacheTask {
         logger.debug("缓存系统参数");
         List<SysConfig> list = sysConfigService.list();
         for (SysConfig sysConfig : list) {
-            redisTemplate.opsForHash().put("sys:config", sysConfig.getParamKey(), sysConfig.getParamValue());
+            redisTemplate.opsForHash().put(KEY_SYS_CONFIG, sysConfig.getParamKey(), sysConfig.getParamValue());
         }
     }
 

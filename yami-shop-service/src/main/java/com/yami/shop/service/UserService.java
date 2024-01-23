@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.service;
 
@@ -76,7 +68,7 @@ public interface UserService extends IService<User> {
      * 获取用户的微信绑定手机号
      * @param userId
      * @param getWxPhoneParam
-     * @author peiyuan.cai@mapabc.com
+     * @author peiyuan.cai
      * @date 2024/1/19 21:52 星期五
      */
     void getWxPhoneParam(String userId, GetWxPhoneParam getWxPhoneParam);

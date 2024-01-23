@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.service.impl;
 
@@ -41,6 +33,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
+
+import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 
 /**
  * @author lgh on 2018/09/11.
@@ -119,9 +113,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public User wxLogin(String wxLoginCode) {
-        String jscode2sessionUrl = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_jscode2sessionUrl");
-        String secret = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_secret");
-        String appId = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_appId");
+        String jscode2sessionUrl = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxapp_jscode2sessionUrl");
+        String secret = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxapp_secret");
+        String appId = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxapp_appId");
 
         jscode2sessionUrl = StrKit.isBlank(jscode2sessionUrl) ? "https://api.weixin.qq.com/sns/jscode2session" : jscode2sessionUrl;
         secret = StrKit.isBlank(secret) ? "032c5873129b0bef34e835c4c259e76c" : secret;
@@ -201,7 +195,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      *
      * @param userId
      * @param getWxPhoneParam
-     * @author peiyuan.cai@mapabc.com
+     * @author peiyuan.cai
      * @date 2024/1/19 21:52 星期五
      */
     @Override
@@ -210,7 +204,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         /**
          * 获取accessToken
          */
-        String ACCESS_TOKEN = (String) redisTemplate.opsForHash().get("sys:config", "wxapp_access_token");
+        String ACCESS_TOKEN = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxapp_access_token");
         String url = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=" + ACCESS_TOKEN;
 
         JSONObject jsonObject = new JSONObject();

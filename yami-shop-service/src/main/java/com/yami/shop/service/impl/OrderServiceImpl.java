@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.service.impl;
 
@@ -56,6 +48,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 
 /**
  * @author lgh on 2018/09/15.
@@ -304,10 +298,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         setOrderExtraInfo(order);
         // 写入文件 供测试使用
         testWriteObject(order);
-        String print_order_auto = (String) redisTemplate.opsForHash().get("sys:config", "print_order_auto");
-        String print_machine_code = (String) redisTemplate.opsForHash().get("sys:config", "print_machine_code");
-        String print_order_content_template = (String) redisTemplate.opsForHash().get("sys:config", "print_order_content_template");
-        String service_tel = (String) redisTemplate.opsForHash().get("sys:config", "service_tel");
+        String print_order_auto = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "print_order_auto");
+        String print_machine_code = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "print_machine_code");
+        String print_order_content_template = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "print_order_content_template");
+        String service_tel = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "service_tel");
 
         if (StrUtil.isBlank(print_machine_code)) {
             throw new YamiShopBindException("请在系统参数中设置系统打印机设备编码[" + print_machine_code + "]");

@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.sys.service;
 
@@ -35,7 +27,7 @@ public interface SysMenuService extends IService<SysMenu> {
 	 * @param menuId 菜单id
 	 */
 	void deleteMenuAndRoleMenu(Long menuId);
-	
+
 	/**
 	 * 根据角色ID，获取菜单列表
 	 * @param roleId 角色id
@@ -54,7 +46,7 @@ public interface SysMenuService extends IService<SysMenu> {
 	 * @return 一级菜单列表
 	 */
 	List<SysMenu> listRootMenu();
-	
+
 	/**
 	 * 根据一级菜单id 获取二级菜单
 	 * @param parentId 一级菜单id

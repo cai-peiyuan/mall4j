@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.sys.dao;
 
@@ -21,7 +13,7 @@ import java.util.List;
  * @author lgh
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu>{
-	
+
 	/**
 	 * 根据角色id获取菜单列表
 	 * @param roleId 角色id
@@ -35,7 +27,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu>{
 	 * @return 该用户所有可用的菜单
 	 */
 	List<SysMenu> listMenuByUserId(Long userId);
-	
+
 	/**
 	 * 获取系统的所有菜单
 	 * @return 系统的所有菜单
@@ -53,7 +45,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu>{
 	 * @return 一级菜单列表
 	 */
 	List<SysMenu> listRootMenu();
-	
+
 	/**
 	 * 根据一级菜单id 获取二级菜单
 	 * @param parentId 一级菜单id

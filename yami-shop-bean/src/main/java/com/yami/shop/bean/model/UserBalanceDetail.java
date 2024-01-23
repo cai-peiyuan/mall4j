@@ -1,12 +1,4 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.bean.model;
 
@@ -28,15 +20,18 @@ import java.util.Date;
 @TableName("tz_user_balance_detail")
 public class UserBalanceDetail implements Serializable {
     private static final long serialVersionUID = 2090714647038636896L;
-    @TableId(type = IdType.INPUT)
+    @TableId
+    private Long id;
+
     private String userId;
-    private String detailType;
+
+    private String detailType; //明细类型1余额2积分
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date useTime;
     private Double useBalance;
     private Double newBalance;
     private Integer useCredits;
     private Integer newCredits;
-    private String orderNumber;
-    private String description;
+    private String orderNumber; //关联订单号
+    private String description; //明细描述
 }

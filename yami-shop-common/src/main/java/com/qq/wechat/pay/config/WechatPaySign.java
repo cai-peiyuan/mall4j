@@ -22,6 +22,9 @@ public class WechatPaySign {
      */
     private String nonceStr;
 
+    /**
+     * 小程序下单接口返回的prepay_id参数值，提交格式如：prepay_id=***
+     */
     private String packageStr;
 
     /**

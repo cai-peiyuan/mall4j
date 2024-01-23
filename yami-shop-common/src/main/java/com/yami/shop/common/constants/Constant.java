@@ -13,4 +13,10 @@ public class Constant {
      * 逗号
      */
     public static final String COMMA = ",";
+
+    public static final String KEY_SYS_CONFIG = "sys:config";
+
+    public static final String ORDER_TYPE_BALANCE = "ORDER_TYPE_BALANCE";
+
+
 }

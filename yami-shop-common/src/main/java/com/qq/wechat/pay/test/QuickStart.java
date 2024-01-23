@@ -32,10 +32,10 @@ public class QuickStart {
     Amount amount = new Amount();
     amount.setTotal(1);
     request.setAmount(amount);
-    request.setAppid(WeChatPayUtil.WXAPP_APPID);
+    request.setAppid(WeChatPayUtil.appId);
     request.setMchid(WeChatPayUtil.merchantId);
     request.setDescription("测试商品标题");
-    request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL);
+    request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
     request.setOutTradeNo("out_trade_no_001");
     Payer payer = new Payer();
     payer.setOpenid("o7hh869Yv8oVzVJ8UEUPorTqeMI8");

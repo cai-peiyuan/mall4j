@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="stored_value" jdbcType="DECIMAL" property="storedValue" />
     <result column="sell_value" jdbcType="DECIMAL" property="sellValue" />
+    <result column="sell_cnt" jdbcType="INTEGER" property="sellCnt" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
 

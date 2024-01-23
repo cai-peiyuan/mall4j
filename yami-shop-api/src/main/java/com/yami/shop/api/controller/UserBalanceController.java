@@ -1,30 +1,21 @@
-/*
- * Copyright (c) 2018-2999 广州市蓝海创新科技有限公司 All rights reserved.
- *
- * https://www.mall4j.com/
- *
- * 未经允许，不可做商业用途！
- *
- * 版权所有，侵权必究！
- */
+
 
 package com.yami.shop.api.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.yami.shop.bean.model.UserBalance;
-import com.yami.shop.bean.model.UserBalanceDetail;
-import com.yami.shop.bean.model.UserBalanceSell;
+import com.qq.wechat.pay.config.WechatPaySign;
+import com.yami.shop.bean.model.*;
 import com.yami.shop.common.response.ServerResponseEntity;
+import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.security.api.util.SecurityUtils;
 import com.yami.shop.service.UserBalanceDetailService;
+import com.yami.shop.service.UserBalanceOrderService;
 import com.yami.shop.service.UserBalanceSellService;
 import com.yami.shop.service.UserBalanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,8 +31,8 @@ import java.util.List;
 public class UserBalanceController {
 
     private final UserBalanceService userBalanceService;
+    private final UserBalanceOrderService userBalanceOrderService;
     private final UserBalanceSellService userBalanceSellService;
-
     private final UserBalanceDetailService userBalanceDetailService;
 
     /**
@@ -68,6 +59,21 @@ public class UserBalanceController {
         JSONObject result = new JSONObject();
         result.put("userBalanceDetail", userBalanceDetail);
         return ServerResponseEntity.success(result);
+    }
+
+
+    /**
+     * 创建用户储值订单
+     */
+    @GetMapping("/createBalanceOrder/{cardId}")
+    @Operation(summary = "创建用户储值订单")
+    public ServerResponseEntity<WechatPaySign> createBalanceOrder(@PathVariable("cardId") Long cardId) {
+        YamiUser user = SecurityUtils.getUser();
+        // 创建储值订单
+        UserBalanceOrder userBalanceOrder = userBalanceOrderService.createBalanceOrder(user.getUserId(), user.getShopId(), cardId);
+        // 生成支付订单和支付参数
+        WechatPaySign wechatPaySign = userBalanceOrderService.createWeChatPayPreOrder(userBalanceOrder);
+        return ServerResponseEntity.success(wechatPaySign);
     }
 
 }
