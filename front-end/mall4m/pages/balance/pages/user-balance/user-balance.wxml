@@ -1,38 +1,38 @@
 <!--pages/user-balance/user-balance.wxml 用户储值余额页面-->
 <!-- <text>pages/user-balance/user-balance.wxml</text> -->
 <view class='container'>
-    <view class="pageHead">
-        <view class="cardNo">
-            <view class="cardNoLeft">No.{{userBalance.cardNumber}}</view>
-            <view style="font-size: 12px;" bindtap="toUserBalanceDetailPage">明细</view>
-        </view>
-        <view style="margin-top: 2vw;">账户余额</view>
-        <view class="bananceNum">¥{{userBalance.balance}}</view>
+  <view class="pageHead">
+    <view class="cardNo">
+      <view class="cardNoLeft">No.{{userBalance.cardNumber}}</view>
+      <view style="font-size: 12px;" bindtap="toUserBalanceDetailPage">明细</view>
     </view>
-    <view style="display: flex; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
-        <view class="{{activeTab==0?'activeTab':''}}" bindtap="changeActiveTab" data-index="{{0}}">在线储值</view>
-        <view class="{{activeTab==1?'activeTab':''}}" bindtap="changeActiveTab" data-index="{{1}}">储值券</view>
+    <view style="margin-top: 2vw;">账户余额</view>
+    <view class="bananceNum">¥{{userBalance.balance}}</view>
+  </view>
+  <view style="display: flex; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
+    <view class="{{activeTab==0?'activeTab':''}}" bindtap="changeActiveTab" data-index="{{0}}">在线储值</view>
+    <view class="{{activeTab==1?'activeTab':''}}" bindtap="changeActiveTab" data-index="{{1}}">储值券</view>
+  </view>
+  <view wx:if="{{activeTab==0}}" style="display: flex; padding:3vw; flex-wrap: wrap;">
+    <!-- 循环显示售卖储值卡 -->
+    <view wx:for="{{userBalanceSells}}" wx:key="userId" class="rechargeItem {{cardIndex==index?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{index}}" data-money="{{item.sellValue}}" data-card="{{item.id}}">
+      <view class="rechargeNum"><span class="RMB">¥</span>{{item.storedValue}}</view>
+      <view class="salePrice">售价¥{{item.sellValue}}</view>
     </view>
-    <view wx:if="{{activeTab==0}}" style="display: flex; padding:3vw; flex-wrap: wrap;">
-        <!-- 循环显示售卖储值卡 -->
-        <view wx:for="{{userBalanceSells}}" wx:key="userId" class="rechargeItem {{cardIndex==index?'rechargeItemActive':''}}" bindtap="changeCard" data-index="{{index}}" data-money="{{item.sellValue}}">
-            <view class="rechargeNum"><span class="RMB">¥</span>{{item.storedValue}}</view>
-            <view class="salePrice">售价¥{{item.sellValue}}</view>
-        </view>
-    </view>
+  </view>
 
-    <view wx:if="{{activeTab==1}}" class="centerFlex" style="margin-top: 5vw;">
-        券码：<input type="text" style="border:solid 1px #eee; border-radius:3vw; height:10vw; width:70vw" />
-    </view>
+  <view wx:if="{{activeTab==1}}" class="centerFlex" style="margin-top: 5vw;">
+    券码：<input type="text" style="border:solid 1px #eee; border-radius:3vw; height:10vw; width:70vw" />
+  </view>
 
-    <view class="footerMenu" wx:if="{{activeTab==0}}">
-        <view style="font-size: 14px; display: flex; align-items:baseline;">实付金额
-            <view style="display: flex; align-items:baseline; font-weight: bold; margin-left: 2vw;">¥ <view style="font-size: 26px; margin-left: 2vw; position: relative; top:0.5vw;">{{cardMoney}}</view>
-            </view>
-        </view>
-        <view class="btnCharge">立即充值</view>
+  <view class="footerMenu" wx:if="{{activeTab==0 && cardIndex!=-1}}">
+    <view style="font-size: 14px; display: flex; align-items:baseline;">实付金额
+      <view style="display: flex; align-items:baseline; font-weight: bold; margin-left: 2vw;">¥ <view style="font-size: 26px; margin-left: 2vw; position: relative; top:0.5vw;">{{cardMoney}}</view>
+      </view>
     </view>
-    <view class="footerMenu" wx:if="{{activeTab==1}}" bind:tap="chargeByCode">
-        <view class="btnCharge" style="width:90vw; justify-content: center;">立即兑换</view>
-    </view>
+    <view class="btnCharge" bindtap="submitBalanceOrder" >立即充值</view>
+  </view>
+  <view class="footerMenu" wx:if="{{activeTab==1}}" bind:tap="chargeByCode">
+    <view class="btnCharge" style="width:90vw; justify-content: center;">立即兑换</view>
+  </view>
 </view>

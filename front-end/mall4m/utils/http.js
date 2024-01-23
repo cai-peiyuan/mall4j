@@ -19,8 +19,8 @@ function request(params, isGetToken) {
     method: params.method == undefined ? "POST" : params.method,
     dataType: 'json',
     responseType: params.responseType == undefined ? 'text' : params.responseType,
-    success: function(res) {
-			const responseData = res.data
+    success: function (res) {
+      const responseData = res.data
 
       // 00000 请求成功
       if (responseData.code === '00000') {
@@ -30,13 +30,14 @@ function request(params, isGetToken) {
         return
       }
 
-      // A00004 未授权
+      // A00004 未授权 需要重新登录
       if (responseData.code === 'A00004') {
         /*wx.navigateTo({
           url: '/pages/login/login',
         })*/
+        console.log('A00004 未授权 需要重新登录', responseData);
         getToken();
-        return
+        return;
       }
 
       // A00005 服务器出了点小差
@@ -71,7 +72,7 @@ function request(params, isGetToken) {
       // 其他异常
       if (responseData.code !== '00000') {
         // console.log('params', params)
-      	wx.hideLoading();
+        wx.hideLoading();
         if (params.errCallBack) {
           params.errCallBack(responseData)
         } else {
@@ -83,7 +84,7 @@ function request(params, isGetToken) {
         wx.hideLoading();
       }
     },
-    fail: function(err) {
+    fail: function (err) {
       wx.hideLoading();
       wx.showToast({
         title: "网络故障",
@@ -138,53 +139,57 @@ const wxLogin = function (wxLoginCode) {
 }
 
 //通过code获取token,并保存到缓存
-var getToken = function() {
-/*  wx.login({
-    success: res => {
-      // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      request({
-        login: true,
-        url: '/login?grant_type=mini_app',
-        data: {
-          principal: res.code
-        },
-        callBack: result => {
-          // 没有获取到用户昵称，说明服务器没有保存用户的昵称，也就是用户授权的信息并没有传到服务器
-          if (!result.nickName) {
-            updateUserInfo();
+var getToken = function () {
+  /*  wx.login({
+      success: res => {
+        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        request({
+          login: true,
+          url: '/login?grant_type=mini_app',
+          data: {
+            principal: res.code
+          },
+          callBack: result => {
+            // 没有获取到用户昵称，说明服务器没有保存用户的昵称，也就是用户授权的信息并没有传到服务器
+            if (!result.nickName) {
+              updateUserInfo();
+            }
+            if (result.userStutas == 0) {
+              wx.showModal({
+                showCancel: false,
+                title: '提示',
+                content: '您已被禁用，不能购买，请联系客服'
+              })
+              wx.setStorageSync('token', '');
+            } else {
+              wx.setStorageSync('token', 'bearer' + result.access_token); //把token存入缓存，请求接口数据时要用
+            }
+            var globalData = getApp().globalData;
+            globalData.isLanding = false;
+            while (globalData.requestQueue.length) {
+              request(globalData.requestQueue.pop());
+            }
           }
-          if (result.userStutas == 0) {
-            wx.showModal({
-              showCancel: false,
-              title: '提示',
-              content: '您已被禁用，不能购买，请联系客服'
-            })
-            wx.setStorageSync('token', '');
-          } else {
-            wx.setStorageSync('token', 'bearer' + result.access_token); //把token存入缓存，请求接口数据时要用
-          }
-          var globalData = getApp().globalData;
-          globalData.isLanding = false;
-          while (globalData.requestQueue.length) {
-            request(globalData.requestQueue.pop());
-          }
-        }
-      }, true)
+        }, true)
 
-    }
-  })
-*/
+      }
+    })
+  */
   wx.login({
     success: res => {
-      if (config.debug) {
-        console.log('wx.login -> res', res);
-      }
+      console.log('wx.login success', res);
       try {
         wx.setStorageSync('wxLoginCode', res.code)
       } catch (e) {
         console.error(e);
       }
       wxLogin(res.code);
+    },
+    fail: res => {
+      console.log('wx.login fail', res);
+    },
+    complete: res => {
+      console.log('wx.login complete', res);
     }
   })
 }
@@ -213,7 +218,7 @@ function getCartCount() {
     url: "/p/shopCart/prodCount",
     method: "GET",
     data: {},
-    callBack: function(res) {
+    callBack: function (res) {
       if (res > 0) {
         wx.setTabBarBadge({
           index: 2,
