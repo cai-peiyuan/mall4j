@@ -39,8 +39,6 @@ public class NoticeController {
 
     private NoticeService noticeService;
 
-    
-
     /**
      * 置顶公告列表接口
      */
@@ -71,7 +69,6 @@ public class NoticeController {
     @Parameters({
     })
     public ServerResponseEntity<IPage<NoticeDto>> pageNotice(PageParam<NoticeDto> page) {
-
         return ServerResponseEntity.success(noticeService.pageNotice(page));
     }
 }
