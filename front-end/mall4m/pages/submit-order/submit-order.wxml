@@ -27,7 +27,7 @@
 
     <!-- 商品详情 -->
     <view class='prod-item'>
-      <block wx:for="{{orderItems}}" wx:key=''>
+      <block wx:for="{{orderItems}}" wx:key='id'>
         <view class='item-cont' bindtap='toOrderDetailPage' data-ordernum="{{item.primaryOrderNo}}">
           <view class='prod-pic'>
             <image src='{{item.pic}}'></image>
@@ -39,8 +39,8 @@
             <view class='prod-info-cont'>{{item.skuName}}</view>
             <view class='price-nums'>
               <text class='prodprice'><text class='symbol'>￥</text>
-              <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
-              <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
+                <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
+                <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
               <text class="prodcount">x{{item.prodCount}}</text>
             </view>
           </view>

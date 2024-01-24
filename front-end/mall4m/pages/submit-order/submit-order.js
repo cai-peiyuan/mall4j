@@ -132,6 +132,7 @@ Page({
      * 提交订单
      */
     toPay: function () {
+        // 检查地址选择情况
         if (!this.data.userAddr) {
             wx.showToast({
                 title: '请选择地址',
@@ -190,9 +191,9 @@ Page({
                 wx.requestPayment({
                     timeStamp: res.timeStamp,
                     nonceStr: res.nonceStr,
-                    package: res.packageValue,
-                    signType: res.signType,
-                    paySign: res.paySign,
+                    package: res.packageStr,
+                    signType: "RSA",
+                    paySign: res.sign,
                     success: e => {
                         console.log("wx.requestPayment支付成功", e);
                         wx.navigateTo({
@@ -206,7 +207,6 @@ Page({
                         })
                     }
                 })
-
             }
         };
         http.request(params);
