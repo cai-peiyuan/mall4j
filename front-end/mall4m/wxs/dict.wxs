@@ -15,8 +15,21 @@ function getPayTypeName(payTypeCode) {
 }
 
 /**
+ * 物流公司
+ * @param dvyId 
+ */
+function getDvyNameById(dvyId) {
+  if (dvyId == 13) {
+    return '商家配送'
+  } else {
+    return '未找到物流公司 编号：' + dvyId
+  }
+}
+
+/**
  * 提供小程序使用的一些字典信息
  */
 module.exports = ({
-  getPayTypeName: getPayTypeName
+  getPayTypeName: getPayTypeName,
+  getDvyNameById: getDvyNameById
 });
