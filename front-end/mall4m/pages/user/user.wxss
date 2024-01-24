@@ -260,3 +260,15 @@ button.memu-btn.memu-item:after {
   background: salmon;
   opacity: 0;
 }
+
+
+/* 获取手机号btn */
+.getphone-btn {
+  display: inline-block;
+  position: absolute;
+  width: 100%;
+  background: salmon;
+  opacity: 0;
+  height: 100%;
+  left: 0px;
+}

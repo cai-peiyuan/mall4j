@@ -395,7 +395,13 @@ Page({
         data: e.detail,
         callBack: function (res) {
           console.log('获取小程序用户手机号', res);
-          that.loadUserInfo();
+          http.getToken();
+          //that.loadUserInfo();
+          setTimeout(() => {
+            wx.navigateTo({
+              url: '/pages/user/user?sts=1',
+            })
+          }, 1000)
         }
       };
       http.request(params);

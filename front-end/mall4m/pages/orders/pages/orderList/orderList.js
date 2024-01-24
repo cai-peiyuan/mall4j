@@ -198,16 +198,17 @@ Page({
         wx.requestPayment({
           timeStamp: res.timeStamp,
           nonceStr: res.nonceStr,
-          package: res.packageValue,
-          signType: res.signType,
-          paySign: res.paySign,
-          success: function() {
+          package: res.packageStr,
+          signType: "RSA",
+          paySign: res.sign,
+          success: function(e) {
+            console.log("wx.requestPayment支付成功", e);
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + e.currentTarget.dataset.ordernum,
             })
           },
           fail: function(err) {
-            //console.log("支付失败");
+            console.log("wx.requestPayment支付失败", err);
             //这里模拟跳转到支付结果页面
             wx.navigateTo({
                 url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' +  + e.currentTarget.dataset.ordernum + "&orderType=" + this.data.orderType,

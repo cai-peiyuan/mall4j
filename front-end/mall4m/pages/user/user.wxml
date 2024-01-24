@@ -27,7 +27,7 @@
     <view>
       <view wx:if="{{userMobile==null}}">
         <view class='binding-phone'>
-          <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="contact-btn"></button>
+          <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="getphone-btn"></button>
           <text class='show-tip'>请先注册会员</text>
         </view>
       </view>

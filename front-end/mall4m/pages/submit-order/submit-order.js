@@ -201,7 +201,7 @@ Page({
                         })
                     },
                     fail: err => {
-                        console.log("wx.requestPayment支付失败", e);
+                        console.log("wx.requestPayment支付失败", err);
                         wx.navigateTo({
                             url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
                         })
