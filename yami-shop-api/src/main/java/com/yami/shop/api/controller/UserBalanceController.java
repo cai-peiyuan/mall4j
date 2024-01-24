@@ -8,10 +8,7 @@ import com.yami.shop.bean.model.*;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.security.api.util.SecurityUtils;
-import com.yami.shop.service.UserBalanceDetailService;
-import com.yami.shop.service.UserBalanceOrderService;
-import com.yami.shop.service.UserBalanceSellService;
-import com.yami.shop.service.UserBalanceService;
+import com.yami.shop.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -31,6 +28,8 @@ import java.util.List;
 public class UserBalanceController {
 
     private final UserBalanceService userBalanceService;
+
+    private final PayService payService;
     private final UserBalanceOrderService userBalanceOrderService;
     private final UserBalanceSellService userBalanceSellService;
     private final UserBalanceDetailService userBalanceDetailService;
@@ -72,7 +71,7 @@ public class UserBalanceController {
         // 创建储值订单
         UserBalanceOrder userBalanceOrder = userBalanceOrderService.createBalanceOrder(user.getUserId(), user.getShopId(), cardId);
         // 生成支付订单和支付参数
-        WechatPaySign wechatPaySign = userBalanceOrderService.createWeChatPayPreOrder(userBalanceOrder);
+        WechatPaySign wechatPaySign = payService.createWeChatPrePayOrder(userBalanceOrder);
         return ServerResponseEntity.success(wechatPaySign);
     }
 

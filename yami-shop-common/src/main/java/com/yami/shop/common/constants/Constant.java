@@ -16,7 +16,15 @@ public class Constant {
 
     public static final String KEY_SYS_CONFIG = "sys:config";
 
+    /**
+     * 订单类型，余额充值
+     */
     public static final String ORDER_TYPE_BALANCE = "ORDER_TYPE_BALANCE";
+
+    /**
+     * 订单类型 商品购买
+     */
+    public static final String ORDER_TYPE_GOODS = "ORDER_TYPE_GOODS";
 
 
 }

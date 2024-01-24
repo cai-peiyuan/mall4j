@@ -31,6 +31,11 @@ public class WxPayPrepay implements Serializable {
 
     private String description;
 
+    /**
+     * 关联订单表中的订单编号多个使用逗号分割
+     */
+    private String orderNumbers;
+
     private String outTradeNo;
 
     private String attach;

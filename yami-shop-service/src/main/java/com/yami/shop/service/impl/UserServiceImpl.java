@@ -23,6 +23,7 @@ import com.yami.shop.common.util.RedisUtil;
 import com.yami.shop.dao.SmsLogMapper;
 import com.yami.shop.dao.UserMapper;
 import com.yami.shop.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -40,6 +41,7 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
  * @author lgh on 2018/09/11.
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
@@ -136,6 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String session_key = jsonObject.getString("session_key");
         //如果openid没有返回，则没有用户信息
         if (StrUtil.hasBlank(openId, session_key)) {
+            log.info("获取openid出错 接口返回结果 {} ", jscode2SessionResultStr);
             return null;
         }
         User user = getUserByAppIdAndOpenId(appId, openId, session_key);

@@ -2,9 +2,12 @@
 
 package com.yami.shop.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yami.shop.bean.model.User;
 import com.yami.shop.bean.model.UserBalance;
 import com.yami.shop.dao.UserBalanceMapper;
+import com.yami.shop.dao.UserMapper;
 import com.yami.shop.service.UserBalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +26,8 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
 
     @Autowired
     private UserBalanceMapper userBalanceMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 根据用户id获取用户余额信息
@@ -32,7 +37,16 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
      */
     @Override
     public UserBalance getUserBalanceByUserId(String userId) {
-        return userBalanceMapper.selectById(userId);
+        UserBalance userBalance = userBalanceMapper.selectById(userId);
+        if (StrUtil.isBlank(userBalance.getCardNumber())) {
+            User user = userMapper.selectById(userId);
+            String userMobile = user.getUserMobile();
+            if (StrUtil.isNotBlank(userMobile)) {
+                userBalance.setCardNumber(userMobile);
+                userBalanceMapper.updateById(userBalance);
+            }
+        }
+        return userBalance;
     }
 
     /**
@@ -45,7 +59,7 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
     @Override
     public UserBalance getUserBalance(String userId, String userMobile) {
         UserBalance userBalance = userBalanceMapper.selectById(userId);
-        if(userBalance == null){
+        if (userBalance == null) {
             userBalance = new UserBalance();
             userBalance.setUserId(userId);
             userBalance.setBalance(Double.valueOf(0.00));

@@ -11,11 +11,10 @@ import lombok.Data;
 @Data
 public class OrderNumbersDto {
 
-	@Schema(description = "多个订单号拼接的字符串" ,required=true)
+	@Schema(description = "多个订单号拼接的字符串")
 	private String orderNumbers;
 
 	public OrderNumbersDto(String orderNumbers) {
 		this.orderNumbers = orderNumbers;
 	}
-	public OrderNumbersDto(){}
 }

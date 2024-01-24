@@ -4,10 +4,17 @@ package com.yami.shop.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.qq.wechat.pay.WeChatPayUtil;
+import com.qq.wechat.pay.config.WechatPaySign;
 import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
+import com.wechat.pay.java.service.payments.jsapi.model.Amount;
+import com.wechat.pay.java.service.payments.jsapi.model.Payer;
+import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
+import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yami.shop.bean.enums.PayType;
 import com.yami.shop.bean.event.PaySuccessOrderEvent;
 import com.yami.shop.bean.model.*;
@@ -28,6 +35,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yami.shop.common.constants.Constant.ORDER_TYPE_BALANCE;
+import static com.yami.shop.common.constants.Constant.ORDER_TYPE_GOODS;
 
 /**
  * 订单支付平台服务
@@ -40,6 +48,9 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private OrderSettlementMapper orderSettlementMapper;
@@ -121,7 +132,6 @@ public class PayServiceImpl implements PayService {
             throw new YamiShopBindException("结算信息已更改");
         }
 
-
         List<String> orderNumbers = orderSettlements.stream().map(OrderSettlement::getOrderNumber).collect(Collectors.toList());
 
         // 将订单改为已支付状态
@@ -142,113 +152,302 @@ public class PayServiceImpl implements PayService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String handleWxPayNotifyTransaction(Transaction transaction) {
-        StringBuilder result = new StringBuilder();
-        Date now = new Date();
+        String result = null;
         String attach = transaction.getAttach();
         if (StrUtil.equals(ORDER_TYPE_BALANCE, attach)) {
-            String tradeType = transaction.getTradeType().name();
-            //处理充值的用户支付通知订单逻辑
-            String tradeState = transaction.getTradeState().name();
-            String tradeStateDesc = transaction.getTradeStateDesc();
-            String bankType = transaction.getBankType();
-            if (transaction.getTradeState() == Transaction.TradeStateEnum.SUCCESS) {
-                String outTradeNo = transaction.getOutTradeNo();
-                /**
-                 * 支付成功的通知
-                 * 处理充值订单支付成功的逻辑
-                 * 1、更新预支付订单数据
-                 * 2、更新充值订单数据
-                 * 3、更新用户充值余额值
-                 * 4、添加用户余额变化明细
-                 */
+            // 充值订单
+            result = handleNotifyBalanceOrder(transaction, attach);
+        } else if (StrUtil.equals(ORDER_TYPE_GOODS, attach)) {
+            // 购物订单
+            result = handleNotifyGoodsOrder(transaction, attach);
+        }
+        return result;
+    }
 
-                // 1、更新预支付订单数据
-                WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, outTradeNo).eq(WxPayPrepay::getAttach, attach));
-                if (wxPayPrepay == null) {
-                    log.warn("微信预支付订单不存在 attach = {} outTradeNo = {}", attach, outTradeNo);
-                    result.append("微信预支付订单不存在 attach = " + attach + " outTradeNo = " + outTradeNo);
+    /**
+     * 处理购物订单通知
+     *
+     * @param transaction
+     * @param attach
+     * @return
+     * @author peiyuan.cai
+     * @date 2024/1/24 14:38 星期三
+     */
+    private String handleNotifyGoodsOrder(Transaction transaction, String attach) {
+        StringBuilder result = new StringBuilder();
+        Date now = new Date();
+        String tradeType = transaction.getTradeType().name();
+        //处理购物订单逻辑
+        String tradeState = transaction.getTradeState().name();
+        String tradeStateDesc = transaction.getTradeStateDesc();
+        String bankType = transaction.getBankType();
+        if (transaction.getTradeState() == Transaction.TradeStateEnum.SUCCESS) {
+            String outTradeNo = transaction.getOutTradeNo();
+            /**
+             * 支付成功的通知
+             * 处理充值订单支付成功的逻辑
+             * 1、更新预支付订单数据
+             * 2、更新订单结算信息
+             * 3、更新订单信息
+             */
+
+            // 1、更新预支付订单数据
+            WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, outTradeNo).eq(WxPayPrepay::getAttach, attach));
+            if (wxPayPrepay == null) {
+                log.warn("微信预支付订单不存在 attach = {} outTradeNo = {}", attach, outTradeNo);
+                result.append("微信预支付订单不存在 attach = " + attach + " outTradeNo = " + outTradeNo);
+                //合并支付的订单数据 支付的内部订单编号存在预支付订单orderNumbers字段中 所以如果 没有预支付订单 无法进一步处理数据
+                return result.toString();
+            } else {
+                if (StrUtil.equals(tradeState, wxPayPrepay.getTradeState())) {
+                    result.append("微信预支付订单数据已经处理过 attach = " + attach + " outTradeNo = " + outTradeNo);
                 } else {
-                    if (StrUtil.equals(tradeState, wxPayPrepay.getTradeState())) {
-                        result.append("微信预支付订单数据已经处理过 attach = " + attach + " outTradeNo = " + outTradeNo);
-                    } else {
-                        WxPayPrepay wxPayPrepayUpdate = new WxPayPrepay();
+                    WxPayPrepay wxPayPrepayUpdate = new WxPayPrepay();
+                    wxPayPrepayUpdate.setId(wxPayPrepay.getId());
+                    wxPayPrepayUpdate.setTransactionId(transaction.getTransactionId());
+                    wxPayPrepayUpdate.setTradeState(tradeState);
+                    wxPayPrepayUpdate.setTradeStateDesc(tradeStateDesc);
+                    wxPayPrepayUpdate.setBankType(bankType);
+                    wxPayPrepayUpdate.setSuccessTime(transaction.getSuccessTime());
+                    wxPayPrepayUpdate.setTradeStateDesc(tradeStateDesc);
+                    wxPayPrepayUpdate.setUpdateTime(now);
+                    boolean updateWxPayPrepay = wxPayPrepayService.updateById(wxPayPrepayUpdate);
+                    result.append("更新微信预支付订单 ").append(" id = ").append(wxPayPrepay.getId()).append(" 更新结果 ").append(updateWxPayPrepay).append("\n");
 
-                        wxPayPrepayUpdate.setId(wxPayPrepay.getId());
-                        wxPayPrepayUpdate.setTransactionId(transaction.getTransactionId());
-                        wxPayPrepayUpdate.setTradeState(tradeState);
-                        wxPayPrepayUpdate.setTradeStateDesc(tradeStateDesc);
-                        wxPayPrepayUpdate.setBankType(bankType);
-                        wxPayPrepayUpdate.setSuccessTime(transaction.getSuccessTime());
-                        wxPayPrepayUpdate.setTradeStateDesc(tradeStateDesc);
-                        wxPayPrepayUpdate.setUpdateTime(now);
-                        boolean updateWxPayPrepay = wxPayPrepayService.updateById(wxPayPrepayUpdate);
-                        result.append("更新微信预支付订单 ").append(" id = ").append(wxPayPrepay.getId()).append(" 更新结果 ").append(updateWxPayPrepay).append("\n");
+                    String[] orderNumbers = wxPayPrepay.getOrderNumbers().split(StrUtil.COMMA);
+                    String transactionId = transaction.getTransactionId();
+                    // 修改订单信息
+                    for (String orderNumber : orderNumbers) {
+                        OrderSettlement orderSettlement = new OrderSettlement();
+                        orderSettlement.setPayNo(outTradeNo);
+                        orderSettlement.setBizPayNo(transactionId);
+                        orderSettlement.setPayType(PayType.WECHATPAY.value());
+                        orderSettlement.setUserId(wxPayPrepay.getPayerOpenid());
+                        orderSettlement.setOrderNumber(orderNumber);
+                        orderSettlement.setPayStatus(1);
+                        orderSettlement.setClearingTime(now);
+                        orderSettlement.setIsClearing(1);
+                        //更新订单结算信息
+                        orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
+
+                        Order order = orderMapper.getOrderByOrderNumber(orderNumber);
                     }
+
+                    // 将订单改为已支付状态
+                    orderMapper.updateByToPaySuccess(Arrays.asList(orderNumbers), PayType.WECHATPAY.value());
+
+                    // 支付成功通知事件 和监听此事件执行进一步的数据操作  如打印小票、发送通知等
+                    List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
+                    eventPublisher.publishEvent(new PaySuccessOrderEvent(orders));
                 }
-
-                // 2、更新充值订单数据
-                UserBalanceOrder userBalanceOrder = userBalanceOrderService.getOne(new LambdaQueryWrapper<UserBalanceOrder>().eq(UserBalanceOrder::getOrderNumber, outTradeNo));
-                if (userBalanceOrder == null) {
-                    log.warn("充值订单数据不存在 orderNumber = {}", outTradeNo);
-                    return "充值订单数据不存在 orderNumber = " + outTradeNo;
-                } else {
-                    if (userBalanceOrder.getIsPayed() == 1) {
-                        log.warn("充值订单数据已经处理过 orderNumber = {}", outTradeNo);
-                        result.append("充值订单数据已经处理过 orderNumber = " + outTradeNo);
-                    } else {
-                        UserBalanceOrder userBalanceOrderUpdate = new UserBalanceOrder();
-                        userBalanceOrderUpdate.setOrderId(userBalanceOrder.getOrderId());
-                        userBalanceOrderUpdate.setPayTime(now);
-                        userBalanceOrderUpdate.setUpdateTime(now);
-                        userBalanceOrderUpdate.setIsPayed(1);
-                        userBalanceOrderUpdate.setStatus(3);
-                        boolean updateUserBalanceOrder = userBalanceOrderService.updateById(userBalanceOrderUpdate);
-                        result.append("更新充值订单 ").append(" orderId = ").append(userBalanceOrderUpdate.getOrderId()).append(" 更新结果 ").append(updateUserBalanceOrder).append("\n");
-
-
-                        // 3、更新用户充值余额值
-                        UserBalance userBalance = userBalanceService.getOne(new LambdaQueryWrapper<UserBalance>().eq(UserBalance::getUserId, userBalanceOrder.getUserId()));
-                        double newBalance;
-                        if (userBalance == null) {
-                            log.warn("用户余额数据不存在 userId = {}", userBalanceOrder.getUserId());
-                            return "用户余额数据不存在 userId = " + userBalanceOrder.getUserId();
-                        } else {
-                            UserBalance userBalanceUpdate = new UserBalance();
-                            userBalanceUpdate.setUserId(userBalanceOrder.getUserId());
-                            userBalanceUpdate.setUpdateTime(now);
-                            newBalance = Arith.add(userBalance.getBalance(), userBalanceOrder.getTotal());
-                            //设置最新余额
-                            userBalanceUpdate.setBalance(newBalance);
-                            boolean updateUserBalance = userBalanceService.updateById(userBalanceUpdate);
-                            result.append("更新用户最新余额 ").append(" userId = ").append(userBalanceUpdate.getUserId()).append(" 更新结果 ").append(updateUserBalance).append("\n");
-                        }
-
-
-                        // 4、添加用户余额变化明细
-                        UserBalanceDetail userBalanceDetail = new UserBalanceDetail();
-                        userBalanceDetail.setUserId(userBalanceOrder.getUserId());
-                        userBalanceDetail.setDetailType("1");
-                        userBalanceDetail.setNewBalance(newBalance);
-                        userBalanceDetail.setDescription("" + DateUtil.formatDateTime(now) + "充值" + userBalanceOrder.getTotal());
-                        userBalanceDetail.setOrderNumber(userBalanceOrder.getOrderNumber());
-                        userBalanceDetail.setUseTime(now);
-                        userBalanceDetail.setUseTime(now);
-                        // 消费是负数 充值是正数
-                        userBalanceDetail.setUseBalance(userBalanceOrder.getTotal());
-
-                        boolean saveUserBalanceDetail = userBalanceDetailService.save(userBalanceDetail);
-                        result.append("添加用户余额变化明细 ").append(" 结果 ").append(saveUserBalanceDetail).append("\n");
-                    }
-                }
-
-
-
-
             }
-
         }
         return result.toString();
     }
 
+    /**
+     * 处理充值订单通知
+     *
+     * @param transaction
+     * @param attach
+     * @return
+     * @author peiyuan.cai
+     * @date 2024/1/24 14:39 星期三
+     */
+    private String handleNotifyBalanceOrder(Transaction transaction, String attach) {
+        StringBuilder result = new StringBuilder();
+        Date now = new Date();
+        String tradeType = transaction.getTradeType().name();
+        //处理充值的用户支付通知订单逻辑
+        String tradeState = transaction.getTradeState().name();
+        String tradeStateDesc = transaction.getTradeStateDesc();
+        String bankType = transaction.getBankType();
+        if (transaction.getTradeState() == Transaction.TradeStateEnum.SUCCESS) {
+            String outTradeNo = transaction.getOutTradeNo();
+            /**
+             * 支付成功的通知
+             * 处理充值订单支付成功的逻辑
+             * 1、更新预支付订单数据
+             * 2、更新充值订单数据
+             * 3、更新用户充值余额值
+             * 4、添加用户余额变化明细
+             */
+
+            // 1、更新预支付订单数据
+            WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, outTradeNo).eq(WxPayPrepay::getAttach, attach));
+            if (wxPayPrepay == null) {
+                log.warn("微信预支付订单不存在 attach = {} outTradeNo = {}", attach, outTradeNo);
+                result.append("微信预支付订单不存在 attach = " + attach + " outTradeNo = " + outTradeNo);
+            } else {
+                if (StrUtil.equals(tradeState, wxPayPrepay.getTradeState())) {
+                    result.append("微信预支付订单数据已经处理过 attach = " + attach + " outTradeNo = " + outTradeNo);
+                } else {
+                    WxPayPrepay wxPayPrepayUpdate = new WxPayPrepay();
+
+                    wxPayPrepayUpdate.setId(wxPayPrepay.getId());
+                    wxPayPrepayUpdate.setTransactionId(transaction.getTransactionId());
+                    wxPayPrepayUpdate.setTradeState(tradeState);
+                    wxPayPrepayUpdate.setTradeStateDesc(tradeStateDesc);
+                    wxPayPrepayUpdate.setBankType(bankType);
+                    wxPayPrepayUpdate.setSuccessTime(transaction.getSuccessTime());
+                    wxPayPrepayUpdate.setTradeStateDesc(tradeStateDesc);
+                    wxPayPrepayUpdate.setUpdateTime(now);
+                    boolean updateWxPayPrepay = wxPayPrepayService.updateById(wxPayPrepayUpdate);
+                    result.append("更新微信预支付订单 ").append(" id = ").append(wxPayPrepay.getId()).append(" 更新结果 ").append(updateWxPayPrepay).append("\n");
+                }
+            }
+
+            // 2、更新充值订单数据
+            UserBalanceOrder userBalanceOrder = userBalanceOrderService.getOne(new LambdaQueryWrapper<UserBalanceOrder>().eq(UserBalanceOrder::getOrderNumber, outTradeNo));
+            if (userBalanceOrder == null) {
+                log.warn("充值订单数据不存在 orderNumber = {}", outTradeNo);
+                result.append("充值订单数据不存在 orderNumber = " + outTradeNo);
+                return result.toString();
+            } else {
+                if (userBalanceOrder.getIsPayed() == 1) {
+                    log.warn("充值订单数据已经处理过 orderNumber = {}", outTradeNo);
+                    result.append("充值订单数据已经处理过 orderNumber = " + outTradeNo);
+                } else {
+                    UserBalanceOrder userBalanceOrderUpdate = new UserBalanceOrder();
+                    userBalanceOrderUpdate.setOrderId(userBalanceOrder.getOrderId());
+                    userBalanceOrderUpdate.setPayTime(now);
+                    userBalanceOrderUpdate.setUpdateTime(now);
+                    userBalanceOrderUpdate.setIsPayed(1);
+                    userBalanceOrderUpdate.setStatus(3);
+                    boolean updateUserBalanceOrder = userBalanceOrderService.updateById(userBalanceOrderUpdate);
+                    result.append("更新充值订单 ").append(" orderId = ").append(userBalanceOrderUpdate.getOrderId()).append(" 更新结果 ").append(updateUserBalanceOrder).append("\n");
+
+
+                    // 3、更新用户充值余额值
+                    UserBalance userBalance = userBalanceService.getOne(new LambdaQueryWrapper<UserBalance>().eq(UserBalance::getUserId, userBalanceOrder.getUserId()));
+                    double newBalance;
+                    if (userBalance == null) {
+                        log.warn("用户余额数据不存在 userId = {}", userBalanceOrder.getUserId());
+                        result.append("用户余额数据不存在 userId = " + userBalanceOrder.getUserId());
+                        return result.toString();
+                    } else {
+                        UserBalance userBalanceUpdate = new UserBalance();
+                        userBalanceUpdate.setUserId(userBalanceOrder.getUserId());
+                        userBalanceUpdate.setUpdateTime(now);
+                        newBalance = Arith.add(userBalance.getBalance(), userBalanceOrder.getTotal());
+                        //设置最新余额
+                        userBalanceUpdate.setBalance(newBalance);
+                        boolean updateUserBalance = userBalanceService.updateById(userBalanceUpdate);
+                        result.append("更新用户最新余额 ").append(" userId = ").append(userBalanceUpdate.getUserId()).append(" 更新结果 ").append(updateUserBalance).append("\n");
+                    }
+
+
+                    // 4、添加用户余额变化明细
+                    UserBalanceDetail userBalanceDetail = new UserBalanceDetail();
+                    userBalanceDetail.setUserId(userBalanceOrder.getUserId());
+                    userBalanceDetail.setDetailType("1");
+                    userBalanceDetail.setNewBalance(newBalance);
+                    userBalanceDetail.setDescription("" + DateUtil.formatDateTime(now) + " 在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()));
+                    userBalanceDetail.setOrderNumber(userBalanceOrder.getOrderNumber());
+                    userBalanceDetail.setUseTime(now);
+                    userBalanceDetail.setUseTime(now);
+                    // 消费是负数 充值是正数
+                    userBalanceDetail.setUseBalance(userBalanceOrder.getTotal());
+
+                    boolean saveUserBalanceDetail = userBalanceDetailService.save(userBalanceDetail);
+                    result.append("添加用户余额变化明细 ").append(" 结果 ").append(saveUserBalanceDetail).append("\n");
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * 普通订单
+     * 创建微信预支付订单 并且返回支付参数
+     *
+     * @param userId
+     * @param shopId
+     * @param payParam
+     * @return
+     * @author peiyuan.cai
+     * @date 2024/1/24 11:03 星期三
+     */
+    @Override
+    public WechatPaySign createWeChatPrePayOrder(String userId, Long shopId, PayParam payParam) {
+
+        String[] orderNumbers = payParam.getOrderNumbers().split(StrUtil.COMMA);
+
+        List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
+
+        Double actualTotal = 0D;
+        StringBuilder prodName = new StringBuilder();
+
+        for (Order order : orders) {
+            actualTotal = Arith.add(actualTotal, order.getActualTotal());
+            prodName.append(order.getProdName()).append(StrUtil.COMMA);
+        }
+        PrepayRequest request = new PrepayRequest();
+        Amount amount = new Amount();
+        amount.setTotal(Arith.toAmount(actualTotal));
+        request.setAmount(amount);
+        request.setAppid(WeChatPayUtil.appId);
+        request.setMchid(WeChatPayUtil.merchantId);
+        request.setDescription(prodName.substring(0, Math.min(100, prodName.length() - 1)));
+        request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
+        String outTradeNo = String.valueOf(snowflake.nextId());
+        request.setOutTradeNo(outTradeNo);
+        Payer payer = new Payer();
+        payer.setOpenid(userId);
+        request.setPayer(payer);
+        //通过返回的消息通知中attach字段判断支付订单类型
+        request.setAttach(ORDER_TYPE_GOODS);
+        PrepayWithRequestPaymentResponse response = WeChatPayUtil.jsapiServiceExtension.prepayWithRequestPayment(request);
+
+        WechatPaySign wechatPaySign = new WechatPaySign();
+        wechatPaySign.setSign(response.getPaySign());
+        wechatPaySign.setNonceStr(response.getNonceStr());
+        wechatPaySign.setTimeStamp(response.getTimeStamp());
+        wechatPaySign.setPackageStr(response.getPackageVal());
+        wechatPaySign.setPrepayId(response.getPackageVal());
+        //保存预支付订单到数据库
+        WxPayPrepay wxPayPrepay = wxPayPrepayService.saveWxPayPrepayGoods(payParam, request, response);
+        return wechatPaySign;
+    }
+
+
+    /**
+     * 充值订单
+     * 创建微信预支付订单 并且返回支付参数
+     *
+     * @param userBalanceOrder
+     * @return
+     * @author peiyuan.cai
+     * @date 2024/1/23 13:03 星期二
+     */
+    @Override
+    public WechatPaySign createWeChatPrePayOrder(UserBalanceOrder userBalanceOrder) {
+        // request.setXxx(val)设置所需参数，具体参数可见Request定义
+        PrepayRequest request = new PrepayRequest();
+        Amount amount = new Amount();
+        amount.setTotal(Arith.toAmount(userBalanceOrder.getActualTotal()));
+        request.setAmount(amount);
+        request.setAppid(WeChatPayUtil.appId);
+        request.setMchid(WeChatPayUtil.merchantId);
+        request.setDescription(userBalanceOrder.getProdName());
+        request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
+        request.setOutTradeNo(userBalanceOrder.getOrderNumber());
+        Payer payer = new Payer();
+        payer.setOpenid(userBalanceOrder.getUserId());
+        request.setPayer(payer);
+        //通过返回的消息通知中attach字段判断支付订单类型
+        request.setAttach(ORDER_TYPE_BALANCE);
+        PrepayWithRequestPaymentResponse response = WeChatPayUtil.jsapiServiceExtension.prepayWithRequestPayment(request);
+
+        WechatPaySign wechatPaySign = new WechatPaySign();
+        wechatPaySign.setSign(response.getPaySign());
+        wechatPaySign.setNonceStr(response.getNonceStr());
+        wechatPaySign.setTimeStamp(response.getTimeStamp());
+        wechatPaySign.setPackageStr(response.getPackageVal());
+        wechatPaySign.setPrepayId(response.getPackageVal());
+        //保存预支付订单到数据库
+        wxPayPrepayService.saveWxPayPrepayUserBalance(userBalanceOrder, request, response);
+        return wechatPaySign;
+    }
 
 }

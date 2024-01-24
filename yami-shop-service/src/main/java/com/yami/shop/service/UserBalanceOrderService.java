@@ -18,13 +18,4 @@ public interface UserBalanceOrderService extends IService<UserBalanceOrder> {
      */
     UserBalanceOrder createBalanceOrder(String userId, Long shopId, Long cardId);
 
-    /**
-     * 创建微信预支付订单 并且返回支付参数
-     *
-     * @param userBalanceOrder
-     * @return
-     * @author peiyuan.cai
-     * @date 2024/1/23 13:03 星期二
-     */
-    WechatPaySign createWeChatPayPreOrder(UserBalanceOrder userBalanceOrder);
 }

@@ -132,6 +132,7 @@ public class PayNoticeController {
             NotificationParser parser = new NotificationParser(WeChatPayUtil.notificationConfig);
             try {
                 Transaction transaction = parser.parse(requestParam, Transaction.class);
+                //处理支付结果通知
                 String handleNotifyResult = payService.handleWxPayNotifyTransaction(transaction);
                 log.debug("通过加密数据解析的通知内容 {}", transaction);
                 wxPayNotifyService.saveNotify("/wechat/transaction", requestBody, requestHeaders, transaction, handleNotifyResult);

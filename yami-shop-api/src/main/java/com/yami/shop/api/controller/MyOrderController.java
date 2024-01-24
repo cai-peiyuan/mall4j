@@ -3,6 +3,7 @@
 package com.yami.shop.api.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yami.shop.bean.app.dto.*;
 import com.yami.shop.bean.enums.OrderStatus;
@@ -59,46 +60,20 @@ public class MyOrderController {
     @Operation(summary = "订单详情信息", description = "根据订单号获取订单详情信息")
     @Parameter(name = "orderNumber", description = "订单号", required = true)
     public ServerResponseEntity<OrderShopDto> orderDetail(@RequestParam(value = "orderNumber") String orderNumber) {
-
         String userId = SecurityUtils.getUser().getUserId();
-        OrderShopDto orderShopDto = new OrderShopDto();
-
-        Order order = orderService.getOrderByOrderNumber(orderNumber);
-
-        if (order == null) {
-            throw new RuntimeException("该订单不存在");
-        }
-        if (!Objects.equals(order.getUserId(), userId)) {
-            throw new RuntimeException("你没有权限获取该订单信息");
-        }
-
-        ShopDetail shopDetail = shopDetailService.getShopDetailByShopId(order.getShopId());
-        UserAddrOrder userAddrOrder = userAddrOrderService.getById(order.getAddrOrderId());
-        UserAddrDto userAddrDto = BeanUtil.copyProperties(userAddrOrder, UserAddrDto.class);
-        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(orderNumber);
-        List<OrderItemDto> orderItemList = BeanUtil.copyToList(orderItems, OrderItemDto.class);
-
-        orderShopDto.setShopId(shopDetail.getShopId());
-        orderShopDto.setShopName(shopDetail.getShopName());
-        orderShopDto.setActualTotal(order.getActualTotal());
-        orderShopDto.setUserAddrDto(userAddrDto);
-        orderShopDto.setOrderItemDtos(orderItemList);
-        orderShopDto.setTransfee(order.getFreightAmount());
-        orderShopDto.setReduceAmount(order.getReduceAmount());
-        orderShopDto.setCreateTime(order.getCreateTime());
-        orderShopDto.setRemarks(order.getRemarks());
-        orderShopDto.setStatus(order.getStatus());
-
-        double total = 0.0;
-        Integer totalNum = 0;
-        for (OrderItemDto orderItem : orderShopDto.getOrderItemDtos()) {
-            total = Arith.add(total, orderItem.getProductTotalAmount());
-            totalNum += orderItem.getProdCount();
-        }
-        orderShopDto.setTotal(total);
-        orderShopDto.setTotalNum(totalNum);
-
+        OrderShopDto orderShopDto = myOrderService.getMyOrderByOrderNumber(userId, orderNumber);
         return ServerResponseEntity.success(orderShopDto);
+    }
+
+    /**
+     * 订单详情信息接口
+     */
+    @GetMapping("/orderDetail/{orderNumber}")
+    @Operation(summary = "订单详情信息", description = "根据订单号获取订单详情信息")
+    public ServerResponseEntity<Object> orderDetailV2(@PathVariable(value = "orderNumber") String orderNumber) {
+        String userId = SecurityUtils.getUser().getUserId();
+        JSONObject orderInfo = myOrderService.getMyOrderByOrderNumberV2(userId, orderNumber);
+        return ServerResponseEntity.success(orderInfo);
     }
 
 

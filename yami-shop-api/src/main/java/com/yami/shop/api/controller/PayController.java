@@ -2,7 +2,9 @@
 
 package com.yami.shop.api.controller;
 
+import com.qq.wechat.pay.config.WechatPaySign;
 import com.yami.shop.bean.app.param.PayParam;
+import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.bean.pay.PayInfoDto;
 import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.security.api.util.SecurityUtils;
@@ -30,17 +32,27 @@ public class PayController {
 
     /**
      * 小程序平台订单支付接口
-     *
+     * 小程序下单后获取前端支付参数
      */
     @PostMapping("/pay")
     @Operation(summary = "根据订单号进行支付" , description = "根据订单号进行支付")
-    public ServerResponseEntity<PayParam> pay(@RequestBody PayParam payParam) {
+    public ServerResponseEntity<WechatPaySign> pay(@RequestBody PayParam payParam) {
         YamiUser user = SecurityUtils.getUser();
         String userId = user.getUserId();
+        // 生成支付订单和支付参数
+        WechatPaySign wechatPaySign = payService.createWeChatPrePayOrder(userId, user.getShopId(), payParam);
+        /**
+         * 这个是支付成功执行的操作 放入notify url接口中处理
+         */
+        //PayInfoDto payInfo = payService.pay(userId, payParam);
+        //payService.paySuccess(payInfo.getPayNo(), "");
 
-        PayInfoDto payInfo = payService.pay(userId, payParam);
-        payService.paySuccess(payInfo.getPayNo(), "");
-        return ServerResponseEntity.success();
+        // 创建储值订单
+        //UserBalanceOrder userBalanceOrder = userBalanceOrderService.createBalanceOrder(user.getUserId(), user.getShopId(), cardId);
+        // 生成支付订单和支付参数
+        //WechatPaySign wechatPaySign = userBalanceOrderService.createWeChatPayPreOrder(userBalanceOrder);
+
+        return ServerResponseEntity.success(wechatPaySign);
     }
 
     /**

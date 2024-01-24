@@ -22,8 +22,14 @@
 	  <if test="orderSettlement.payNo != null ">
 	   pay_no = #{orderSettlement.payNo},
 	  </if>
+	  <if test="orderSettlement.bizPayNo != null ">
+       biz_pay_no = #{orderSettlement.bizPayNo},
+	  </if>
 	  <if test="orderSettlement.payType != null ">
        pay_type = #{orderSettlement.payType},
+      </if>
+	  <if test="orderSettlement.payStatus != null ">
+       pay_status = #{orderSettlement.payStatus},
       </if>
       <if test="orderSettlement.isClearing != null ">
        is_clearing = #{orderSettlement.isClearing},
@@ -34,22 +40,22 @@
       order_number = #{orderSettlement.orderNumber}
 	WHERE order_number = #{orderSettlement.orderNumber} and user_id = #{orderSettlement.userId}
   </update>
-  
+
   <select id="getSettlementsByPayNo" resultType="com.yami.shop.bean.model.OrderSettlement">
     select * from tz_order_settlement WHERE pay_no = #{payNo}
   </select>
-  
+
   <update id="updateSettlementsByPayNo">
-    update tz_order_settlement 
+    update tz_order_settlement
     <if test="outTradeNo !=null and transactionId != null">
-        set 
+        set
             biz_pay_no = #{transactionId},
             is_clearing = 1,
             pay_status = 1
     </if>
     where pay_no = #{outTradeNo}
   </update>
-  
+
   <update id="updateToPay">
   	update tz_order_settlement set pay_status = 1, version = version +1 where pay_no = #{payNo} and version = #{version}
   </update>

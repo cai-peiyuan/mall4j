@@ -138,14 +138,12 @@ public class Order implements Serializable {
     /**
      * 完成时间
      */
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date finallyTime;
 
     /**
      * 取消时间
      */
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date cancelTime;
 

@@ -64,6 +64,7 @@ public class SubmitOrderListener {
     @Order(SubmitOrderOrder.DEFAULT)
     public void defaultSubmitOrderListener(SubmitOrderEvent event) {
         Date now = new Date();
+
         String userId = SecurityUtils.getUser().getUserId();
 
         ShopCartOrderMergerDto mergerOrder = event.getMergerOrder();
@@ -89,11 +90,9 @@ public class SubmitOrderListener {
         // 订单地址id
         Long addrOrderId = userAddrOrder.getAddrOrderId();
 
-
         // 每个店铺生成一个订单
         for (ShopCartOrderDto shopCartOrderDto : shopCartOrders) {
             createOrder(event, now, userId, basketIds, skuStocksMap, prodStocksMap, addrOrderId, shopCartOrderDto);
-
         }
 
         // 删除购物车的商品信息
@@ -101,7 +100,6 @@ public class SubmitOrderListener {
             basketMapper.deleteShopCartItemsByBasketIds(userId, basketIds);
 
         }
-
 
         // 更新sku库存
         skuStocksMap.forEach((key, sku) -> {
@@ -123,6 +121,19 @@ public class SubmitOrderListener {
 
     }
 
+    /**
+     * 每个店铺生成一个订单
+     * @param event
+     * @param now
+     * @param userId
+     * @param basketIds
+     * @param skuStocksMap
+     * @param prodStocksMap
+     * @param addrOrderId
+     * @param shopCartOrderDto
+     * @author peiyuan.cai
+     * @date 2024/1/24 11:49 星期三
+     */
     private void createOrder(SubmitOrderEvent event, Date now, String userId, List<Long> basketIds, Map<Long, Sku> skuStocksMap, Map<Long, Product> prodStocksMap, Long addrOrderId, ShopCartOrderDto shopCartOrderDto) {
         // 使用雪花算法生成的订单号
         String orderNumber = String.valueOf(snowflake.nextId());
@@ -153,12 +164,10 @@ public class SubmitOrderListener {
 
         }
 
-
         orderProdName.subSequence(0, Math.min(orderProdName.length() - 1, 100));
         if (orderProdName.lastIndexOf(Constant.COMMA) == orderProdName.length() - 1) {
             orderProdName.deleteCharAt(orderProdName.length() - 1);
         }
-
 
         // 订单信息
         com.yami.shop.bean.model.Order order = getOrder(now, userId, addrOrderId, shopCartOrderDto, orderNumber, shopId, orderProdName, orderItems);
