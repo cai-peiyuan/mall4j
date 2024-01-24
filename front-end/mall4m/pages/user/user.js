@@ -264,9 +264,10 @@ Page({
 
   // 跳转绑定手机号
   toBindingPhone: function () {
-    wx.navigateTo({
-      url: '/pages/user-info/pages/binding-phone/binding-phone',
-    })
+    return;
+    // wx.navigateTo({
+    //   url: '/pages/user-info/pages/binding-phone/binding-phone',
+    // })
   },
 
   /**

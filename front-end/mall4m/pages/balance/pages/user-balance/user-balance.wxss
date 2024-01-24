@@ -1,78 +1,107 @@
 /* pages/user-balance/user-balance.wxss */
-.pageHead{
-  box-sizing: border-box; 
-  width:90vw; 
-  margin:3vw auto 0; 
-  padding:4vw 5vw; 
-  box-shadow: 0 0 3vw rgb(61, 60, 60); 
-  border-radius: 4vw 4vw 0 0; 
-  height: 30vw; 
-  background-color: #000; 
+.pageHead {
+  box-sizing: border-box;
+  width: 90vw;
+  margin: 3vw auto 0;
+  padding: 4vw 5vw;
+  box-shadow: 0 0 3vw rgb(61, 60, 60);
+  border-radius: 4vw 4vw 0 0;
+  height: 35vw;
+  background-color: #000;
   color: rgb(248, 201, 70);
   text-shadow: 0 0 1vw rgb(230, 238, 186);
   font-size: 14px;
 }
-.cardNo{
-  display: flex; 
+
+.cardNo {
+  display: flex;
   justify-content: space-between;
 }
-.cardNoLeft{
+
+.cardNoLeft {
   text-shadow: 0 0 1vw rgb(230, 238, 186);
 }
-.bananceNum{
+
+.bananceNum {
   font-size: 30px;
-  margin-top:3vw;
+  margin-top: 3vw;
 }
-.rechargeItem{
-  width:28vw;
+
+.rechargeItem {
+  width: 28vw;
   height: 20vw;
-  color:#000;
+  color: #000;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border:solid 3px rgb(216, 215, 215);
+  border: solid 3px rgb(216, 215, 215);
   border-radius: 0 4vw 0 0;
   margin-right: 2.5vw;
   margin-bottom: 2.5vw;
 
 }
-.activeTab{color:#000; font-weight: bold; position: relative; z-index: 10;}
-.activeTab::after{
-  width:100%; 
-  content: " ";  
-  display:block; 
-  height:1.5vw; 
-  position: absolute; 
-  bottom:0vw; 
+
+.activeTab {
+  color: #000;
+  font-weight: bold;
+  position: relative;
+  z-index: 10;
+}
+
+.activeTab::after {
+  width: 100%;
+  content: " ";
+  display: block;
+  height: 1.5vw;
+  position: absolute;
+  bottom: 0vw;
   background-color: rgb(248, 201, 70);
-   z-index: -1;}
-.rechargeItem:nth-child(3n){margin-right: 0;}
-.rechargeNum{font-size:30px}
-.RMB{font-size: 14px;}
-.salePrice{color: rgb(122, 121, 121); font-size: 12px; margin-top: 1vw;}
-.rechargeItemActive{
-  border:solid 3px rgb(248, 201, 70);
-  background-color: rgba(248, 201, 70,.3);
-   color: rgb(153, 103, 11);
-  }
-.footerMenu{
+  z-index: -1;
+}
+
+.rechargeItem:nth-child(3n) {
+  margin-right: 0;
+}
+
+.rechargeNum {
+  font-size: 22px
+}
+
+.RMB {
+  font-size: 14px;
+}
+
+.salePrice {
+  color: rgb(122, 121, 121);
+  font-size: 10px;
+  margin-top: 1vw;
+}
+
+.rechargeItemActive {
+  border: solid 3px rgb(248, 201, 70);
+  background-color: rgba(248, 201, 70, .3);
+  color: rgb(153, 103, 11);
+}
+
+.footerMenu {
   box-sizing: border-box;
   width: 100%;
-  height:12vw; 
-  position: absolute; 
-  bottom:5vw; 
-  padding:0 3vw;
+  height: 12vw;
+  position: absolute;
+  bottom: 5vw;
+  padding: 0 3vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.btnCharge{
-  padding:0 4vw;
+
+.btnCharge {
+  padding: 0 4vw;
   border-radius: 5vw;
   display: flex;
   align-items: center;
   height: 10vw;
-  background-color: rgba(248, 201, 70,.3);
+  background-color: rgba(248, 201, 70, .3);
   color: rgb(153, 103, 11);
 }

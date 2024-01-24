@@ -28,14 +28,14 @@
       <view wx:if="{{userMobile==null}}">
         <view class='binding-phone'>
           <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="contact-btn"></button>
-          <text class='show-tip'>点击快速注册会员。</text>
+          <text class='show-tip'>请先注册会员</text>
         </view>
       </view>
       <view wx:if="{{userMobile!=null}}">
         <view style="display: flex; justify-content: space-around;color:#fff; margin-top: 20rpx;">
           <view class='userinfo-name' bindtap='toUserBalancePage' style="flex-direction: column;">
             <view>
-              {{userBalance.balance}}
+              {{wxs.toPrice(userBalance.balance)}}
             </view>
             <view>
               余额
@@ -58,8 +58,6 @@
             </view>
           </view>
         </view>
-
-
         <view class='userinfo-name'>
         </view>
       </view>
@@ -209,5 +207,5 @@
       <text>退出登录</text>
     </view>
   </view> -->
-
 </view>
+<wxs module="wxs" src="../../wxs/number.wxs" />

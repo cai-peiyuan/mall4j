@@ -1,26 +1,28 @@
 <view class='container'>
 
-    <view class="pageHead" wx:if="{{false}}">
-        <view class="cardHead">
-            <view class="cardNo">
-                <view class="cardNoLeft"> No.1000000000</view>
-            </view>
-            <view style="margin-top: 2vw;">账户余额</view>
-            <view class="bananceNum">¥79.10</view>
-        </view>
+  <!-- 不显示余额 只显示余额明细 -->
+  <view class="pageHead" wx:if="{{false}}">
+    <view class="cardHead">
+      <view class="cardNo">
+        <view class="cardNoLeft"> No.1000000000</view>
+      </view>
+      <view style="margin-top: 2vw;">账户余额</view>
+      <view class="bananceNum">¥79.10</view>
     </view>
+  </view>
 
-    <view wx:if="{{false}}" style="display: flex; position:fixed; z-index: 11; top:0vw;width:100%; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
-        <view class="{{tabIndex==0?'activeTab':''}}" bindtap="changeTab" data-index="{{0}}">近一个月</view>
-        <view class="{{tabIndex==1?'activeTab':''}}" bindtap="changeTab" data-index="{{1}}">全部</view>
+  <view wx:if="{{false}}" style="display: flex; position:fixed; z-index: 11; top:0vw;width:100%; justify-content:space-around; margin-top: -1vw; background-color: #fff; padding:6vw 0 4vw;">
+    <view class="{{tabIndex==0?'activeTab':''}}" bindtap="changeTab" data-index="{{0}}">近一个月</view>
+    <view class="{{tabIndex==1?'activeTab':''}}" bindtap="changeTab" data-index="{{1}}">全部</view>
+  </view>
+
+  <view class="consumeList">
+    <view class="consumeItem" wx:for="{{userBalanceDetail}}">
+      <view style="color:rgb(19, 133, 24)">{{item.useBalance>0?'+'+wxs.toPrice(item.useBalance):'-'+wxs.toPrice(item.useBalance)}}</view>
+      <!-- <view class="consumeDate">{{item.useTime}}</view> -->
+      <view class="consumeDate">{{item.description}}</view>
     </view>
-
-    <view class="consumeList">
-        <view class="consumeItem" wx:for="{{userBalanceDetail}}">
-            <view style="color:rgb(19, 133, 24)">{{item.useBalance}}</view>
-            <view class="consumeDate">{{item.useTime}}</view>
-        </view>
-    </view>
-
-    <view wx:if="userBalanceDetail.length == 0">暂无数据</view>
+  </view>
+  <view wx:if="{{userBalanceDetail.length == 0}}">暂无数据</view>
 </view>
+<wxs module="wxs" src="../../../../wxs/number.wxs" />

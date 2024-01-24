@@ -7,7 +7,6 @@ function toPrice(val) {
         val = 0;
     }
     return (val.toFixed(2))
-
 };
 
 function parsePrice(val) {
