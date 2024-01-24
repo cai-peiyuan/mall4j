@@ -197,7 +197,7 @@ Page({
                     success: e => {
                         console.log("wx.requestPayment支付成功", e);
                         wx.navigateTo({
-                            url: '/pagespay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
+                            url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
                         })
                     },
                     fail: err => {
