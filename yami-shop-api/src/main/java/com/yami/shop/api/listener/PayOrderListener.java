@@ -48,9 +48,9 @@ public class PayOrderListener {
     @EventListener(PaySuccessOrderEvent.class)
     @Order(PayOrderOrder.DEFAULT)
     public void defaultSubmitOrderListener(PaySuccessOrderEvent event) {
-        List<com.yami.shop.bean.model.Order> orders = event.getOrders();
-        for (com.yami.shop.bean.model.Order order : orders) {
-            log.debug("订单已支付 订单编号 {} 订单金额 {}" , order.getOrderNumber(), order.getActualTotal());
+        List<String> orderNumbers = event.getOrderNumbers();
+        for (String orderNumber : orderNumbers) {
+            log.debug("订单已支付 订单编号 {} " , orderNumber);
         }
     }
 

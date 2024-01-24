@@ -13,8 +13,9 @@ import java.util.List;
  * @author
  */
 @Data
-@AllArgsConstructor
 public class PaySuccessOrderEvent {
 
     private List<Order> orders;
+
+    private List<String> orderNumbers;
 }

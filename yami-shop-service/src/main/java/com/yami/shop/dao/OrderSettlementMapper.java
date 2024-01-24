@@ -16,7 +16,7 @@ public interface OrderSettlementMapper extends BaseMapper<OrderSettlement> {
 	 * 更新订单结算
 	 * @param orderSettlement
 	 */
-	void updateByOrderNumberAndUserId(@Param("orderSettlement") OrderSettlement orderSettlement);
+	int updateByOrderNumberAndUserId(@Param("orderSettlement") OrderSettlement orderSettlement);
 
 	/**
 	 * 根据支付单号获取结算信息

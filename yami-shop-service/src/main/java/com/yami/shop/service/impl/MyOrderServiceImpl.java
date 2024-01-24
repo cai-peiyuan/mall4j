@@ -38,12 +38,6 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     @Autowired
     private UserAddrOrderService userAddrOrderService;
     @Autowired
-    private ProductService productService;
-    @Autowired
-    private SkuService skuService;
-    @Autowired
-    private MyOrderService myOrderService;
-    @Autowired
     private ShopDetailService shopDetailService;
     @Autowired
     private OrderItemService orderItemService;

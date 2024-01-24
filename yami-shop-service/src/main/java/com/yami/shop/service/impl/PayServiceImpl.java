@@ -9,16 +9,15 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qq.wechat.pay.WeChatPayUtil;
 import com.qq.wechat.pay.config.WechatPaySign;
-import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.enums.PayType;
 import com.yami.shop.bean.event.PaySuccessOrderEvent;
 import com.yami.shop.bean.model.*;
-import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.pay.PayInfoDto;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.Arith;
@@ -31,7 +30,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.yami.shop.common.constants.Constant.ORDER_TYPE_BALANCE;
@@ -137,8 +138,10 @@ public class PayServiceImpl implements PayService {
         // 将订单改为已支付状态
         orderMapper.updateByToPaySuccess(orderNumbers, PayType.WECHATPAY.value());
 
-        List<Order> orders = orderNumbers.stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
-        eventPublisher.publishEvent(new PaySuccessOrderEvent(orders));
+        // List<Order> orders = orderNumbers.stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
+        PaySuccessOrderEvent paySuccessOrderEvent = new PaySuccessOrderEvent();
+        paySuccessOrderEvent.setOrderNumbers(orderNumbers);
+        eventPublisher.publishEvent(paySuccessOrderEvent);
         return orderNumbers;
     }
 
@@ -190,7 +193,6 @@ public class PayServiceImpl implements PayService {
              * 2、更新订单结算信息
              * 3、更新订单信息
              */
-
             // 1、更新预支付订单数据
             WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, outTradeNo).eq(WxPayPrepay::getAttach, attach));
             if (wxPayPrepay == null) {
@@ -228,17 +230,20 @@ public class PayServiceImpl implements PayService {
                         orderSettlement.setClearingTime(now);
                         orderSettlement.setIsClearing(1);
                         //更新订单结算信息
-                        orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
-
-                        Order order = orderMapper.getOrderByOrderNumber(orderNumber);
+                        int update = orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
+                        result.append("更新订单结算信息 ").append(" orderNumber = ").append(orderNumber).append(" 更新结果 ").append(update).append("\n");
+                        // Order order = orderMapper.getOrderByOrderNumber(orderNumber);
                     }
 
                     // 将订单改为已支付状态
-                    orderMapper.updateByToPaySuccess(Arrays.asList(orderNumbers), PayType.WECHATPAY.value());
+                    int update = orderMapper.updateByToPaySuccess(Arrays.asList(orderNumbers), PayType.WECHATPAY.value());
+                    result.append("更新订单信息 ").append(" orderNumbers = ").append(orderNumbers).append(" 更新结果 ").append(update).append("\n");
 
                     // 支付成功通知事件 和监听此事件执行进一步的数据操作  如打印小票、发送通知等
-                    List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
-                    eventPublisher.publishEvent(new PaySuccessOrderEvent(orders));
+                    // List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
+                    PaySuccessOrderEvent paySuccessOrderEvent = new PaySuccessOrderEvent();
+                    paySuccessOrderEvent.setOrderNumbers(Arrays.asList(orderNumbers));
+                    eventPublisher.publishEvent(paySuccessOrderEvent);
                 }
             }
         }

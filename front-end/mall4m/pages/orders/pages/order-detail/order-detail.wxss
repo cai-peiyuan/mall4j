@@ -108,7 +108,7 @@ page {
   color: #999;
   height: 28rpx;
   margin-top: 10rpx;
-  font-size: 24rpx;
+  font-size: 30rpx;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 1;

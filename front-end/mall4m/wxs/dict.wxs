@@ -1,0 +1,22 @@
+/**
+ * 支付方式字典
+ * @param payTypeCode 
+ */
+function getPayTypeName(payTypeCode) {
+  if (payTypeCode == 1) {
+    return '微信支付';
+  } else if (payTypeCode == 2) {
+    return '支付宝';
+  } else if (payTypeCode == 0) {
+    return '手动支付';
+  } else {
+    return '未知支付' + payTypeCode;
+  }
+}
+
+/**
+ * 提供小程序使用的一些字典信息
+ */
+module.exports = ({
+  getPayTypeName: getPayTypeName
+});

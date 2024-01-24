@@ -52,7 +52,7 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @param orderNumbers 订单编号列表
      * @param payType 支付类型
      */
-    void updateByToPaySuccess(@Param("orderNumbers") List<String> orderNumbers, @Param("payType") Integer payType);
+    int updateByToPaySuccess(@Param("orderNumbers") List<String> orderNumbers, @Param("payType") Integer payType);
 
     /**
      * 根据参数和时间获取订单列表
