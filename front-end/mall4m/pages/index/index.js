@@ -20,6 +20,7 @@ Page({
     news: [],
     taglist: [],
     sts: 0,
+    statuBarHeight:wx.getMenuButtonBoundingClientRect().top,//wx.getSystemInfoSync().statusBarHeight,
   },
   //事件处理函数
   bindViewTap: function() {
@@ -28,6 +29,8 @@ Page({
     })
   },
   onLoad: function() {
+    //   console.log("height",wx.getSystemInfoSync().statusBarHeight);
+    //   console.log("top",wx.getMenuButtonBoundingClientRect().top);
     // this.getAllData();
     // 页面创建时执行
     const version = wx.getSystemInfoSync().SDKVersion

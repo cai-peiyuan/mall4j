@@ -1,8 +1,11 @@
 /* pages/user/user.wxss */
-
 page {
   background-color: #f7f7f7;
-  padding-bottom: 60rpx;
+  /* padding-bottom: 60rpx; */
+  width:100vw;
+  overflow-x: hidden;
+  border: solid 1px red;
+  box-sizing: border-box;
 }
 
 .avatar-wrapper {

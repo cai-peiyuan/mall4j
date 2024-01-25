@@ -1,7 +1,8 @@
 //可改动页面
 //统一接口域名，测试环境
 var domain = "http://192.168.50.163:8086";
-domain = "http://192.168.50.163:8086/mall-wx-api";
+// domain = "http://192.168.50.163:8086/mall-wx-api";
+domain = "https://xdyx.bhgk.cc/wx-apis";
 let openSource = true;
 
 function compareVersion(v1, v2) {

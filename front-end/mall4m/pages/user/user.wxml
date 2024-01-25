@@ -143,13 +143,13 @@
     </view>
 
     <view class='my-menu'>
-      <view class='memu-item' bindtap='toDistCenter' wx:if="{{openSource == true}}">
+      <!-- <view class='memu-item' bindtap='toDistCenter' wx:if="{{openSource == true}}">
         <view class="i-name">
           <image src='../../images/icon/promotion.png'></image>
           <text>分销中心</text>
         </view>
         <view class='arrowhead'></view>
-      </view>
+      </view> -->
 
       <view class='memu-item' bindtap='toCouponCenter' wx:if="{{openSource == true}}">
         <view class="i-name">
