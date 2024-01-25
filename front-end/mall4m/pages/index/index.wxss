@@ -3,6 +3,10 @@
 page {
   background: #f7f7f7;
   height: auto;
+  width:100vw;
+  overflow-x: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 /* 轮播图及搜索框 */
@@ -17,7 +21,7 @@ swiper.pic-swiper {
   margin-top: 75rpx;
   padding: 10rpx 0;
   background: #fff;
-  height: 422rpx;
+  height: 300rpx;
 }
 
 swiper-item {
@@ -41,13 +45,14 @@ swiper.pic-swiper .banner {
   position: absolute;
   width: 690rpx;
   margin: 0 10rpx;
-  height: 402rpx;
+  height: 300rpx;
   border-radius: 8rpx;
   display: inline-block;
   box-shadow: 0 4px 10px 0 rgba(83, 83, 83, 0.288);
 }
 
 .container .bg-sear {
+   
   position: fixed;
   z-index: 999;
   width: 100%;
@@ -131,8 +136,8 @@ swiper.pic-swiper .banner {
 }
 
 .message-play .hornpng {
-  width: 77rpx;
-  height: 36rpx;
+  width: 40rpx;
+  height: 40rpx;
   position: absolute;
   left: 20rpx;
   top: 27rpx;
@@ -219,8 +224,8 @@ line-height:44rpx;
 }
 
 .up-to-date {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAABxCAYAAACkwXoWAAABS2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIi8+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSJyIj8+IEmuOgAAAZBJREFUeJzt1DEBwCAAwLAxYfhEGXJABkcTBb065trnAwj6XwcAvGKAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGRdKykDj9OUNYkAAAAASUVORK5CYII=");
-  background-color: #fff;
+    background:linear-gradient(#fff, #eba851,#e66465,  #fff);
+  /* background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAABxCAYAAACkwXoWAAABS2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxMzggNzkuMTU5ODI0LCAyMDE2LzA5LzE0LTAxOjA5OjAxICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIi8+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSJyIj8+IEmuOgAAAZBJREFUeJzt1DEBwCAAwLAxYfhEGXJABkcTBb065trnAwj6XwcAvGKAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGQZIJBlgECWAQJZBghkGSCQZYBAlgECWQYIZBkgkGWAQJYBAlkGCGRdKykDj9OUNYkAAAAASUVORK5CYII="); */
 }
 
 .up-to-date .item-cont {
@@ -237,6 +242,8 @@ line-height:44rpx;
 .hotsale-item-cont {
   padding-bottom: 20rpx;
   background: #fff;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .up-to-date .item-cont::before {
@@ -302,7 +309,8 @@ line-height:44rpx;
 }
 
 .hot-sale .prod-items {
-  width: 345rpx;
+    border-radius: 0 0 2vw 2vw;
+  width: 45.5vw;
   display: inline-block;
   background: #fff;
   padding-bottom: 20rpx;
@@ -311,17 +319,18 @@ line-height:44rpx;
   box-shadow: 0rpx 6rpx 8rpx rgba(58,134,185,0.2);
 }
 
-.hot-sale .prod-items:nth-child(2n-1) {
-  margin: 20rpx 10rpx 10rpx 20rpx;
+.hot-sale .prod-items:nth-child(2n) {
+  margin:1.5vw 3vw 1.5vw 1.5vw;
 }
 
-.hot-sale .prod-items:nth-child(2n) {
-  margin: 20rpx 20rpx 10rpx 10rpx;
+.hot-sale .prod-items:nth-child(2n-1) {
+  margin:1.5vw 1.5vw 1.5vw 3vw;
 }
 
 .prod-items .hot-imagecont .hotsaleimg {
   width: 341rpx;
   height: 341rpx;
+  border-radius:  2vw 2vw 0 0;
 }
 
 .prod-items .hot-text .hotprod-text {
@@ -346,6 +355,7 @@ line-height:44rpx;
   color: #999;
   white-space: nowrap;
   overflow: hidden;
+  width:40vw;
   text-overflow: ellipsis;
 }
 

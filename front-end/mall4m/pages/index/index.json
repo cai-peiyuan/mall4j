@@ -2,5 +2,6 @@
   "backgroundTextStyle": "dark",
   "navigationBarTextStyle": "black",
   "enablePullDownRefresh": true,
-  "navigationBarTitleText": "小岛袋鼠优选"
+  "navigationBarTitleText": "小岛袋鼠优选",
+  "navigationStyle": "custom"
 }
