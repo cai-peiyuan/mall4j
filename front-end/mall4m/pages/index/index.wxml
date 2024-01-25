@@ -1,24 +1,7 @@
 <!--index.wxml-->
 <view class="container">
-  <!-- <page-meta>
-    <navigation-bar title="小岛袋鼠优选" front-color="#fff" background-color="#eba851" color-animation-duration="0" color-animation-timing-func="">
-    </navigation-bar>
-    <view class='bg-sear' style="background-color: rgb(235, 168, 81); position: fixed; top:0">
-            <view class="scrolltop">
-            <view class='section' bindtap='toSearchPage'>
-                <image src='../../images/icon/search.png' class='search-img'></image>
-                <text class='placeholder'>搜索</text>
-            </view>
-        </view>
-    
-  </view>
-  </page-meta> -->
-  <view style="background-color: rgb(235, 168, 81);position: fixed; top:0;; height:141px; width:100vw;z-index: 999;">
-<<<<<<< Updated upstream
-      <view style="height:100rpx; line-height: 80rpx; padding-top:{{statuBarHeight}}px; color:#fff; font-weight: bold; width:100vw; text-align: center;">
-=======
+	<view style="background-color: rgb(235, 168, 81);position: fixed; top:0;; height:141px; width:100vw;z-index: 999;">
       <view style="height:70rpx; line-height: 70rpx; padding-top:{{statuBarHeight}}px; color:#fff; font-weight: bold; width:100vw; text-align: center;">
->>>>>>> Stashed changes
           小岛袋鼠优选
       </view>
       <view class='bg-sear' style="top: 100px; background: transparent;">
