@@ -141,33 +141,22 @@
         <view class="tit">我的足迹</view>
       </view>
     </view>
-
-    <view class='my-menu'>
-      <!-- <view class='memu-item' bindtap='toDistCenter' wx:if="{{openSource == true}}">
-        <view class="i-name">
-          <image src='../../images/icon/promotion.png'></image>
-          <text>分销中心</text>
+    <view class="my-menu">
+        <view class='memu-item' bindtap='toCouponCenter' wx:if="{{openSource == true}}">
+            <view class="i-name">
+                <image src='../../images/icon/getCoupon.png'></image>
+                <text>领券中心</text>
+            </view>
+            <view class='arrowhead'></view>
         </view>
-        <view class='arrowhead'></view>
-      </view> -->
-
-      <view class='memu-item' bindtap='toCouponCenter' wx:if="{{openSource == true}}">
-        <view class="i-name">
-          <image src='../../images/icon/getCoupon.png'></image>
-          <text>领券中心</text>
+        <view class='memu-item' bindtap='toMyCouponPage' wx:if="{{openSource == true}}">
+            <view class="i-name">
+                <image src='../../images/icon/myCoupon.png'></image>
+                <text>我的优惠券</text>
+            </view>
+            <view class='arrowhead'></view>
         </view>
-        <view class='arrowhead'></view>
-      </view>
-
-      <view class='memu-item' bindtap='toMyCouponPage' wx:if="{{openSource == true}}">
-        <view class="i-name">
-          <image src='../../images/icon/myCoupon.png'></image>
-          <text>我的优惠券</text>
-        </view>
-        <view class='arrowhead'></view>
-      </view>
-
-      <view class='memu-item' bindtap='myCollectionHandle'>
+        <view class='memu-item' bindtap='myCollectionHandle'>
         <view class="i-name">
           <image src='../../images/icon/promotion.png'></image>
           <text>收藏商品</text>
@@ -195,11 +184,11 @@
         <view class="i-name">
           <image src='../../images/icon/icon-msg.png'></image>
           <text>联系我们</text>
-          <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系我们</button>
         </view>
+        <view class='arrowhead'></view>
       </view>
     </view>
-    <!--end 列表项 -->
+    
   </view>
 
   <!-- <view class="log-out" bindtap="logout" wx:if="isAuthInfo">

@@ -4,7 +4,6 @@ page {
   /* padding-bottom: 60rpx; */
   width:100vw;
   overflow-x: hidden;
-  border: solid 1px red;
   box-sizing: border-box;
 }
 
@@ -167,12 +166,14 @@ page {
 }
 
 .list-cont .my-menu .memu-item {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 100rpx;
   border-bottom: 2rpx solid #f7f7f7;
   padding:0 30rpx;
+  flex-wrap: wrap;
 }
 
 .list-cont .my-menu .memu-item:nth-child(1) {
