@@ -181,6 +181,7 @@
       </view>
 
       <view class='memu-item'>
+        <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系我们</button>
         <view class="i-name">
           <image src='../../images/icon/icon-msg.png'></image>
           <text>联系我们</text>
