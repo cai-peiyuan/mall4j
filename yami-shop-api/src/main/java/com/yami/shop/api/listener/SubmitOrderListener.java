@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import cn.hutool.core.bean.BeanUtil;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -62,6 +63,7 @@ public class SubmitOrderListener {
      */
     @EventListener(SubmitOrderEvent.class)
     @Order(SubmitOrderOrder.DEFAULT)
+    @Async
     public void defaultSubmitOrderListener(SubmitOrderEvent event) {
         Date now = new Date();
 

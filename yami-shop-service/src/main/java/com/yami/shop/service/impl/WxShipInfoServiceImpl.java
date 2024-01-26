@@ -7,6 +7,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -39,6 +41,10 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final UserBalanceOrderService userBalanceOrderService;
+
+
+    private final WxPayPrepayService wxPayPrepayService;
+
     /**
      * 购物卡支付订单发货信息上传
      *
@@ -164,5 +170,40 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
             log.error("查询小程序是否已开通发货信息管理服务失败" + errmsg);
         }
         return is_trade_managed;
+    }
+
+    /**
+     * 充值订单虚拟发货
+     *
+     * @param orderNumber
+     * @param userBalanceOrder
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void uploadBalanceOrderShip(String orderNumber, UserBalanceOrder userBalanceOrder) {
+        if (orderNumber == null) {
+            log.debug("orderNumber数据为空  ");
+        }
+        if (userBalanceOrder == null) {
+            log.debug("userBalanceOrder数据为空  ");
+            userBalanceOrder = userBalanceOrderService.getOne(new LambdaQueryWrapper<UserBalanceOrder>().eq(UserBalanceOrder::getOrderNumber, orderNumber));
+        }
+        log.debug("充值订单已支付 订单编号 {} ", orderNumber);
+        WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, orderNumber).eq(WxPayPrepay::getTradeState, Transaction.TradeStateEnum.SUCCESS));
+        if (wxPayPrepay == null) {
+            log.debug("未查询到已支付的订单信息");
+            return;
+        }
+        log.debug("查询到已支付的订单 {}", Json.toJsonString(wxPayPrepay));
+
+        if (checkTradeManaged()) {
+            log.debug("查询小程序是否已开通发货信息管理服务");
+            String s = uploadBalanceOrderShipInfo(userBalanceOrder, wxPayPrepay);
+            log.debug("准备向腾讯推送虚拟发货信息");
+            log.debug("向腾讯推送虚拟发货信息请求接口返回 {}", s);
+
+        } else {
+            log.error("查询小程序是否已开通发货信息管理服务");
+        }
     }
 }

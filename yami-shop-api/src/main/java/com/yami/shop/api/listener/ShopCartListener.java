@@ -10,6 +10,7 @@ import com.yami.shop.bean.event.ShopCartEvent;
 import com.yami.shop.bean.order.ShopCartEventOrder;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class ShopCartListener {
      */
     @EventListener(ShopCartEvent.class)
     @Order(ShopCartEventOrder.DEFAULT)
+    @Async
     public void defaultShopCartEvent(ShopCartEvent event) {
         ShopCartDto shopCart = event.getShopCartDto();
         List<ShopCartItemDto> shopCartItemDtoList = event.getShopCartItemDtoList();

@@ -20,6 +20,7 @@ import com.yami.shop.service.UserAddrService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,6 +44,7 @@ public class ConfirmOrderListener {
      */
     @EventListener(ConfirmOrderEvent.class)
     @Order(ConfirmOrderOrder.DEFAULT)
+    @Async
     public void defaultConfirmOrderEvent(ConfirmOrderEvent event) {
 
 

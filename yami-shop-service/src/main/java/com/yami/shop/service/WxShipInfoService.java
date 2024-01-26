@@ -34,4 +34,11 @@ public interface WxShipInfoService extends IService<WxShipInfo> {
      * @date 2024/1/26 17:12 星期五
      */
     Boolean checkTradeManaged();
+
+    /**
+     * 充值订单虚拟发货
+     * @param orderNumber
+     * @param userBalanceOrder
+     */
+    void uploadBalanceOrderShip(String orderNumber, UserBalanceOrder userBalanceOrder);
 }
