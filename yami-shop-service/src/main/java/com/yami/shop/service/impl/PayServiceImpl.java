@@ -351,7 +351,7 @@ public class PayServiceImpl implements PayService {
                     userBalanceDetail.setUserId(userBalanceOrder.getUserId());
                     userBalanceDetail.setDetailType("1");
                     userBalanceDetail.setNewBalance(newBalance);
-                    userBalanceDetail.setDescription("在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()) + " 余额 "+ newBalance);
+                    userBalanceDetail.setDescription("在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()) + " 最新余额 "+ newBalance);
                     userBalanceDetail.setOrderNumber(userBalanceOrder.getOrderNumber());
                     userBalanceDetail.setUseTime(now);
                     userBalanceDetail.setUseTime(now);
