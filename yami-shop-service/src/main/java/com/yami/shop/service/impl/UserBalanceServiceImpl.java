@@ -9,6 +9,7 @@ import com.yami.shop.bean.model.UserBalance;
 import com.yami.shop.dao.UserBalanceMapper;
 import com.yami.shop.dao.UserMapper;
 import com.yami.shop.service.UserBalanceService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
  * @author c'p'y
  */
 @Service
+@Slf4j
 public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserBalance> implements UserBalanceService {
 
     @Autowired
@@ -38,6 +40,11 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
     @Override
     public UserBalance getUserBalanceByUserId(String userId) {
         UserBalance userBalance = userBalanceMapper.selectById(userId);
+        if(userBalance == null){
+            log.warn("用户余额数据不存在 userId = {}", userId);
+            userBalance = getUserBalance(userId, "");
+        }
+
         if (StrUtil.isBlank(userBalance.getCardNumber())) {
             User user = userMapper.selectById(userId);
             String userMobile = user.getUserMobile();
@@ -65,7 +72,8 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
             userBalance.setBalance(Double.valueOf(0.00));
             userBalance.setCredits(0);
             userBalance.setCardNumber(userMobile);
-            userBalanceMapper.insert(userBalance);
+            int insert = userBalanceMapper.insert(userBalance);
+            log.warn("保存用户余额数据 userId = {}  结果 {}", userId, insert);
         }
         return userBalance;
     }

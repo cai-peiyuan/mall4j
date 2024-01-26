@@ -16,6 +16,7 @@ import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.enums.PayType;
+import com.yami.shop.bean.event.PaySuccessBalanceOrderEvent;
 import com.yami.shop.bean.event.PaySuccessOrderEvent;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.pay.PayInfoDto;
@@ -117,6 +118,16 @@ public class PayServiceImpl implements PayService {
     }
 
 
+    /**
+     * 原有系统逻辑 不适用
+     *
+     * @param payNo
+     * @param bizPayNo
+     * @return
+     * @author peiyuan.cai@mapabc.com
+     * @date 2024/1/26 16:07 星期五
+     */
+    @Deprecated
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<String> paySuccess(String payNo, String bizPayNo) {
@@ -252,6 +263,7 @@ public class PayServiceImpl implements PayService {
 
     /**
      * 处理充值订单通知
+     * 后续要传入虚拟发货物流信息给公众平台
      *
      * @param transaction
      * @param attach
@@ -322,32 +334,23 @@ public class PayServiceImpl implements PayService {
                     boolean updateUserBalanceOrder = userBalanceOrderService.updateById(userBalanceOrderUpdate);
                     result.append("更新充值订单 ").append(" orderId = ").append(userBalanceOrderUpdate.getOrderId()).append(" 更新结果 ").append(updateUserBalanceOrder).append("\n");
 
-
                     // 3、更新用户充值余额值
-                    UserBalance userBalance = userBalanceService.getOne(new LambdaQueryWrapper<UserBalance>().eq(UserBalance::getUserId, userBalanceOrder.getUserId()));
-                    double newBalance;
-                    if (userBalance == null) {
-                        log.warn("用户余额数据不存在 userId = {}", userBalanceOrder.getUserId());
-                        result.append("用户余额数据不存在 userId = " + userBalanceOrder.getUserId());
-                        return result.toString();
-                    } else {
-                        UserBalance userBalanceUpdate = new UserBalance();
-                        userBalanceUpdate.setUserId(userBalanceOrder.getUserId());
-                        userBalanceUpdate.setUpdateTime(now);
-                        newBalance = Arith.add(userBalance.getBalance(), userBalanceOrder.getTotal());
-                        //设置最新余额
-                        userBalanceUpdate.setBalance(newBalance);
-                        boolean updateUserBalance = userBalanceService.updateById(userBalanceUpdate);
-                        result.append("更新用户最新余额 ").append(" userId = ").append(userBalanceUpdate.getUserId()).append(" 更新结果 ").append(updateUserBalance).append("\n");
-                    }
-
+                    UserBalance userBalance = userBalanceService.getUserBalanceByUserId(userBalanceOrder.getUserId());
+                    UserBalance userBalanceUpdate = new UserBalance();
+                    userBalanceUpdate.setUserId(userBalanceOrder.getUserId());
+                    userBalanceUpdate.setUpdateTime(now);
+                    //设置最新余额
+                    double newBalance = Arith.add(userBalance.getBalance(), userBalanceOrder.getTotal());
+                    userBalanceUpdate.setBalance(newBalance);
+                    boolean updateUserBalance = userBalanceService.updateById(userBalanceUpdate);
+                    result.append("更新用户最新余额 ").append(" userId = ").append(userBalanceUpdate.getUserId()).append(" 最新余额 ").append(newBalance).append(" 更新结果 ").append(updateUserBalance).append("\n");
 
                     // 4、添加用户余额变化明细
                     UserBalanceDetail userBalanceDetail = new UserBalanceDetail();
                     userBalanceDetail.setUserId(userBalanceOrder.getUserId());
                     userBalanceDetail.setDetailType("1");
                     userBalanceDetail.setNewBalance(newBalance);
-                    userBalanceDetail.setDescription("" + DateUtil.formatDateTime(now) + " 在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()));
+                    userBalanceDetail.setDescription("在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()) + " 余额 "+ newBalance);
                     userBalanceDetail.setOrderNumber(userBalanceOrder.getOrderNumber());
                     userBalanceDetail.setUseTime(now);
                     userBalanceDetail.setUseTime(now);
@@ -356,6 +359,11 @@ public class PayServiceImpl implements PayService {
 
                     boolean saveUserBalanceDetail = userBalanceDetailService.save(userBalanceDetail);
                     result.append("添加用户余额变化明细 ").append(" 结果 ").append(saveUserBalanceDetail).append("\n");
+
+                    // 充值订单支付成功通知事件 和监听此事件执行进一步的数据操作  如上传发货信息等
+                    PaySuccessBalanceOrderEvent paySuccessBalanceOrderEvent = new PaySuccessBalanceOrderEvent();
+                    paySuccessBalanceOrderEvent.setUserBalanceOrder(userBalanceOrder);
+                    eventPublisher.publishEvent(paySuccessBalanceOrderEvent);
                 }
             }
         }

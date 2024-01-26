@@ -34,8 +34,8 @@ import java.util.Map;
 import static com.yami.shop.common.constants.Constant.ORDER_TYPE_BALANCE;
 
 /**
- * .在接口文档中隐藏这个接口  不对外显示
- *
+ * 在接口文档中隐藏这个接口
+ * 不对外显示
  * @author cpy
  */
 @Hidden
@@ -50,7 +50,6 @@ public class PayNoticeController {
     private final PayService payService;
 
     private final WxPayNotifyService wxPayNotifyService;
-
 
     /**
      * 微信支付退款回调接口
@@ -100,13 +99,6 @@ public class PayNoticeController {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write(Ret.by("code", code).set("message", message).toJson());
         }
-    /*  WxPayOrderNotifyResult parseOrderNotifyResult = wxMiniPayService.parseOrderNotifyResult(xmlData);
-        String payNo = parseOrderNotifyResult.getOutTradeNo();
-        String bizPayNo = parseOrderNotifyResult.getTransactionId();
-        // 根据内部订单号更新order settlement
-        payService.paySuccess(payNo, bizPayNo);
-
-        return ServerResponseEntity.success();*/
     }
 
     /**

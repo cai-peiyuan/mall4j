@@ -30,7 +30,8 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements Ar
     @Override
     @Cacheable(cacheNames = "area", key = "#pid")
     public List<Area> listByPid(Long pid) {
-        return areaMapper.selectList(new LambdaQueryWrapper<Area>().eq(Area::getParentId, pid));
+        // 只查询有效的地址行政区 status == 1
+        return areaMapper.selectList(new LambdaQueryWrapper<Area>().eq(Area::getParentId, pid).eq(Area::getStatus, 1));
     }
 
     @Override

@@ -71,11 +71,11 @@ public class UserBalanceOrderServiceImpl extends ServiceImpl<UserBalanceOrderMap
         userBalanceOrder.setUserId(userId);
         userBalanceOrder.setShopId(shopId);
         userBalanceOrder.setSellCardId(cardId);
-        userBalanceOrder.setProdName("储值卡充值" + NumberUtil.decimalFormat("#.##", userBalanceSell.getStoredValue()));
+        userBalanceOrder.setProdName("储值充值" + NumberUtil.decimalFormat("#.##", userBalanceSell.getStoredValue()));
         userBalanceOrder.setCreateTime(now);
         userBalanceOrder.setActualTotal(userBalanceSell.getSellValue());
         userBalanceOrder.setTotal(userBalanceSell.getStoredValue());
-        userBalanceOrder.setRemarks("用户储值卡");
+        userBalanceOrder.setRemarks("用户储值");
         userBalanceOrder.setIsPayed(0);
         userBalanceOrder.setStatus(0);
         userBalanceOrder.setDeleteStatus(0);

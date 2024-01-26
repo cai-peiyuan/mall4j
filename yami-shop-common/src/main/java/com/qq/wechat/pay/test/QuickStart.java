@@ -1,5 +1,6 @@
 package com.qq.wechat.pay.test;
 
+import cn.hutool.core.date.DateUtil;
 import com.qq.wechat.pay.WeChatPayUtil;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
@@ -9,6 +10,8 @@ import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayResponse;
 
+import java.util.Date;
+
 /**
  * JSAPI 下单为例
  * @author c'p'y
@@ -17,6 +20,8 @@ public class QuickStart {
 
 
   public static void main(String[] args) {
+    String format = DateUtil.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    System.out.println(format);
     // 使用自动更新平台证书的RSA配置
     // 一个商户号只能初始化一个配置，否则会因为重复的下载任务报错
     Config config =
