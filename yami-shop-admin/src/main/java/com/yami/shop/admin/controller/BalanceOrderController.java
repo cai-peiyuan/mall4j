@@ -1,0 +1,78 @@
+package com.yami.shop.admin.controller;
+
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yami.shop.bean.model.UserBalanceOrder;
+import com.yami.shop.common.response.ServerResponseEntity;
+import com.yami.shop.common.util.PageParam;
+import com.yami.shop.service.UserBalanceOrderService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+
+/**
+ * 充值订单查询
+ *
+ * @author lgh
+ */
+@RestController
+@RequestMapping("/admin/balance/order")
+public class BalanceOrderController {
+
+    @Autowired
+    private UserBalanceOrderService userBalanceOrderService;
+
+    /**
+     * 分页获取
+     */
+    @GetMapping("/page")
+    @PreAuthorize("@pms.hasPermission('admin:balance:order:page')")
+    public ServerResponseEntity<IPage<UserBalanceOrder>> page(UserBalanceOrder balanceOrder, PageParam<UserBalanceOrder> page) {
+        IPage<UserBalanceOrder> brands = userBalanceOrderService.page(page, new LambdaQueryWrapper<UserBalanceOrder>().like(StrUtil.isNotBlank(balanceOrder.getOrderNumber()), UserBalanceOrder::getOrderNumber, balanceOrder.getOrderNumber()).orderByAsc(UserBalanceOrder::getCreateTime));
+        return ServerResponseEntity.success(brands);
+    }
+
+    /**
+     * 获取信息
+     */
+    @GetMapping("/info/{id}")
+    @PreAuthorize("@pms.hasPermission('admin:balance:order:info')")
+    public ServerResponseEntity<UserBalanceOrder> info(@PathVariable("id") Long id) {
+        UserBalanceOrder balanceOrder = userBalanceOrderService.getById(id);
+        return ServerResponseEntity.success(balanceOrder);
+    }
+
+    /**
+     * 保存
+     */
+    @PostMapping
+    @PreAuthorize("@pms.hasPermission('admin:balance:order:save')")
+    public ServerResponseEntity<Void> save(@Valid UserBalanceOrder balanceOrder) {
+        userBalanceOrderService.save(balanceOrder);
+        return ServerResponseEntity.success();
+    }
+
+    /**
+     * 修改
+     */
+    @PutMapping
+    @PreAuthorize("@pms.hasPermission('admin:balance:order:update')")
+    public ServerResponseEntity<Void> update(@Valid UserBalanceOrder balanceOrder) {
+        userBalanceOrderService.updateById(balanceOrder);
+        return ServerResponseEntity.success();
+    }
+
+    /**
+     * 删除
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@pms.hasPermission('admin:balance:order:delete')")
+    public ServerResponseEntity<Void> delete(@PathVariable Long id) {
+        userBalanceOrderService.removeById(id);
+        return ServerResponseEntity.success();
+    }
+
+}
