@@ -135,7 +135,7 @@ page {
 
 .list-cont .total-order .procedure .items image {
   width: 70rpx;
-  height: 70rpx;
+  height: 60rpx;
   margin-bottom: 20rpx;
 }
 

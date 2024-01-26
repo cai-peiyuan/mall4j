@@ -6,6 +6,7 @@ var util = require('../../../../utils/util.js');
 
 Page({
 
+<<<<<<< Updated upstream
     /**
      * 页面的初始数据
      */
@@ -43,6 +44,191 @@ Page({
         propKeys: [],
         allProperties: [],
         prodCommData: {},
+=======
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    shopId: 1,
+    picDomain: config.picDomain,
+    indicatorDots: true,
+    indicatorColor: '#f2f2f2',
+    indicatorActiveColor: '#eb2444',
+    autoplay: true,
+    interval: 3000,
+    duration: 1000,
+    prodNum: 1,
+    totalCartNum: 0,
+    pic: "",
+    imgs: '',
+    prodName: '',
+    price: 0,
+    content: '',
+    prodId: 0,
+    brief: '',
+    skuId: 0,
+    popupShow: false,
+    // 是否获取过用户领取过的优惠券id
+    loadCouponIds: false,
+    skuShow: false,
+    commentShow: false,
+    couponList: [],
+    skuList: [],
+    skuGroup: {},
+    findSku: true,
+    defaultSku: undefined,
+    selectedProp: [],
+    selectedPropObj: {},
+    propKeys: [],
+    allProperties: [],
+    prodCommData: {},
+    prodCommPage: {
+      current: 0,
+      pages: 0,
+      records: []
+    },
+    littleCommPage: [],
+    evaluate: -1,
+    isCollection: false,
+    left:"11.5%",
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function(options) {
+    this.setData({
+      prodId: options.prodid,
+    });
+
+    // 加载商品信息
+    this.getProdInfo();
+    // 加载评论数据
+    this.getProdCommData();
+    // 加载评论项
+    this.getLittleProdComm();
+    // 查看用户是否关注
+    this.getCollection();
+  },
+
+  /**
+   * 获取是否关注信息
+   */
+  getCollection() {
+    wx.showLoading();
+    var params = {
+      url: "/p/user/collection/isCollection",
+      method: "GET",
+      data: {
+        prodId: this.data.prodId
+      },
+      callBack: (res) => {
+        this.setData({
+          isCollection: res
+        })
+        wx.hideLoading();
+      }
+    };
+    http.request(params);
+  },
+
+  /**
+   * 添加或者取消收藏商品 
+   */
+  addOrCannelCollection() {
+    wx.showLoading();
+
+    var params = {
+      url: "/p/user/collection/addOrCancel",
+      method: "POST",
+      data: this.data.prodId,
+      callBack: (res) => {
+        this.setData({
+          isCollection: !this.data.isCollection
+        })
+        wx.hideLoading();
+      }
+    };
+    http.request(params);
+  },
+  toTarget(val){
+    if(val.target.dataset.val==1){
+        this.setData({left:"11.5%"});
+    }else if(val.target.dataset.val==2){
+        this.setData({left:"45%"})
+    }else if(val.target.dataset.val==3){
+        this.setData({left:"78.5%"})
+    }
+    console.log("left",this.data.left);
+  },
+  // 获取商品信息
+  getProdInfo() {
+    wx.showLoading();
+    var params = {
+      url: "/prod/prodInfo",
+      method: "GET",
+      data: {
+        prodId: this.data.prodId,
+        // userType: 0
+      },
+      callBack: (res) => {
+        //console.log(res);
+        var imgStrs = res.imgs;
+        var imgs = imgStrs.split(",");
+        var content = util.formatHtml(res.content);
+        this.setData({
+          imgs: imgs,
+          content: content,
+          price: res.price,
+          prodName: res.prodName,
+          prodId: res.prodId,
+          brief: res.brief,
+          // skuId: res.skuId
+          skuList: res.skuList,
+          pic: res.pic
+        });
+        // 获取优惠券
+        //this.getCouponList();
+        // 组装sku
+        this.groupSkuProp();
+
+        wx.hideLoading();
+      }
+    };
+    http.request(params);
+  },
+  getProdCommData() {
+    http.request({
+      url: "/prodComm/prodCommData",
+      method: "GET",
+      data: {
+        prodId: this.data.prodId,
+      },
+      callBack: (res) => {
+        this.setData({
+          prodCommData: res
+        })
+      }
+    })
+  },
+  // 获取部分评论
+  getLittleProdComm() {
+    if (this.data.prodCommPage.records.length) {
+      return;
+    }
+    this.getProdCommPage();
+  },
+  getMoreCommPage(e) {
+    this.getProdCommPage();
+  },
+  // 获取分页获取评论
+  getProdCommPage(e) {
+    if (e) {
+      if (e.currentTarget.dataset.evaluate === this.data.evaluate) {
+        return;
+      }
+      this.setData({
+>>>>>>> Stashed changes
         prodCommPage: {
             current: 0,
             pages: 0,

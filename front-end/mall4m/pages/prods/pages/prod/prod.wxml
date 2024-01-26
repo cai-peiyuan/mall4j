@@ -1,7 +1,16 @@
 <!-- 商品详情 -->
 <view class="container">
+    <view style="height:10vw; position:fixed; top:0; width:100vw; z-index:10; background-color: #fff;">
+        <view class="menu aroundFlex">
+            <view bindtap="toTarget" data-val="1"> 商品简介 </view>
+            <view bindtap="toTarget" data-val="2"> 商品详情 </view>
+            <view bindtap="toTarget" data-val="3"> 商品评价 </view>
+        </view>
+       <view class="activeBar" style="left:{{left}}">
+        </view>
+    </view>
     <!-- 轮播图 -->
-    <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" indicator-color="{{indicatorColor}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicatorActiveColor}}">
+    <swiper style="margin-top:10vw" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" indicator-color="{{indicatorColor}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicatorActiveColor}}">
         <block wx:for="{{imgs}}" wx:key='*this'>
             <swiper-item>
                 <image src='{{item}}'></image>
@@ -12,7 +21,7 @@
     <!-- 商品信息 -->
     <!-- <block wx:for="{{imgs}}" wx:key=''> -->
     <view class='prod-info'>
-        <view class="tit-wrap">
+        <view class="tit-wrap spaceBetweenFlex" style="height: 10vw;">
             <view class="prod-tit">{{prodName}}</view>
             <view class="col">
                 <view style="position: absolute;left: 0px;" bindtap='addOrCannelCollection'>

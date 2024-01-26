@@ -18,7 +18,15 @@ swiper image {
   height: 750rpx;
   width: 100%;
 }
-
+.activeBar{
+    position: absolute; 
+    width:10vw; 
+    height:4px; 
+    top:7vw; 
+    background:rgb(235, 168, 81);
+    border-radius: 2px;
+    transition: left 200ms linear;
+}
 /** 商品信息 */
 
 .prod-info {
@@ -77,7 +85,6 @@ swiper image {
   color: #999;
   font-size: 24rpx;
   margin-top: 6rpx;
-  margin-right: 140rpx;
 }
 
 .prod-price {
@@ -553,12 +560,12 @@ img {
 }
 
 .cart-footer .btn.cart {
-  background: #584e61;
+  background: #9d9b9e;
   color: #fff;
 }
 
 .cart-footer .btn.buy {
-  background: #eb2444;
+  background: rgb(238, 147, 27);
   color: #fff;
 }
 
