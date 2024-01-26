@@ -2,44 +2,24 @@
 
 package com.yami.shop.api.listener;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
-import com.yami.shop.bean.app.dto.ShopCartItemDiscountDto;
-import com.yami.shop.bean.app.dto.ShopCartItemDto;
-import com.yami.shop.bean.app.dto.ShopCartOrderDto;
-import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
-import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.event.PaySuccessBalanceOrderEvent;
 import com.yami.shop.bean.event.PaySuccessOrderEvent;
-import com.yami.shop.bean.event.SubmitOrderEvent;
-import com.yami.shop.bean.model.*;
+import com.yami.shop.bean.model.UserBalanceOrder;
+import com.yami.shop.bean.model.WxPayPrepay;
 import com.yami.shop.bean.order.PayOrderOrder;
-import com.yami.shop.bean.order.SubmitOrderOrder;
-import com.yami.shop.common.constants.Constant;
-import com.yami.shop.common.exception.YamiShopBindException;
-import com.yami.shop.common.util.Arith;
 import com.yami.shop.common.util.Json;
-import com.yami.shop.dao.*;
-import com.yami.shop.security.api.util.SecurityUtils;
-import com.yami.shop.service.*;
+import com.yami.shop.service.WxPayPrepayService;
+import com.yami.shop.service.WxShipInfoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
-
-import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
+import java.util.List;
 
 /**
  * 支付订单后续逻辑
@@ -49,7 +29,7 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 @Component("defaultPayOrderListener")
 @AllArgsConstructor
 @Slf4j
-public class PayOrderListener {
+public class PayOrderListener implements ApplicationListener {
 
     private final WxPayPrepayService wxPayPrepayService;
 

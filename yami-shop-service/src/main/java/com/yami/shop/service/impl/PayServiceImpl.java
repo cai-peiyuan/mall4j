@@ -22,6 +22,7 @@ import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.pay.PayInfoDto;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.Arith;
+import com.yami.shop.common.util.Json;
 import com.yami.shop.dao.OrderMapper;
 import com.yami.shop.dao.OrderSettlementMapper;
 import com.yami.shop.service.*;
@@ -248,7 +249,7 @@ public class PayServiceImpl implements PayService {
 
                     // 将订单改为已支付状态
                     int update = orderMapper.updateByToPaySuccess(Arrays.asList(orderNumbers), PayType.WECHATPAY.value());
-                    result.append("更新订单信息 ").append(" orderNumbers = ").append(orderNumbers).append(" 更新结果 ").append(update).append("\n");
+                    result.append("更新订单信息 ").append(" orderNumbers = ").append(Json.toJsonString(orderNumbers)).append(" 更新结果 ").append(update).append("\n");
 
                     // 支付成功通知事件 和监听此事件执行进一步的数据操作  如打印小票、发送通知等
                     // List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
