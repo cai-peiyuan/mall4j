@@ -79,6 +79,7 @@ public class UserBalanceOrderServiceImpl extends ServiceImpl<UserBalanceOrderMap
         userBalanceOrder.setIsPayed(0);
         userBalanceOrder.setStatus(0);
         userBalanceOrder.setDeleteStatus(0);
+        userBalanceOrder.setShipTowx(0);
         userBalanceOrder.setPayType(PayType.WECHATPAY.value());
         userBalanceOrder.setReduceAmount(Arith.sub(userBalanceSell.getStoredValue(), userBalanceSell.getSellValue()));
         save(userBalanceOrder);

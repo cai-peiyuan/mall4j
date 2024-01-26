@@ -1,20 +1,14 @@
-
-
 package com.yami.shop.api.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.jfinal.kit.Ret;
 import com.qq.wechat.pay.WeChatPayUtil;
-import com.wechat.pay.java.core.RSAAutoCertificateConfig;
 import com.wechat.pay.java.core.exception.ValidationException;
-import com.wechat.pay.java.core.http.Constant;
-import com.wechat.pay.java.core.notification.Notification;
-import com.wechat.pay.java.core.notification.NotificationConfig;
 import com.wechat.pay.java.core.notification.NotificationParser;
 import com.wechat.pay.java.core.notification.RequestParam;
-import com.wechat.pay.java.core.util.GsonUtil;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.refund.model.Refund;
+import com.yami.shop.bean.event.PaySuccessBalanceOrderEvent;
+import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.Json;
 import com.yami.shop.service.PayService;
 import com.yami.shop.service.WxPayNotifyService;
@@ -23,19 +17,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.RequestUtil;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static com.yami.shop.common.constants.Constant.ORDER_TYPE_BALANCE;
-
 /**
  * 在接口文档中隐藏这个接口
  * 不对外显示
+ *
  * @author cpy
  */
 @Hidden
@@ -51,6 +43,19 @@ public class PayNoticeController {
 
     private final WxPayNotifyService wxPayNotifyService;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    @GetMapping("/publishEvent/{orderNumber}")
+    public ServerResponseEntity publishEvent(@PathVariable(name = "orderNumber") String orderNumber) {
+        // 充值订单支付成功通知事件 和监听此事件执行进一步的数据操作  如上传发货信息等
+        PaySuccessBalanceOrderEvent paySuccessBalanceOrderEvent = new PaySuccessBalanceOrderEvent();
+        paySuccessBalanceOrderEvent.setUserBalanceOrder(null);
+        paySuccessBalanceOrderEvent.setOrderNumber(orderNumber);
+        eventPublisher.publishEvent(paySuccessBalanceOrderEvent);
+        return ServerResponseEntity.success();
+    }
+
     /**
      * 微信支付退款回调接口
      * doc -> https://pay.weixin.qq.com/docs/merchant/apis/mini-program-payment/payment-notice.html
@@ -58,7 +63,7 @@ public class PayNoticeController {
      * @param request
      * @param response
      */
-    @RequestMapping("/wechat/refund")
+    @PostMapping("/wechat/refund")
     public void wechatRefund(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean success = true;
         String message = "";
@@ -108,7 +113,7 @@ public class PayNoticeController {
      * @param request
      * @param response
      */
-    @RequestMapping("/wechat/transaction")
+    @PostMapping("/wechat/transaction")
     public void wechatTransaction(HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean success = true;
         String message = "";

@@ -35,7 +35,7 @@ public class WxShipInfo implements Serializable {
 
     private Integer logisticsType;
 
-    private String deliveryMode;
+    private Integer deliveryMode;
 
     private String isAllDelivered;
 
@@ -53,13 +53,15 @@ public class WxShipInfo implements Serializable {
 
     private String receiverContact;
 
-    private String resultText;
+    private Integer resultCode;
+
+    private String resultMsg;
 
     private String logisticsInfo;
 
-    private String delivered;
+    private Integer delivered;
 
-    private String receipt;
+    private Integer receipt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

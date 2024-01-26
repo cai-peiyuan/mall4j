@@ -75,6 +75,11 @@ public class UserBalanceOrder implements Serializable {
     private String remarks;
 
     /**
+     * 是否向腾讯发送虚拟发货标记
+     */
+    private Integer shipTowx;
+
+    /**
      * 订单状态 -1 已取消 0:待付款 1:待发货 2:待收货 3:已完成
      */
     private Integer status;

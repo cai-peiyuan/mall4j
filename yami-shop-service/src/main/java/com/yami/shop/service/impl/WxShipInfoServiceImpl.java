@@ -5,6 +5,7 @@ package com.yami.shop.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
@@ -17,11 +18,14 @@ import com.yami.shop.bean.model.WxShipInfo;
 import com.yami.shop.common.util.Json;
 import com.yami.shop.dao.WxPayPrepayMapper;
 import com.yami.shop.dao.WxShipInfoMapper;
+import com.yami.shop.service.UserBalanceOrderService;
+import com.yami.shop.service.UserBalanceService;
 import com.yami.shop.service.WxPayPrepayService;
 import com.yami.shop.service.WxShipInfoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,6 +37,8 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 @AllArgsConstructor
 public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipInfo> implements WxShipInfoService {
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final UserBalanceOrderService userBalanceOrderService;
     /**
      * 购物卡支付订单发货信息上传
      *
@@ -44,6 +50,8 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
      */
     @Override
     public String uploadBalanceOrderShipInfo(UserBalanceOrder userBalanceOrder, WxPayPrepay wxPayPrepay) {
+        WxShipInfo wxShipInfo = new WxShipInfo();
+        Date now = new Date();
         /**
          * 发货信息录入接口
          * 调用方式以及出入参和HTTPS相同，仅是调用的token不同
@@ -56,48 +64,68 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
         String wxpay_mchid = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "wxpay_mchid");
         String url = "https://api.weixin.qq.com/wxa/sec/order/upload_shipping_info?access_token=" + ACCESS_TOKEN;
         JSONObject jsonObject = new JSONObject();
-
         JSONObject order_key = new JSONObject();
         order_key.put("order_number_type", 1);
         order_key.put("transaction_id", wxPayPrepay.getTransactionId());
         order_key.put("mchid", wxpay_mchid);
         order_key.put("out_trade_no", userBalanceOrder.getOrderNumber());
-
         jsonObject.put("order_key", order_key);
-
-
         /**
          * 物流模式，发货方式枚举值：1、实体物流配送采用快递公司进行实体物流配送形式 2、同城配送 3、虚拟商品，虚拟商品，例如话费充值，点卡等，无实体配送形式 4、用户自提
          */
         jsonObject.put("logistics_type", 3);
-
         /**
          * 发货模式，发货模式枚举值：1、UNIFIED_DELIVERY（统一发货）2、SPLIT_DELIVERY（分拆发货） 示例值: UNIFIED_DELIVERY
          */
         jsonObject.put("delivery_mode", 1);
-
-        JSONObject shipping_list = new JSONObject();
-        shipping_list.put("item_desc", "储值"+userBalanceOrder.getTotal()+"已到账");
-
+        JSONArray shipping_list = new JSONArray();
+        JSONObject shippingListItem = new JSONObject();
+        String itemDesc = "储值"+userBalanceOrder.getTotal()+"已到账";
+        shippingListItem.put("item_desc", itemDesc);
+        shipping_list.add(shippingListItem);
+        jsonObject.put("shipping_list", shipping_list);
         JSONObject payer = new JSONObject();
         payer.put("openid", userBalanceOrder.getUserId());
-
         jsonObject.put("payer", payer);
-
-        jsonObject.put("upload_time", DateUtil.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
-
+        String uploadTime = DateUtil.format(now, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        jsonObject.put("upload_time", uploadTime);
         String post = HttpUtil.post(url, jsonObject.toJSONString());
-
         log.debug("小程序发货信息上传接口：" + post);
-
         JSONObject jsonObjResult = JSON.parseObject(post);
         Integer errcode = jsonObjResult.getInteger("errcode");
+        String errmsg = jsonObjResult.getString("errmsg");
+
+        wxShipInfo.setResultCode(errcode);
+        wxShipInfo.setResultMsg(errmsg);
+        wxShipInfo.setOrderNumberType(1);
+        wxShipInfo.setTransactionId(wxPayPrepay.getTransactionId());
+        wxShipInfo.setMchId(wxpay_mchid);
+        wxShipInfo.setOutTradeNo(userBalanceOrder.getOrderNumber());
+        wxShipInfo.setLogisticsType(3);
+        wxShipInfo.setDeliveryMode(1);
+        wxShipInfo.setItemDesc(itemDesc);
+        wxShipInfo.setPayerId(userBalanceOrder.getUserId());
+        wxShipInfo.setUpdateTime(now);
+        wxShipInfo.setUploadTime(uploadTime);
+        wxShipInfo.setCreateTime(now);
+        wxShipInfo.setAppId(appId);
         if (errcode == 0) {
             log.debug("小程序发货信息上传结果：" + jsonObjResult);
+            UserBalanceOrder balanceOrderUpdate = new UserBalanceOrder();
+            balanceOrderUpdate.setOrderId(userBalanceOrder.getOrderId());
+            balanceOrderUpdate.setShipTowx(1);
+            balanceOrderUpdate.setStatus(5);
+            boolean b = userBalanceOrderService.updateById(balanceOrderUpdate);
+            log.debug("更新充值订单发货状态 {}", b);
+            wxShipInfo.setDelivered(1);
+            wxShipInfo.setReceipt(1);
         } else {
-            String errmsg = jsonObjResult.getString("errmsg");
             log.error("小程序发货信息上传结果请求失败" + errmsg);
+            wxShipInfo.setDelivered(0);
+            wxShipInfo.setReceipt(0);
         }
+        boolean save = save(wxShipInfo);
+        log.debug("保存小程序发货数据记录 {}", save);
         return post;
     }
 

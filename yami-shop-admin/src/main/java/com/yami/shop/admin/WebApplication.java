@@ -10,12 +10,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * @author lgh
  */
 @SpringBootApplication
 @ComponentScan("com.yami.shop")
+@EnableAsync
 public class WebApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
