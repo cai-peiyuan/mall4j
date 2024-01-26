@@ -103,7 +103,7 @@
           >
             <el-option
               label="账户充值"
-              value="/pages/user-balance/user-balance"
+              value="/pages/balance/pages/user-balance/user-balance"
             />
           </el-select>
         </el-form-item>
