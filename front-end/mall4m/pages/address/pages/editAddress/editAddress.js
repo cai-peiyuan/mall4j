@@ -28,6 +28,10 @@ Page({
     addrId: 0
   },
 
+  /**
+   * 再入页面执行
+   * @param {*} options 
+   */
   onLoad: function (options) {
     if (options && options.addrId) {
       wx.showLoading();
@@ -55,10 +59,16 @@ Page({
       }
       http.request(params);
     } else {
-      this.initCityData(this.data.provinceId, this.data.cityId, this.data.areaId);
+       this.initCityData(this.data.provinceId, this.data.cityId, this.data.areaId);
     }
   },
 
+  /**
+   * 初始化城市数据
+   * @param {*} provinceId 
+   * @param {*} cityId 
+   * @param {*} areaId 
+   */
   initCityData: function (provinceId, cityId, areaId) {
     var ths = this;
     wx.showLoading();
@@ -69,7 +79,7 @@ Page({
         pid: 0
       },
       callBack: function (res) {
-        //console.log(res)
+        console.log(res)
         ths.setData({
           provArray: res
         });
@@ -90,8 +100,8 @@ Page({
   },
 
   /**
-* 生命周期函数--监听页面显示
-*/
+   * 生命周期函数--监听页面显示
+   */
   onShow: function () {
 
   },
@@ -107,12 +117,12 @@ Page({
       val[1] = 0;
       val[2] = 0;
       //更新数据
-      ths.getCityArray(this.data.provArray[val[0]].areaId);//获取地级市数据
-    } else {    //若省份column未做滑动，地级市做了滑动则定位区县第一位
+      ths.getCityArray(this.data.provArray[val[0]].areaId); //获取地级市数据
+    } else { //若省份column未做滑动，地级市做了滑动则定位区县第一位
       if (index[1] != val[1]) {
         val[2] = 0;
         //更新数据
-        ths.getAreaArray(this.data.cityArray[val[1]].areaId);//获取区县数据
+        ths.getAreaArray(this.data.cityArray[val[1]].areaId); //获取区县数据
       } else {
 
       }
@@ -137,8 +147,7 @@ Page({
       duration: 0,
       timingFunction: "ease",
       delay: 0
-    }
-    )
+    })
     this.animation.translateY(200 + 'vh').step();
     this.setData({
       animation: this.animation.export(),
@@ -181,8 +190,7 @@ Page({
       duration: 400,
       timingFunction: "ease",
       delay: 0
-    }
-    )
+    })
     that.animation.translateY(moveY + 'vh').step()
 
     that.setData({
@@ -224,8 +232,8 @@ Page({
   },
 
   /**
-    * 根据城市ID获取 区数据
-    */
+   * 根据城市ID获取 区数据
+   */
   getAreaArray: function (cityId, areaId) {
     var ths = this;
     var params = {
@@ -283,7 +291,36 @@ Page({
       region: e.detail.value
     })
   },
-
+  /**
+   * 判断是否支持的地址
+   * @param {*} provinceName 
+   */
+  containProvince(provinceName){
+    let support = false;
+    for (let index = 0; index < this.data.provArray.length; index++) {
+      const element = array[index];
+      if(element == provinceName){
+        support = true;
+        break;
+      }
+    }
+    return support;
+  },
+  /**
+   * 判断是否支持的地址
+   * @param {*} cityName 
+   */
+  containCity(cityName){
+    let support = false;
+    for (let index = 0; index < this.data.cityArray.length; index++) {
+      const element = array[index];
+      if(element == cityName){
+        support = true;
+        break;
+      }
+    }
+    return support;
+  },
   /**
    * 获取微信收货地址
    *  cityName: "广州市"
@@ -299,6 +336,22 @@ Page({
   chooseAddress() {
     wx.chooseAddress({
       success: (res) => {
+        //不支持的省份
+        if(!this.containProvince(res.provinceName)){
+          wx.showToast({
+            title: '不支持的省份 ' + res.provinceName,
+            icon: "none"
+          })
+          return;
+        }
+        //不支持的省份
+        if(!this.containCity(res.cityName)){
+          wx.showToast({
+            title: '不支持的城市 ' + res.cityName,
+            icon: "none"
+          })
+          return;
+        }
         this.setData({
           receiver: res.userName,
           addr: res.detailInfo,
@@ -416,7 +469,7 @@ Page({
       success(res) {
         if (res.confirm) {
           var addrId = ths.data.addrId;
-        
+
           wx.showLoading();
           var params = {
             url: "/p/address/deleteAddr/" + addrId,

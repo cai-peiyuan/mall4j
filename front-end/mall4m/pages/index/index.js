@@ -66,7 +66,10 @@ Page({
    * @param {*} e 
    */
   toSwiperLinkPage: function(e) {
+    console.log('点击首页轮播图片', e);
     var item = e.currentTarget.dataset.item;
+    console.log(item);
+
     //跳转到指定页面
     if(item.type == 1){
         wx.navigateTo({
@@ -74,9 +77,9 @@ Page({
         })
     }else if(item.type == 0){
         //跳转到商品页面
-        if (item.prodid) {
+        if (item.relation) {
             wx.navigateTo({
-              url: '/pages/prods/pages/prod/prod?prodid=' + item.prodid,
+              url: '/pages/prods/pages/prod/prod?prodid=' + item.relation,
             })
           }
     }
@@ -111,7 +114,7 @@ Page({
 
   //跳转商品活动页面
   toClassifyPage: function(e) {
-    var url = '/pages/prod-classify/prod-classify?sts=' + e.currentTarget.dataset.sts;
+    var url = '/pages/prods/pages/prod-classify/prod-classify?sts=' + e.currentTarget.dataset.sts;
     var id = e.currentTarget.dataset.id;
     var title = e.currentTarget.dataset.title;
     if (id) {
@@ -275,7 +278,6 @@ Page({
       callBack: (res) => {
         var taglist = this.data.taglist;
         taglist[index].prods = res.records
-
         this.setData({
           taglist: taglist,
         });
