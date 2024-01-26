@@ -15,7 +15,6 @@ import java.util.List;
 @Schema(description = "订单参数")
 public class OrderParam {
 
-
 	@Schema(description = "购物车id 数组" )
 	private List<Long> basketIds;
 
@@ -36,7 +35,5 @@ public class OrderParam {
 //	private String uuid;
 //	@Schema(description = "订单入口 SHOP_CART购物车，BUY_NOW立即购买" )
 //	private OrderEntry orderEntry;
-
-
 
 }

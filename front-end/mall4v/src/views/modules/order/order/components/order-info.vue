@@ -129,7 +129,7 @@
                         </el-form-item>
                       </div>
                     </div>
-                    <div class="detail01">
+                    <div class="detail01" v-if="false">
                       <img
                         src="~@/assets/img/invoice.png"
                         alt=""
@@ -146,11 +146,21 @@
                       style="margin-right:15px"
                     >
                     <el-form-item
-                      label="买家:"
+                      label="买家信息"
                       style="margin-top:22px"
                       label-width="44px"
                     >
-                      <span>{{ dataForm.nickName }}</span>
+                      <span>
+                      <div v-if="dataForm.userInfo.pic != null">
+                        <img
+                          alt=""
+                          :src="dataForm.userInfo.pic"
+                          style="height:60px !important;width: 60px !important;"
+                        >
+                      </div>
+                      </span>
+                      <span>微信名称：{{ dataForm.userInfo.nickName }}</span>
+                      <span>绑定手机号：{{ dataForm.userInfo.userMobile }}</span>
                     </el-form-item>
                   </div>
                   <div class="buyers-info">
@@ -304,6 +314,8 @@ const dataForm = ref({
   status: 1,
   addrOrderId: 0,
   nickName: '',
+  userInfo: {},
+  userId: '',
   orderItems: [],
   orderTime: '',
   updateTime: '',

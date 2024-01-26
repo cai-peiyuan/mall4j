@@ -141,6 +141,7 @@
                   </div>
                 </div>
               </el-col>
+              <!-- 支付方式 -->
               <el-col
                 :span="2"
                 style="height: 100%;"
@@ -154,6 +155,7 @@
                   </div>
                 </div>
               </el-col>
+              <!-- 订单状态 -->
               <el-col
                 :span="2"
                 style="height: 100%;"
@@ -184,6 +186,7 @@
                   >失败</span>
                 </div>
               </el-col>
+              <!-- 下单用户，购买人信息 -->
               <el-col
                 :span="2"
                 style="height: 100%;"
@@ -191,7 +194,7 @@
                 <div class="item">
                   <div>
                     <span>
-                      <div>
+                      <div v-if="order.userInfo.pic != null">
                         <img
                           alt=""
                           :src="order.userInfo.pic"
@@ -202,6 +205,10 @@
                     <span>{{ order.userInfo.nickName }}</span>
                     <span>{{ order.userInfo.realName }}</span>
                     <span>{{ order.userInfo.userMobile }}</span>
+                    <span
+                      v-if="order.userInfo.nickName == null"
+                      style="word-break: break-word;"
+                    >{{ order.userInfo.userId }}</span>
                   </div>
                 </div>
               </el-col>
@@ -230,7 +237,27 @@
                     >
                       查看
                     </el-button>
-                    <span v-if="order.printTimes > 0">已打印次数：{{ order.printTimes }}</span>
+                    <br>
+                    <el-button
+                      v-if="isAuth('order:order:delivery')"
+                      type="text"
+                      @click="changeOrder(order)"
+                    >
+                      发货
+                    </el-button>
+                    <br>
+                    <el-button
+                      v-if="isAuth('order:order:refund')"
+                      type="text"
+                      @click="orderRefund(order)"
+                    >
+                      退款
+                    </el-button>
+                    <span
+                      v-if="order.printTimes> 0"
+                      style="cursor:pointer;"
+                      @click="printOrder(order.orderNumber)"
+                    >已打印次数：{{ order.printTimes }}</span>
                     <el-button
                       v-if="isAuth('order:order:print') && order.printTimes == 0"
                       type="text"
@@ -278,10 +305,24 @@
       ref="consignmentInfoRef"
       @input-callback="getWaitingConsignmentExcel"
     />
+    <!-- 弹窗, 新增 / 修改 -->
+    <devy-add
+      v-if="devyVisible"
+      ref="devyAddRef"
+      @refresh-data-list="getDataList"
+    />
+    <!-- 退款 弹窗, 新增 / 修改 -->
+    <order-refund
+      v-if="refundVisible"
+      ref="orderRefundRef"
+      @refresh-data-list="getDataList"
+    />
   </div>
 </template>
 
 <script setup>
+import DevyAdd from './components/order-devy.vue'
+import OrderRefund from './components/order-refund.vue'
 import AddOrUpdate from './components/order-info.vue'
 import ConsignmentInfo from './components/consignment-info.vue'
 import { isAuth } from '@/utils'
@@ -289,6 +330,8 @@ import { ElMessage } from 'element-plus'
 const resourcesUrl = import.meta.env.VITE_APP_RESOURCES_URL
 const dataForm = ref({})
 const dateRange = ref([])
+const devyVisible = ref(false)
+const refundVisible = ref(false)
 const options = [{
   value: 1,
   label: '待付款'
@@ -322,7 +365,28 @@ const page = reactive({
 onMounted(() => {
   getDataList(page)
 })
-
+const devyAddRef = ref(null)
+const orderRefundRef = ref(null)
+/**
+ * 发货
+ * @param order
+ */
+const orderRefund = (order) => {
+  refundVisible.value = true
+  nextTick(() => {
+    orderRefundRef.value?.init(order.orderNumber)
+  })
+}
+/**
+ * 发货
+ * @param order
+ */
+const changeOrder = (order) => {
+  devyVisible.value = true
+  nextTick(() => {
+    devyAddRef.value?.init(order.orderNumber, order.dvyId, order.dvyFlowId)
+  })
+}
 /**
  * 获取数据列表
  */

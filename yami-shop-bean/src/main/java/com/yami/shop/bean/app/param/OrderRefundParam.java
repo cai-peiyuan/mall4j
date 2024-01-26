@@ -30,7 +30,7 @@ public class OrderRefundParam {
     private String photoFiles;
 
     @Schema(description = "申请原因" , required = true)
-    @NotEmpty(message = "订单编号不能为空")
+    @NotEmpty(message = "申请原因不能为空")
     private String buyerMsg;
 
 }
