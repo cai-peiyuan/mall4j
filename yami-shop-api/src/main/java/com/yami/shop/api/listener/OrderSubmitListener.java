@@ -63,7 +63,6 @@ public class OrderSubmitListener {
      */
     @EventListener(OrderSubmitEvent.class)
     @Order(SubmitOrderOrder.DEFAULT)
-    @Async
     public void defaultSubmitOrderListener(OrderSubmitEvent event) {
         Date now = new Date();
 

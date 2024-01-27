@@ -44,7 +44,6 @@ public class OrderConfirmListener {
      */
     @EventListener(OrderConfirmEvent.class)
     @Order(ConfirmOrderOrder.DEFAULT)
-    @Async
     public void defaultConfirmOrderEvent(OrderConfirmEvent event) {
 
 
