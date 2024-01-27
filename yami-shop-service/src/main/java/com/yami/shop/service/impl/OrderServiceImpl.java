@@ -1,5 +1,3 @@
-
-
 package com.yami.shop.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -21,9 +19,10 @@ import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.enums.OrderStatus;
-import com.yami.shop.bean.event.CancelOrderEvent;
-import com.yami.shop.bean.event.ReceiptOrderEvent;
-import com.yami.shop.bean.event.SubmitOrderEvent;
+import com.yami.shop.bean.event.OrderCancelEvent;
+import com.yami.shop.bean.event.OrderDeliveryEvent;
+import com.yami.shop.bean.event.OrderReceiptEvent;
+import com.yami.shop.bean.event.OrderSubmitEvent;
 import com.yami.shop.bean.model.DeliveryOrder;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
@@ -35,6 +34,7 @@ import com.yami.shop.dao.*;
 import com.yami.shop.service.*;
 import com.yly.print_sdk_library.RequestMethod;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -55,6 +55,7 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
 
@@ -189,7 +190,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public List<Order> submit(String userId, ShopCartOrderMergerDto mergerOrder) {
         List<Order> orderList = new ArrayList<>();
         // 通过事务提交订单
-        eventPublisher.publishEvent(new SubmitOrderEvent(mergerOrder, orderList));
+        eventPublisher.publishEvent(new OrderSubmitEvent(mergerOrder, orderList));
 
         // 插入订单
         saveBatch(orderList);
@@ -197,38 +198,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 插入订单项，返回主键
         orderItemMapper.insertBatch(orderItems);
         return orderList;
-    }
-
-    /**
-     * 订单发货
-     *
-     * @param order
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void delivery(Order orderUpdate, Order order) {
-        orderMapper.updateById(order);
-        // 发送用户发货通知
-        Map<String, String> params = new HashMap<>(16);
-        params.put("orderNumber", order.getOrderNumber());
-        //		Delivery delivery = deliveryMapper.selectById(order.getDvyId());
-        //		params.put("dvyName", delivery.getDvyName());
-        //		params.put("dvyFlowId", order.getDvyFlowId());
-        //		smsLogService.sendSms(SmsType.NOTIFY_DVY, order.getUserId(), order.getMobile(), params);
-        // 如果是商家自配送 添加物流订单
-        if(order.getDvyId() == 13){
-            DeliveryOrder deliveryOrder = new DeliveryOrder();
-            deliveryOrder.setOrderNumber(orderUpdate.getOrderNumber());
-            deliveryOrder.setCreateTime(orderUpdate.getDvyTime());
-            deliveryOrder.setExpressNumber(orderUpdate.getDvyFlowId());
-            //物流状态0初始创建1已分配配送员2运送中3已送达
-            deliveryOrder.setExpressStatus(0);
-            deliveryOrder.setAddOrderId(order.getAddrOrderId());
-            deliveryOrderService.save(deliveryOrder);
-
-            //目前都是商家自主配送 将运单号码等信息发送给腾讯平台
-            wxShipInfoService.uploadOrderShipInfo(orderUpdate);
-        }
     }
 
     @Override
@@ -245,7 +214,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (Order order : orders) {
             List<OrderItem> orderItems = order.getOrderItems();
             allOrderItems.addAll(orderItems);
-            eventPublisher.publishEvent(new CancelOrderEvent(order));
+            eventPublisher.publishEvent(new OrderCancelEvent(order));
         }
         if (CollectionUtil.isEmpty(allOrderItems)) {
             return;
@@ -271,7 +240,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public void confirmOrder(List<Order> orders) {
         orderMapper.confirmOrder(orders);
         for (Order order : orders) {
-            eventPublisher.publishEvent(new ReceiptOrderEvent(order));
+            eventPublisher.publishEvent(new OrderReceiptEvent(order));
         }
     }
 
@@ -394,6 +363,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      * @param dvyFlowId
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void orderDelivery(Order order, Long dvyId, String dvyFlowId) {
         /**
          * 更新订单发货状态和物流信息
@@ -404,9 +374,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderUpdate.setDvyFlowId(dvyFlowId);
         orderUpdate.setDvyTime(new Date());
         orderUpdate.setStatus(OrderStatus.CONSIGNMENT.value());
-        orderUpdate.setUserId(order.getUserId());
+        //orderUpdate.setUserId(order.getUserId());
+        updateById(orderUpdate);
         //更新订单发货状态
-        delivery(orderUpdate, order);
+        // 发送用户发货通知
+        // Map<String, String> params = new HashMap<>(16);
+        // params.put("orderNumber", order.getOrderNumber());
+        //		Delivery delivery = deliveryMapper.selectById(order.getDvyId());
+        //		params.put("dvyName", delivery.getDvyName());
+        //		params.put("dvyFlowId", order.getDvyFlowId());
+        //		smsLogService.sendSms(SmsType.NOTIFY_DVY, order.getUserId(), order.getMobile(), params);
+        // 如果是商家自配送 添加物流订单
+        if (orderUpdate.getDvyId() == 13) {
+            log.debug("商品由商家配送 {}", orderUpdate.getDvyId());
+            DeliveryOrder deliveryOrder = new DeliveryOrder();
+            deliveryOrder.setOrderNumber(orderUpdate.getOrderNumber());
+            deliveryOrder.setCreateTime(orderUpdate.getDvyTime());
+            deliveryOrder.setExpressNumber(orderUpdate.getDvyFlowId());
+            //物流状态0初始创建1已分配配送员2运送中3已送达
+            deliveryOrder.setExpressStatus(0);
+            deliveryOrder.setAddOrderId(order.getAddrOrderId());
+            deliveryOrderService.save(deliveryOrder);
+
+            eventPublisher.publishEvent(new OrderDeliveryEvent(order));
+        }
     }
 
 }

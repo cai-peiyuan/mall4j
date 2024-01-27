@@ -2,6 +2,7 @@
 
 package com.yami.shop.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
@@ -24,6 +25,7 @@ import com.yami.shop.dao.SmsLogMapper;
 import com.yami.shop.dao.UserMapper;
 import com.yami.shop.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -102,9 +104,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return
      */
     @Override
+    @Cacheable(cacheNames = "userInfoDto", key = "#userId")
     public UserInfoDto getUserInfoById(String userId) {
-        User user = getById(userId);
-        return UserInfoDto.builder().userId(user.getUserId()).userMobile(user.getUserMobile()).pic(user.getPic()).realName(user.getRealName()).nickName(user.getNickName()).build();
+        User user = getUserByUserId(userId);
+        return BeanUtil.copyProperties(user, UserInfoDto.class);
     }
 
     /**

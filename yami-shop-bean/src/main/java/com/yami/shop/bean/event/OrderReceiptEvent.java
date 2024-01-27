@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class ReceiptOrderEvent {
+public class OrderReceiptEvent {
 
     private Order order;
 }

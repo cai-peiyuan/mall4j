@@ -55,11 +55,6 @@ public interface OrderService extends IService<Order> {
      */
     List<Order> submit(String userId, ShopCartOrderMergerDto mergerOrder);
 
-    /**
-     * 发货
-     * @param order
-     */
-    void delivery(Order orderUpdate, Order order);
 
     /**
      * 根据参数获取订单列表

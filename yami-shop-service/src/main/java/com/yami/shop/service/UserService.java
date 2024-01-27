@@ -46,6 +46,7 @@ public interface UserService extends IService<User> {
      */
     UserInfoDto getUserInfoById(String userId);
 
+
     /**
      * 微信小程序登录
      *

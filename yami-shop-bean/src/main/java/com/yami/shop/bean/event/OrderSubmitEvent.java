@@ -2,10 +2,7 @@
 
 package com.yami.shop.bean.event;
 
-import com.yami.shop.bean.app.dto.ShopCartItemDto;
-import com.yami.shop.bean.app.dto.ShopCartOrderDto;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
-import com.yami.shop.bean.app.param.OrderParam;
 import com.yami.shop.bean.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +15,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-public class SubmitOrderEvent {
+public class OrderSubmitEvent {
     /**
      * 完整的订单信息
      */

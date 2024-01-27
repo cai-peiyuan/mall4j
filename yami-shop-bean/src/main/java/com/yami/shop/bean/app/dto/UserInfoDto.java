@@ -5,6 +5,7 @@ package com.yami.shop.bean.app.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * @author c'p'y
  */
 @Data
-@Builder
+@NoArgsConstructor
 public class UserInfoDto implements Serializable {
 
     @Schema(description = "用户编号")

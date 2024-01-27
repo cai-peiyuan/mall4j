@@ -2,7 +2,6 @@
 
 package com.yami.shop.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
@@ -16,8 +15,8 @@ import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.enums.PayType;
-import com.yami.shop.bean.event.PaySuccessBalanceOrderEvent;
-import com.yami.shop.bean.event.PaySuccessOrderEvent;
+import com.yami.shop.bean.event.BalanceOrderPaySuccessEvent;
+import com.yami.shop.bean.event.OrderPaySuccessEvent;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.pay.PayInfoDto;
 import com.yami.shop.common.exception.YamiShopBindException;
@@ -151,9 +150,9 @@ public class PayServiceImpl implements PayService {
         orderMapper.updateByToPaySuccess(orderNumbers, PayType.WECHATPAY.value());
 
         // List<Order> orders = orderNumbers.stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
-        PaySuccessOrderEvent paySuccessOrderEvent = new PaySuccessOrderEvent();
-        paySuccessOrderEvent.setOrderNumbers(orderNumbers);
-        eventPublisher.publishEvent(paySuccessOrderEvent);
+        OrderPaySuccessEvent orderPaySuccessEvent = new OrderPaySuccessEvent();
+        orderPaySuccessEvent.setOrderNumbers(orderNumbers);
+        eventPublisher.publishEvent(orderPaySuccessEvent);
         return orderNumbers;
     }
 
@@ -253,9 +252,9 @@ public class PayServiceImpl implements PayService {
 
                     // 支付成功通知事件 和监听此事件执行进一步的数据操作  如打印小票、发送通知等
                     // List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
-                    PaySuccessOrderEvent paySuccessOrderEvent = new PaySuccessOrderEvent();
-                    paySuccessOrderEvent.setOrderNumbers(Arrays.asList(orderNumbers));
-                    eventPublisher.publishEvent(paySuccessOrderEvent);
+                    OrderPaySuccessEvent orderPaySuccessEvent = new OrderPaySuccessEvent();
+                    orderPaySuccessEvent.setOrderNumbers(Arrays.asList(orderNumbers));
+                    eventPublisher.publishEvent(orderPaySuccessEvent);
                 }
             }
         }
@@ -362,9 +361,9 @@ public class PayServiceImpl implements PayService {
                     result.append("添加用户余额变化明细 ").append(" 结果 ").append(saveUserBalanceDetail).append("\n");
 
                     // 充值订单支付成功通知事件 和监听此事件执行进一步的数据操作  如上传发货信息等
-                    PaySuccessBalanceOrderEvent paySuccessBalanceOrderEvent = new PaySuccessBalanceOrderEvent();
-                    paySuccessBalanceOrderEvent.setUserBalanceOrder(userBalanceOrder);
-                    eventPublisher.publishEvent(paySuccessBalanceOrderEvent);
+                    BalanceOrderPaySuccessEvent balanceOrderPaySuccessEvent = new BalanceOrderPaySuccessEvent();
+                    balanceOrderPaySuccessEvent.setUserBalanceOrder(userBalanceOrder);
+                    eventPublisher.publishEvent(balanceOrderPaySuccessEvent);
                 }
             }
         }
@@ -404,6 +403,7 @@ public class PayServiceImpl implements PayService {
         request.setMchid(WeChatPayUtil.merchantId);
         request.setDescription(prodName.substring(0, Math.min(100, prodName.length() - 1)));
         request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
+        //支付订单中使用新的id、？？？？ 因为orderNumber可能是有多个？合并付款的情况？
         String outTradeNo = String.valueOf(snowflake.nextId());
         request.setOutTradeNo(outTradeNo);
         Payer payer = new Payer();

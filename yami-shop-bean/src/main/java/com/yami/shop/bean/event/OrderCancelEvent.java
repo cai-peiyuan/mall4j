@@ -8,12 +8,12 @@ import org.springframework.context.ApplicationEvent;
  *
  * @author
  */
-public class CancelOrderEvent extends ApplicationEvent {
+public class OrderCancelEvent extends ApplicationEvent {
 
     private Order order;
 
 
-    public CancelOrderEvent(Order order) {
+    public OrderCancelEvent(Order order) {
         super(order);
         this.order = order;
     }

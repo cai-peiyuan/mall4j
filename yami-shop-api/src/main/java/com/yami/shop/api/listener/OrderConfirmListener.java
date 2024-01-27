@@ -5,7 +5,7 @@ package com.yami.shop.api.listener;
 import com.yami.shop.bean.app.dto.ShopCartItemDto;
 import com.yami.shop.bean.app.dto.ShopCartOrderDto;
 import com.yami.shop.bean.app.param.OrderParam;
-import com.yami.shop.bean.event.ConfirmOrderEvent;
+import com.yami.shop.bean.event.OrderConfirmEvent;
 import com.yami.shop.bean.model.Product;
 import com.yami.shop.bean.model.Sku;
 import com.yami.shop.bean.model.UserAddr;
@@ -27,9 +27,9 @@ import org.springframework.stereotype.Component;
  * 确认订单信息时的默认操作
  * @author LGH
  */
-@Component("defaultConfirmOrderListener")
+@Component
 @AllArgsConstructor
-public class ConfirmOrderListener {
+public class OrderConfirmListener {
 
     private final UserAddrService userAddrService;
 
@@ -42,10 +42,10 @@ public class ConfirmOrderListener {
     /**
      * 计算订单金额
      */
-    @EventListener(ConfirmOrderEvent.class)
+    @EventListener(OrderConfirmEvent.class)
     @Order(ConfirmOrderOrder.DEFAULT)
     @Async
-    public void defaultConfirmOrderEvent(ConfirmOrderEvent event) {
+    public void defaultConfirmOrderEvent(OrderConfirmEvent event) {
 
 
         ShopCartOrderDto shopCartOrderDto = event.getShopCartOrderDto();

@@ -186,4 +186,9 @@ public class Order implements Serializable {
      */
     @TableField(exist = false)
     private UserInfoDto userInfo;
+
+    /**
+     * 是否向腾讯发送发货标记
+     */
+    private Integer shipTowx;
 }

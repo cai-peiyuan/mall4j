@@ -7,9 +7,12 @@ import com.wechat.pay.java.core.notification.NotificationParser;
 import com.wechat.pay.java.core.notification.RequestParam;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.refund.model.Refund;
-import com.yami.shop.bean.event.PaySuccessBalanceOrderEvent;
+import com.yami.shop.bean.event.BalanceOrderPaySuccessEvent;
+import com.yami.shop.bean.event.OrderDeliveryEvent;
+import com.yami.shop.bean.model.Order;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.Json;
+import com.yami.shop.service.OrderService;
 import com.yami.shop.service.PayService;
 import com.yami.shop.service.WxPayNotifyService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -40,19 +43,27 @@ public class PayNoticeController {
      * 小程序支付
      */
     private final PayService payService;
+    private final OrderService orderService;
 
     private final WxPayNotifyService wxPayNotifyService;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @GetMapping("/publishEvent/{orderNumber}")
-    public ServerResponseEntity publishEvent(@PathVariable(name = "orderNumber") String orderNumber) {
+    @GetMapping("/publishBalanceOrderPaySuccessEvent/{orderNumber}")
+    public ServerResponseEntity publishBalanceOrderPaySuccessEvent(@PathVariable(name = "orderNumber") String orderNumber) {
         // 充值订单支付成功通知事件 和监听此事件执行进一步的数据操作  如上传发货信息等
-        PaySuccessBalanceOrderEvent paySuccessBalanceOrderEvent = new PaySuccessBalanceOrderEvent();
-        paySuccessBalanceOrderEvent.setUserBalanceOrder(null);
-        paySuccessBalanceOrderEvent.setOrderNumber(orderNumber);
-        eventPublisher.publishEvent(paySuccessBalanceOrderEvent);
+        BalanceOrderPaySuccessEvent balanceOrderPaySuccessEvent = new BalanceOrderPaySuccessEvent();
+        balanceOrderPaySuccessEvent.setUserBalanceOrder(null);
+        balanceOrderPaySuccessEvent.setOrderNumber(orderNumber);
+        eventPublisher.publishEvent(balanceOrderPaySuccessEvent);
+        return ServerResponseEntity.success();
+    }
+    @GetMapping("/publishOrderDeliveryEvent/{orderNumber}")
+    public ServerResponseEntity publishOrderDeliveryEvent(@PathVariable(name = "orderNumber") String orderNumber) {
+        // 充值订单支付成功通知事件 和监听此事件执行进一步的数据操作  如上传发货信息等
+        Order order = orderService.getOrderByOrderNumber(orderNumber);
+        eventPublisher.publishEvent(new OrderDeliveryEvent(order));
         return ServerResponseEntity.success();
     }
 

@@ -9,7 +9,7 @@ import com.yami.shop.bean.app.dto.ShopCartItemDto;
 import com.yami.shop.bean.app.dto.ShopCartOrderDto;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.enums.OrderStatus;
-import com.yami.shop.bean.event.SubmitOrderEvent;
+import com.yami.shop.bean.event.OrderSubmitEvent;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.order.SubmitOrderOrder;
 import com.yami.shop.common.constants.Constant;
@@ -36,7 +36,7 @@ import java.util.*;
  */
 @Component("defaultSubmitOrderListener")
 @AllArgsConstructor
-public class SubmitOrderListener {
+public class OrderSubmitListener {
 
     private final UserAddrOrderService userAddrOrderService;
 
@@ -61,10 +61,10 @@ public class SubmitOrderListener {
     /**
      * 计算订单金额
      */
-    @EventListener(SubmitOrderEvent.class)
+    @EventListener(OrderSubmitEvent.class)
     @Order(SubmitOrderOrder.DEFAULT)
     @Async
-    public void defaultSubmitOrderListener(SubmitOrderEvent event) {
+    public void defaultSubmitOrderListener(OrderSubmitEvent event) {
         Date now = new Date();
 
         String userId = SecurityUtils.getUser().getUserId();
@@ -136,7 +136,7 @@ public class SubmitOrderListener {
      * @author peiyuan.cai
      * @date 2024/1/24 11:49 星期三
      */
-    private void createOrder(SubmitOrderEvent event, Date now, String userId, List<Long> basketIds, Map<Long, Sku> skuStocksMap, Map<Long, Product> prodStocksMap, Long addrOrderId, ShopCartOrderDto shopCartOrderDto) {
+    private void createOrder(OrderSubmitEvent event, Date now, String userId, List<Long> basketIds, Map<Long, Sku> skuStocksMap, Map<Long, Product> prodStocksMap, Long addrOrderId, ShopCartOrderDto shopCartOrderDto) {
         // 使用雪花算法生成的订单号
         String orderNumber = String.valueOf(snowflake.nextId());
         shopCartOrderDto.setOrderNumber(orderNumber);

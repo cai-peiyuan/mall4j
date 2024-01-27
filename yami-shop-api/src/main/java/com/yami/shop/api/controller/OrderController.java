@@ -8,7 +8,7 @@ import com.yami.shop.bean.app.dto.*;
 import com.yami.shop.bean.app.param.OrderParam;
 import com.yami.shop.bean.app.param.OrderShopParam;
 import com.yami.shop.bean.app.param.SubmitOrderParam;
-import com.yami.shop.bean.event.ConfirmOrderEvent;
+import com.yami.shop.bean.event.OrderConfirmEvent;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.UserAddr;
 import com.yami.shop.common.exception.YamiShopBindException;
@@ -103,7 +103,7 @@ public class OrderController {
             }
             shopCartOrder.setShopCartItemDiscounts(shopCartItemDiscounts);
 
-            applicationContext.publishEvent(new ConfirmOrderEvent(shopCartOrder, orderParam, shopAllShopCartItems));
+            applicationContext.publishEvent(new OrderConfirmEvent(shopCartOrder, orderParam, shopAllShopCartItems));
 
             actualTotal = Arith.add(actualTotal, shopCartOrder.getActualTotal());
             total = Arith.add(total, shopCartOrder.getTotal());

@@ -3,7 +3,6 @@
 package com.yami.shop.bean.event;
 
 import com.yami.shop.bean.model.Order;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
  * @author
  */
 @Data
-public class PaySuccessOrderEvent {
+public class OrderPaySuccessEvent {
 
     private List<Order> orders;
 

@@ -1,10 +1,7 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yami.shop.bean.model.Order;
-import com.yami.shop.bean.model.UserBalanceOrder;
-import com.yami.shop.bean.model.WxPayPrepay;
-import com.yami.shop.bean.model.WxShipInfo;
+import com.yami.shop.bean.model.*;
 
 /**
  * 小程序发货信息管理
@@ -44,7 +41,14 @@ public interface WxShipInfoService extends IService<WxShipInfo> {
     /**
      * 上传订单物流信息到腾讯平台
      *
-     * @param orderUpdate
+     * @param order
      */
-    void uploadOrderShipInfo(Order orderUpdate);
+    Boolean uploadOrderShipInfo(Order order, OrderSettlement orderSettlement);
+
+    /**
+     * 上传订单物流信息到腾讯平台
+     *
+     * @param order
+     */
+    Boolean uploadOrderShipInfo(Order order, OrderSettlement orderSettlement, WxPayPrepay wxPayPrepay);
 }

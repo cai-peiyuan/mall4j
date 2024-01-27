@@ -51,7 +51,6 @@ public class PayController {
         //UserBalanceOrder userBalanceOrder = userBalanceOrderService.createBalanceOrder(user.getUserId(), user.getShopId(), cardId);
         // 生成支付订单和支付参数
         //WechatPaySign wechatPaySign = userBalanceOrderService.createWeChatPayPreOrder(userBalanceOrder);
-
         return ServerResponseEntity.success(wechatPaySign);
     }
 

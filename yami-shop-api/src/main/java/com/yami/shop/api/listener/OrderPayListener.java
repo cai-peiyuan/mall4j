@@ -1,21 +1,12 @@
 package com.yami.shop.api.listener;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
-import com.yami.shop.bean.event.PaySuccessBalanceOrderEvent;
-import com.yami.shop.bean.event.PaySuccessOrderEvent;
-import com.yami.shop.bean.model.Category;
+import com.yami.shop.bean.event.BalanceOrderPaySuccessEvent;
+import com.yami.shop.bean.event.OrderPaySuccessEvent;
 import com.yami.shop.bean.model.UserBalanceOrder;
-import com.yami.shop.bean.model.WxPayPrepay;
-import com.yami.shop.bean.order.PayOrderOrder;
-import com.yami.shop.common.util.Json;
-import com.yami.shop.service.UserBalanceOrderService;
-import com.yami.shop.service.WxPayPrepayService;
 import com.yami.shop.service.WxShipInfoService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +17,10 @@ import java.util.List;
  *
  * @author cpy
  */
-@Component("defaultPayOrderListener")
+@Component
 @AllArgsConstructor
 @Slf4j
-public class PayOrderListener {
+public class OrderPayListener {
 
 
     private final WxShipInfoService wxShipInfoService;
@@ -37,10 +28,9 @@ public class PayOrderListener {
     /**
      * 购物订单已支付事件
      */
-    @EventListener(PaySuccessOrderEvent.class)
-    @Order(PayOrderOrder.DEFAULT)
+    @EventListener(OrderPaySuccessEvent.class)
     @Async
-    public void paySuccessOrderEventListener(PaySuccessOrderEvent event) {
+    public void paySuccessOrderEventListener(OrderPaySuccessEvent event) {
         List<String> orderNumbers = event.getOrderNumbers();
         for (String orderNumber : orderNumbers) {
             log.debug("购物订单已支付 订单编号 {} ", orderNumber);
@@ -50,15 +40,12 @@ public class PayOrderListener {
     /**
      * 充值订单已支付事件
      */
-    @EventListener(PaySuccessBalanceOrderEvent.class)
-    @Order(PayOrderOrder.DEFAULT)
+    @EventListener(BalanceOrderPaySuccessEvent.class)
     @Async
-    public void paySuccessBalanceOrderEventListener(PaySuccessBalanceOrderEvent event) {
+    public void paySuccessBalanceOrderEventListener(BalanceOrderPaySuccessEvent event) {
         String orderNumber = event.getOrderNumber();
         UserBalanceOrder userBalanceOrder = event.getUserBalanceOrder();
-
         wxShipInfoService.uploadBalanceOrderShip(orderNumber, userBalanceOrder);
-
     }
 
 }
