@@ -1,6 +1,6 @@
 <!-- 商品详情 -->
 <view class="container">
-    <view style="height:10vw; position:fixed; top:0; width:100vw; z-index:10; background-color: #fff;">
+    <view style="height:10vw; box-sizing: border-box; padding-top:3vw; position:fixed; top:0; width:100vw; z-index:10; background-color: #fff;">
         <view class="menu aroundFlex">
             <view bindtap="toTarget" data-val="1"> 商品简介 </view>
             <view bindtap="toTarget" data-val="2"> 商品详情 </view>

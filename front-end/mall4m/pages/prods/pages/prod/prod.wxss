@@ -22,7 +22,7 @@ swiper image {
     position: absolute; 
     width:10vw; 
     height:4px; 
-    top:7vw; 
+    top:9vw; 
     background:rgb(235, 168, 81);
     border-radius: 2px;
     transition: left 200ms linear;

@@ -62,8 +62,8 @@
   </view>
 
   <block wx:for="{{taglist}}" wx:key="id">
-    <!-- 每日上新 && 小岛优选-->
-    <view class='up-to-date' wx:if="{{item.style==2 && item.id!=4}}">
+    <!-- 每日上新 && 小岛优选 style==2:一行显示3-->
+    <view class='up-to-date' wx:if="{{item.style==2}}">
       <view class='title'>
         <text>{{item.title}}</text>
         <view class='more-prod-cont' bindtap='toClassifyPage' data-sts="0" data-id="{{item.id}}" data-title="{{item.title}}">
@@ -100,7 +100,7 @@
       </view>
       <view class='hotsale-item-cont'>
         <!-- item.prods  wx:for-item="prod" wx:key="prodId"-->
-        <block wx:for="{{6}}"  wx:for-item="prod" wx:key="prodId">
+        <block wx:for="{{item.prods}}"  wx:for-item="prod" wx:key="prodId">
           <view class='prod-items' bindtap='toProdPage' data-prodid="{{prod.prodId}}">
             <view class='hot-imagecont'>
             <!-- prod.pic -->
