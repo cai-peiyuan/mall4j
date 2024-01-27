@@ -96,7 +96,6 @@
             }
         ]
     },
-    "lazyCodeLoading": "requiredComponents",
     "requiredPrivateInfos": [
         "chooseAddress"
     ],

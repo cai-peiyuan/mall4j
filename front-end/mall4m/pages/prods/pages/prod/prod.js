@@ -51,6 +51,9 @@ Page({
     evaluate: -1,
     isCollection: false,
     left: "11.5%",
+    observerBasicInfo:null,
+    observerDetailInfo:null,
+    observerCommentsInfo:null,
   },
 
   /**
@@ -60,7 +63,53 @@ Page({
     this.setData({
       prodId: options.prodid,
     });
-
+    this.observerBasicInfo=wx.createIntersectionObserver(this);
+    this.observerDetailInfo=wx.createIntersectionObserver(this);
+    this.observerCommentsInfo=wx.createIntersectionObserver(this);
+    // 11.5 45 78.5
+    //监听商品基本信息
+    let that=this;
+    this.observerBasicInfo.relativeTo(".scroll-view").observe(".basicInfo",(res) => {
+      if(res.intersectionRatio >0 ){
+        console.log("进入轮播");
+        that.setData({
+          left: "11.5%"
+        })
+      }else{
+        console.log("离开轮播");
+      }
+    });
+    //监听商品详情
+    this.observerDetailInfo.relativeTo(".scroll-view").observe(".detailInfo",(res) => {
+      console.log(res);
+      if(res.intersectionRatio >0 ){
+        console.log("进入详情");
+        this.setData({
+          left: "45%"
+        });
+      }else{
+        console.log("离开详情");
+        that.setData({
+          left: "11.5%"
+        })
+      }
+    });
+    //监听商品评价
+    this.observerCommentsInfo.relativeTo(".scroll-view").observe(".commentsInfo",(res) => {
+      console.log(res);
+      if(res.intersectionRatio >0 ){
+        console.log("进入评论");
+        this.setData({
+          left: "78.5%"
+        });
+      }else{
+        console.log("离开评论");
+        this.setData({
+          left: "45%"
+        });
+      }
+    });
+    
     // 加载商品信息
     this.getProdInfo();
     // 加载评论数据
@@ -205,25 +254,6 @@ Page({
       });
     }
   },
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-    console.log('页面传入参数', options);
-    this.setData({
-      prodId: options.prodid,
-    });
-
-    // 加载商品信息
-    this.getProdInfo();
-    // 加载评论数据
-    this.getProdCommData();
-    // 加载评论项
-    this.getLittleProdComm();
-    // 查看用户是否关注
-    this.getCollection();
-  },
-
   /**
    * app分享功能
    * @param {*} option 
@@ -540,6 +570,14 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+    if(this.observerDetailInfo){
+      this.observerDetailInfo.disconnect();
+    }
+    if(this.observerBasicInfo){
+      this.observerBasicInfo.disconnect();
+    }if(this.observerCommentsInfo){
+      this.observerCommentsInfo.disconnect();
+    }
 
   },
 
@@ -547,7 +585,10 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    // if(this._observer){
+    //   this._observer.disconnect();
+    // }
+    
   },
 
   /**

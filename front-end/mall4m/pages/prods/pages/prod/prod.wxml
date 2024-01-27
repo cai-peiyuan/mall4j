@@ -1,5 +1,5 @@
 <!-- 商品详情 -->
-<view class="container">
+<view class="container" style="height: 100vh; overflow: hidden;">
     <view style="height:10vw; box-sizing: border-box; padding-top:3vw; position:fixed; top:0; width:100vw; z-index:10; background-color: #fff;">
         <view class="menu aroundFlex">
             <view bindtap="toTarget" data-val="1"> 商品简介 </view>
@@ -9,105 +9,110 @@
        <view class="activeBar" style="left:{{left}}">
         </view>
     </view>
-    <!-- 轮播图 -->
-    <swiper style="margin-top:10vw" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" indicator-color="{{indicatorColor}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicatorActiveColor}}">
-        <block wx:for="{{imgs}}" wx:key='*this'>
-            <swiper-item>
-                <image src='{{item}}'></image>
-            </swiper-item>
-        </block>
-    </swiper>
-    <!-- end  轮播图 -->
-    <!-- 商品信息 -->
-    <!-- <block wx:for="{{imgs}}" wx:key=''> -->
-    <view class='prod-info'>
-        <view class="tit-wrap spaceBetweenFlex" style="height: 10vw;">
-            <view class="prod-tit">{{prodName}}</view>
-            <view class="col">
-                <view style="position: absolute;left: 0px;" bindtap='addOrCannelCollection'>
-                    <image wx-if="{{!isCollection}}" src="../../images/icon/prod-col.png"></image>
-                    <image wx-if="{{isCollection}}" src="../../images/icon/prod-col-red.png"></image>
-                    收藏
-                </view>
-                <view style="position: absolute;right: 0px;">
-                    <button class="share-icon" open-type="share">
-                        <image src='../../images/icon/share.png'></image>
-                        分享
-                    </button>
-                </view>
-            </view>
-        </view>
-        <view class="sales-p">{{brief}}</view>
-        <view class="prod-price">
-            <text class="price">￥<text class="price-num">{{wxs.parsePrice(defaultSku.price)[0]}}</text>.{{wxs.parsePrice(defaultSku.price)[1]}}</text>
-            <text class="sales"></text>
-        </view>
-    </view>
-    <!-- </block> -->
-    <!-- end 商品信息 -->
-    <!-- 领券 -->
-    <!-- <view class="coupon" bindtap='showPopup' wx:if="{{couponList.length}}">
-    <view class="coupon-tit">领券</view>
-    <view class="coupon-con">
-      <text class="item" wx:for="{{couponList}}" wx:key="item.couponId">满{{item.cashCondition}}<block wx:if="{{item.couponType == 1}}">减{{item.reduceAmount}}</block><block wx:if="{{item.couponType == 2}}">打{{item.couponDiscount}}折</block></text>
-    </view>
-    <view class="num">共{{couponList.length}}张</view>
-    <view class="more">...</view>
-  </view> -->
-    <!-- 已选规格 -->
-    <view class="sku" bindtap='showSku'>
-        <view class="sku-tit">已选</view>
-        <view class="sku-con">{{selectedProp.length>0?selectedProp+'，':selectedProp}}{{prodNum}}件</view>
-        <view class="more">...</view>
-    </view>
-    <!-- 评价 -->
-    <view class='cmt-wrap'>
-        <view class="cmt-tit" bindtap='showComment'>
-            <view class="cmt-t">
-                评价
-                <text class="cmt-good">好评{{prodCommData.positiveRating}}%</text>
-            </view>
-            <view class="cmt-count">
-                共{{prodCommData.number}}条
-                <text class="cmt-more"></text>
-            </view>
-        </view>
-        <view class="cmt-cont">
-            <view class="cmt-tag" bindtap='showComment'>
-                <text>全部({{prodCommData.number}})</text>
-                <text>好评({{prodCommData.praiseNumber}})</text>
-                <text>中评({{prodCommData.secondaryNumber}})</text>
-                <text>差评({{prodCommData.negativeNumber}})</text>
-                <text>有图({{prodCommData.picNumber}})</text>
-            </view>
-            <view class="cmt-items">
-                <view class="cmt-item" wx:for="{{littleCommPage}}" wx:key="prodCommId">
-                    <view class="cmt-user">
-                        <text class="date">{{item.recTime}}</text>
-                        <view class="cmt-user-info">
-                            <image class="user-img" src="{{item.pic}}"></image>
-                            <view class="nickname">{{item.nickName}}</view>
-                            <van-rate readonly value="{{ item.score }}" bind:change="onChange" color="#f44" />
-                        </view>
+    <scroll-view class="scroll-view" scroll-y style="height: calc(100vh - 10vw - 60px);margin-top:10vw;box-sizing: border-box; overflow: auto;">
+      <!-- 轮播图 -->
+      <view class="basicInfo">
+        <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" indicator-color="{{indicatorColor}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicatorActiveColor}}">
+            <block wx:for="{{imgs}}" wx:key='*this'>
+                <swiper-item>
+                    <image src='{{item}}'></image>
+                </swiper-item>
+            </block>
+        </swiper>
+        <!-- end  轮播图 -->
+        <!-- 商品信息 -->
+        <!-- <block wx:for="{{imgs}}" wx:key=''> -->
+        <view class='prod-info'>
+            <view class="tit-wrap spaceBetweenFlex" style="height: 10vw;">
+                <view class="prod-tit">{{prodName}}</view>
+                <view class="col">
+                    <view style="position: absolute;left: 0px;" bindtap='addOrCannelCollection'>
+                        <image wx-if="{{!isCollection}}" src="../../images/icon/prod-col.png"></image>
+                        <image wx-if="{{isCollection}}" src="../../images/icon/prod-col-red.png"></image>
+                        收藏
                     </view>
-                    <view class="cmt-cnt">{{item.content}}</view>
-                    <scroll-view class="cmt-attr" scroll-x="true" wx:if="{{item.pics.length}}">
-                        <image src="{{commPic}}" wx:for='{{item.pics}}' wx:for-item="commPic" wx:key='*this'></image>
-                    </scroll-view>
+                    <view style="position: absolute;right: 0px;">
+                        <button class="share-icon" open-type="share">
+                            <image src='../../images/icon/share.png'></image>
+                            分享
+                        </button>
+                    </view>
                 </view>
             </view>
-            <view class="cmt-more-v" wx:if="{{prodCommPage.records.length > 2}}">
-                <text bindtap='showComment'>查看全部评价</text>
+            <view class="sales-p">{{brief}}</view>
+            <view class="prod-price">
+                <text class="price">￥<text class="price-num">{{wxs.parsePrice(defaultSku.price)[0]}}</text>.{{wxs.parsePrice(defaultSku.price)[1]}}</text>
+                <text class="sales"></text>
             </view>
         </view>
-    </view>
-    <!-- 商品详情 -->
-    <view class="prod-detail">
-        <view>
-            <rich-text nodes="{{content}}"></rich-text>
-            <!-- <image src="//img14.360buyimg.com/cms/jfs/t1/25195/1/9487/388554/5c7f80a5E8b8f8f0c/46818404849d6ec6.jpg!q70.dpg" mode="widthFix"></image> -->
-        </view>
-    </view>
+      </view>
+      <!-- </block> -->
+      <!-- end 商品信息 -->
+      <!-- 领券 -->
+      <!-- <view class="coupon" bindtap='showPopup' wx:if="{{couponList.length}}">
+      <view class="coupon-tit">领券</view>
+      <view class="coupon-con">
+        <text class="item" wx:for="{{couponList}}" wx:key="item.couponId">满{{item.cashCondition}}<block wx:if="{{item.couponType == 1}}">减{{item.reduceAmount}}</block><block wx:if="{{item.couponType == 2}}">打{{item.couponDiscount}}折</block></text>
+      </view>
+      <view class="num">共{{couponList.length}}张</view>
+      <view class="more">...</view>
+    </view> -->
+      <!-- 已选规格 -->
+      <view class="sku" bindtap='showSku'>
+          <view class="sku-tit">已选</view>
+          <view class="sku-con">{{selectedProp.length>0?selectedProp+'，':selectedProp}}{{prodNum}}件</view>
+          <view class="more">...</view>
+      </view>
+       <!-- 商品详情 -->
+       <view class="prod-detail detailInfo">
+          <view>
+              <rich-text nodes="{{content}}"></rich-text>
+              <!-- <image src="//img14.360buyimg.com/cms/jfs/t1/25195/1/9487/388554/5c7f80a5E8b8f8f0c/46818404849d6ec6.jpg!q70.dpg" mode="widthFix"></image> -->
+          </view>
+      </view>
+      <!-- 评价 -->
+      <view class='cmt-wrap  commentsInfo' style="{{left=='11.5%'?'display:none':''}}">
+          <view class="cmt-tit" bindtap='showComment'>
+              <view class="cmt-t">
+                  评价
+                  <text class="cmt-good">好评{{prodCommData.positiveRating}}%</text>
+              </view>
+              <view class="cmt-count">
+                  共{{prodCommData.number}}条
+                  <text class="cmt-more"></text>
+              </view>
+          </view>
+          <view class="cmt-cont">
+              <view class="cmt-tag" bindtap='showComment'>
+                  <text>全部({{prodCommData.number}})</text>
+                  <text>好评({{prodCommData.praiseNumber}})</text>
+                  <text>中评({{prodCommData.secondaryNumber}})</text>
+                  <text>差评({{prodCommData.negativeNumber}})</text>
+                  <text>有图({{prodCommData.picNumber}})</text>
+              </view>
+              <view class="cmt-items">
+                  <view class="cmt-item" wx:for="{{littleCommPage}}" wx:key="prodCommId">
+                      <view class="cmt-user">
+                          <text class="date">{{item.recTime}}</text>
+                          <view class="cmt-user-info">
+                              <image class="user-img" src="{{item.pic}}"></image>
+                              <view class="nickname">{{item.nickName}}</view>
+                              <van-rate readonly value="{{ item.score }}" bind:change="onChange" color="#f44" />
+                          </view>
+                      </view>
+                      <view class="cmt-cnt">{{item.content}}</view>
+                      <scroll-view class="cmt-attr" scroll-x="true" wx:if="{{item.pics.length}}">
+                          <image src="{{commPic}}" wx:for='{{item.pics}}' wx:for-item="commPic" wx:key='*this'></image>
+                      </scroll-view>
+                  </view>
+              </view>
+              <view class="cmt-more-v" wx:if="{{prodCommPage.records.length > 2}}">
+                  <text bindtap='showComment'>查看全部评价</text>
+              </view>
+          </view>
+      </view>
+     
+    </scroll-view>
     <!-- end 商品详情 -->
     <!-- 底部按钮 -->
     <view class="cart-footer {{findSku?'':'gray'}}">
