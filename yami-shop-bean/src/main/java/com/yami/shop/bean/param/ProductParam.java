@@ -34,7 +34,6 @@ public class ProductParam {
     @Size(max = 200, message = "商品名称长度应该小于{max}")
     private String prodName;
 
-
     /**
      * 商品价格
      */
@@ -53,6 +52,10 @@ public class ProductParam {
     @NotNull(message = "请输入商品库存")
     private Integer totalStocks;
 
+    /**
+     * 已售量
+     */
+    private Integer totalSales;
     /**
      * 简要描述,卖点等
      */

@@ -112,4 +112,10 @@ public class Sku implements Serializable {
      */
     private Integer isDelete;
 
+
+    /**
+     * 已售
+     */
+    private Integer sales;
+
 }

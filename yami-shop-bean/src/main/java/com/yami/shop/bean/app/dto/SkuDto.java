@@ -27,6 +27,9 @@ public class SkuDto implements Serializable {
     @Schema(description = "库存(-1表示无穷)" , required = true)
     private Integer stocks;
 
+    @Schema(description = "已售(-1表示1000+)" , required = true)
+    private Integer sales;
+
     @Schema(description = "sku名称" , required = true)
     private String skuName;
 

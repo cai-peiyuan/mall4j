@@ -11,6 +11,7 @@
     <result column="ori_price" jdbcType="DECIMAL" property="oriPrice" />
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="stocks" jdbcType="INTEGER" property="stocks" />
+    <result column="sales" jdbcType="INTEGER" property="sales" />
     <result column="actual_stocks" jdbcType="INTEGER" property="actualStocks" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -26,14 +27,14 @@
 	  	INSERT INTO `tz_sku` (
 		  `prod_id`,`properties`,`ori_price`,`price`,`stocks`,`actual_stocks`,
 		  `update_time`,`rec_time`,`party_code`,`model_id`, `pic`,
-		  `sku_name`,`prod_name`,`version`,`weight`,`volume`, `status`, `is_delete`
+		  `sku_name`,`prod_name`,`version`,`weight`,`volume`, `status`, `is_delete`, `sales`
 		)
 		VALUES
 		<foreach collection="skuList" item="sku" separator=",">
         (
             #{prodId},#{sku.properties},#{sku.oriPrice},#{sku.price},#{sku.stocks},
 		    #{sku.actualStocks}, NOW(),NOW(),#{sku.partyCode},#{sku.modelId}, #{sku.pic},
-		    #{sku.skuName},#{sku.prodName},0,#{sku.weight},#{sku.volume}, #{sku.status},0
+		    #{sku.skuName},#{sku.prodName},0,#{sku.weight},#{sku.volume},#{sku.status},0,#{sku.sales}
 		 )
 		 </foreach>
     </insert>
@@ -43,7 +44,7 @@
 	</select>
 
 	<update id="updateStocks" parameterType="com.yami.shop.bean.model.Sku">
-		update tz_sku set stocks = stocks - #{sku.stocks}, version = version + 1,update_time = NOW() where sku_id = #{sku.skuId} and #{sku.stocks} &lt;= stocks
+		update tz_sku set stocks = stocks - #{sku.stocks}, version = version + 1, update_time = NOW(), sales = sales + #{sku.stocks} where sku_id = #{sku.skuId} and #{sku.stocks} &lt;= stocks
 	</update>
 
 	<update id="deleteByProdId">

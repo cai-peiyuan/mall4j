@@ -30,6 +30,7 @@
 		<result property="categoryId" column="category_id"/>
 		<result property="soldNum" column="sold_num"/>
 		<result property="totalStocks" column="total_stocks"/>
+		<result property="totalSales" column="total_sales"/>
 		<result property="transportMode" column="transport_mode"/>
 		<result property="transportId" column="transport_id"/>
 		<result property="createTime" column="create_time"/>

@@ -15,6 +15,7 @@
         <result property="categoryId" column="category_id"/>
         <result property="soldNum" column="sold_num"/>
         <result property="totalStocks" column="total_stocks"/>
+        <result property="totalSales" column="total_sales"/>
         <result property="pic" column="pic"/>
         <result property="deliveryMode" column="delivery_mode"/>
         <result property="deliveryTemplateId" column="delivery_template_id"/>
@@ -39,6 +40,7 @@
             <result property="oriPrice" column="ori_price"/>
             <result property="categoryId" column="category_id"/>
             <result property="totalStocks" column="total_stocks"/>
+            <result property="totalSales" column="total_sales"/>
             <result property="pic" column="pic"/>
         </collection>
 
@@ -62,12 +64,14 @@
         p.pic,
         p.prod_name,
         p.price,
+        p.shop_id,
+        p.ori_price,
         p.brief,
         sd.`shop_name`
     </sql>
 
     <update id="updateStocks" parameterType="com.yami.shop.bean.model.Product">
-		update tz_prod set total_stocks = total_stocks - #{prod.totalStocks} ,version = version + 1 where prod_id = #{prod.prodId} and #{prod.totalStocks} &lt;= total_stocks
+		update tz_prod set total_stocks = total_stocks - #{prod.totalStocks} , total_sales = total_sales + #{prod.totalStocks} ,version = version + 1 where prod_id = #{prod.prodId} and #{prod.totalStocks} &lt;= total_stocks
 	</update>
 
     <select id="pageByCategoryId" resultType="com.yami.shop.bean.app.dto.ProductDto">

@@ -82,6 +82,11 @@ public class Product implements Serializable {
     private Integer totalStocks;
 
     /**
+     * 已售量
+     */
+    private Integer totalSales;
+
+    /**
      * 配送方式json
      */
     private String deliveryMode;

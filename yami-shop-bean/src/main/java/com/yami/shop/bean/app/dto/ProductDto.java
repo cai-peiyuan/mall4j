@@ -63,6 +63,12 @@ public class ProductDto {
     @Schema(description = "库存量" , required = true)
     private Integer totalStocks;
 
+
+    /**
+     * 已售量
+     */
+    @Schema(description = "已售量" , required = true)
+    private Integer totalSales;
     /**
      * 简要描述,卖点等
      */

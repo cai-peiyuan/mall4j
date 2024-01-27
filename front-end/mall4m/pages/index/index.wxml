@@ -104,7 +104,7 @@
           <view class='prod-items' bindtap='toProdPage' data-prodid="{{prod.prodId}}">
             <view class='hot-imagecont'>
             <!-- prod.pic -->
-              <image src='http://cdn.bhgk.cc/2024/01/a39af908797d4f26a0d8d03e73ae9aa8.jpeg' class='hotsaleimg'></image>
+              <image src='{{prod.pic}}' class='hotsaleimg'></image>
             </view>
             <view class='hot-text'>
               <view class='hotprod-text'>{{prod.prodName}}</view>
@@ -115,10 +115,10 @@
                   <text class='big-num'>{{wxs.parsePrice(prod.price)[0]}}</text>
                   <text class='small-num'>.{{wxs.parsePrice(prod.price)[1]}}</text>
                 </view>
-                <!-- <view class='singal-price'>
+                <view class='singal-price'>
                   <text>￥</text>
-                  <text>{{prod.oriPrice}}</text>
-                </view> -->
+                  <text>{{wxs.toPrice(prod.oriPrice)}}</text>
+                </view>
                 <image src='../../images/icon/basket.png' class='basket-img'></image>
               </view>
             </view>
