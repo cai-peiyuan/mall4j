@@ -105,6 +105,7 @@ page {
 
 .deliveryInfo .companyname .key, .deliveryInfo .expno .key {
   color: #666;
+  font-weight: bold;
 }
 
 .deliveryInfo .expno {

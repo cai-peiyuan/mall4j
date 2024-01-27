@@ -7,11 +7,15 @@
       </view>
       <view class="infoWarp">
         <view class="companyname">
-          <text class="key">物流公司：</text>
+          <text class="key">配送物流：</text>
           <text class="value">{{companyName}}</text>
         </view>
         <view class="expno">
-          <text class="key">运单编号：</text>
+          <text class="key">运单号码：</text>
+          <text class="value">{{dvyFlowId}}</text>
+        </view>
+        <view class="expno">
+          <text class="key">联系电话：</text>
           <text class="value">{{dvyFlowId}}</text>
         </view>
       </view>
