@@ -127,18 +127,10 @@ public class OrderController {
         }
 
         /**
-         * 更新订单发货状态和物流信息
+         * 封装订单发货方法
          */
-        Order orderUpdate = new Order();
-        orderUpdate.setOrderId(order.getOrderId());
-        orderUpdate.setDvyId(deliveryOrderParam.getDvyId());
-        orderUpdate.setDvyFlowId(deliveryOrderParam.getDvyFlowId());
-        orderUpdate.setDvyTime(new Date());
-        orderUpdate.setStatus(OrderStatus.CONSIGNMENT.value());
-        orderUpdate.setUserId(order.getUserId());
+        orderService.orderDelivery(order, deliveryOrderParam.getDvyId(), deliveryOrderParam.getDvyFlowId());
 
-        //订单发货
-        orderService.delivery(orderUpdate, order);
 
         /**
          * 删除订单所包含的商品缓存信息

@@ -20,6 +20,7 @@ import com.jfinal.template.Engine;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.app.dto.UserInfoDto;
+import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.event.CancelOrderEvent;
 import com.yami.shop.bean.event.ReceiptOrderEvent;
 import com.yami.shop.bean.event.SubmitOrderEvent;
@@ -56,6 +57,8 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 @AllArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
+
+    private final WxShipInfoService wxShipInfoService;
 
     private final DeliveryOrderService deliveryOrderService;
     private final UserService userService;
@@ -215,13 +218,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         // 如果是商家自配送 添加物流订单
         if(order.getDvyId() == 13){
             DeliveryOrder deliveryOrder = new DeliveryOrder();
-            deliveryOrder.setOrderNumber(order.getOrderNumber());
-            deliveryOrder.setCreateTime(order.getDvyTime());
-            deliveryOrder.setExpressNumber(order.getDvyFlowId());
+            deliveryOrder.setOrderNumber(orderUpdate.getOrderNumber());
+            deliveryOrder.setCreateTime(orderUpdate.getDvyTime());
+            deliveryOrder.setExpressNumber(orderUpdate.getDvyFlowId());
             //物流状态0初始创建1已分配配送员2运送中3已送达
             deliveryOrder.setExpressStatus(0);
             deliveryOrder.setAddOrderId(order.getAddrOrderId());
             deliveryOrderService.save(deliveryOrder);
+
+            //目前都是商家自主配送 将运单号码等信息发送给腾讯平台
+            wxShipInfoService.uploadOrderShipInfo(orderUpdate);
         }
     }
 
@@ -378,6 +384,29 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //订单用户信息
         UserInfoDto userInfoDto = userService.getUserInfoById(order.getUserId());
         order.setUserInfo(userInfoDto);
+    }
+
+    /**
+     * 订单发货
+     *
+     * @param order
+     * @param dvyId
+     * @param dvyFlowId
+     */
+    @Override
+    public void orderDelivery(Order order, Long dvyId, String dvyFlowId) {
+        /**
+         * 更新订单发货状态和物流信息
+         */
+        Order orderUpdate = new Order();
+        orderUpdate.setOrderId(order.getOrderId());
+        orderUpdate.setDvyId(dvyId);
+        orderUpdate.setDvyFlowId(dvyFlowId);
+        orderUpdate.setDvyTime(new Date());
+        orderUpdate.setStatus(OrderStatus.CONSIGNMENT.value());
+        orderUpdate.setUserId(order.getUserId());
+        //更新订单发货状态
+        delivery(orderUpdate, order);
     }
 
 }

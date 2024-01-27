@@ -197,11 +197,10 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
         log.debug("查询到已支付的订单 {}", Json.toJsonString(wxPayPrepay));
 
         if (checkTradeManaged()) {
-            log.debug("查询小程序是否已开通发货信息管理服务");
-            String s = uploadBalanceOrderShipInfo(userBalanceOrder, wxPayPrepay);
+            log.debug("小程序已开通发货信息管理服务");
             log.debug("准备向腾讯推送虚拟发货信息");
+            String s = uploadBalanceOrderShipInfo(userBalanceOrder, wxPayPrepay);
             log.debug("向腾讯推送虚拟发货信息请求接口返回 {}", s);
-
         } else {
             log.error("查询小程序是否已开通发货信息管理服务");
         }

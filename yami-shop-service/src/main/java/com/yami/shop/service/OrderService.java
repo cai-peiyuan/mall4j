@@ -123,4 +123,12 @@ public interface OrderService extends IService<Order> {
      * @param order
      */
     void setOrderExtraInfo(Order order);
+
+    /**
+     * 订单发货
+     * @param order
+     * @param dvyId
+     * @param dvyFlowId
+     */
+    void orderDelivery(Order order, Long dvyId, String dvyFlowId);
 }
