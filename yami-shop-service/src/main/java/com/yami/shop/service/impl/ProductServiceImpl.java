@@ -144,7 +144,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     })
     public void removeProductCacheByProdId(Long prodId) {
 
-
     }
 
     @Override

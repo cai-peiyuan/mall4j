@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
 import com.yami.shop.bean.enums.OrderStatus;
+import com.yami.shop.bean.model.DeliveryOrder;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
 import com.yami.shop.bean.model.UserAddrOrder;
@@ -21,10 +22,7 @@ import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.security.admin.util.SecurityUtils;
-import com.yami.shop.service.OrderItemService;
-import com.yami.shop.service.OrderService;
-import com.yami.shop.service.ProductService;
-import com.yami.shop.service.SkuService;
+import com.yami.shop.service.*;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +53,19 @@ public class OrderController {
     private ProductService productService;
     @Autowired
     private SkuService skuService;
+    @Autowired
+    private DeliveryOrderService deliveryOrderService;
 
+    /**
+     * 生成商家自配送运单号码
+     *
+     * @author cpy
+     */
+    @GetMapping("/generateExpressNumber")
+    public ServerResponseEntity<Object> generateExpressNumber() {
+        String expressNumber = deliveryOrderService.generateExpressNumber();
+        return ServerResponseEntity.success(expressNumber);
+    }
     /**
      * 分页获取订单信息
      *
@@ -68,8 +78,6 @@ public class OrderController {
         orderParam.setShopId(shopId);
         IPage<Order> orderPage = orderService.pageOrdersDetailByOrderParam(page, orderParam);
         return ServerResponseEntity.success(orderPage);
-
-
     }
 
     /**
@@ -107,7 +115,7 @@ public class OrderController {
     }
 
     /**
-     * 发货
+     * 订单发货
      */
     @PutMapping("/delivery")
     @PreAuthorize("@pms.hasPermission('order:order:delivery')")
@@ -118,17 +126,23 @@ public class OrderController {
             throw new YamiShopBindException("您没有权限修改该订单信息");
         }
 
-        Order orderParam = new Order();
-        orderParam.setOrderId(order.getOrderId());
-        orderParam.setDvyId(deliveryOrderParam.getDvyId());
-        orderParam.setDvyFlowId(deliveryOrderParam.getDvyFlowId());
-        orderParam.setDvyTime(new Date());
-        orderParam.setStatus(OrderStatus.CONSIGNMENT.value());
-        orderParam.setUserId(order.getUserId());
+        /**
+         * 更新订单发货状态和物流信息
+         */
+        Order orderUpdate = new Order();
+        orderUpdate.setOrderId(order.getOrderId());
+        orderUpdate.setDvyId(deliveryOrderParam.getDvyId());
+        orderUpdate.setDvyFlowId(deliveryOrderParam.getDvyFlowId());
+        orderUpdate.setDvyTime(new Date());
+        orderUpdate.setStatus(OrderStatus.CONSIGNMENT.value());
+        orderUpdate.setUserId(order.getUserId());
 
         //订单发货
-        orderService.delivery(orderParam);
+        orderService.delivery(orderUpdate, order);
 
+        /**
+         * 删除订单所包含的商品缓存信息
+         */
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(deliveryOrderParam.getOrderNumber());
         for (OrderItem orderItem : orderItems) {
             productService.removeProductCacheByProdId(orderItem.getProdId());

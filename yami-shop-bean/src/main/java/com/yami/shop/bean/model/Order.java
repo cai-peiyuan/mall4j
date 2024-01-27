@@ -98,40 +98,34 @@ public class Order implements Serializable {
     /**
      * 用户订单地址Id
      */
-
     private Long addrOrderId;
 
     /**
      * 订单商品总数
      */
-
     private Integer productNums;
 
     /**
      * 订购时间
      */
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 订单更新时间
      */
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**
      * 付款时间
      */
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date payTime;
 
     /**
      * 发货时间
      */
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dvyTime;
 

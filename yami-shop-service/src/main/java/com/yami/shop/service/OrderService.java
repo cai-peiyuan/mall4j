@@ -59,7 +59,7 @@ public interface OrderService extends IService<Order> {
      * 发货
      * @param order
      */
-    void delivery(Order order);
+    void delivery(Order orderUpdate, Order order);
 
     /**
      * 根据参数获取订单列表

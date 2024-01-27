@@ -7,6 +7,7 @@ import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.service.UserBalanceOrderService;
+import com.yami.shop.service.WxShipInfoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,16 +21,19 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/admin/balance/order")
-public class BalanceOrderController {
+public class UserBalanceOrderController {
 
     @Autowired
     private UserBalanceOrderService userBalanceOrderService;
+
+    @Autowired
+    private WxShipInfoService wxShipInfoService;
 
     /**
      * 分页获取
      */
     @GetMapping("/page")
-    @PreAuthorize("@pms.hasPermission('admin:balance:order:page')")
+    @PreAuthorize("@pms.hasPermission('order:balance:page')")
     public ServerResponseEntity<IPage<UserBalanceOrder>> page(UserBalanceOrder balanceOrder, PageParam<UserBalanceOrder> page) {
         IPage<UserBalanceOrder> brands = userBalanceOrderService.page(page, new LambdaQueryWrapper<UserBalanceOrder>().like(StrUtil.isNotBlank(balanceOrder.getOrderNumber()), UserBalanceOrder::getOrderNumber, balanceOrder.getOrderNumber()).orderByAsc(UserBalanceOrder::getCreateTime));
         return ServerResponseEntity.success(brands);
@@ -39,7 +43,7 @@ public class BalanceOrderController {
      * 获取信息
      */
     @GetMapping("/info/{id}")
-    @PreAuthorize("@pms.hasPermission('admin:balance:order:info')")
+    @PreAuthorize("@pms.hasPermission('order:balance:info')")
     public ServerResponseEntity<UserBalanceOrder> info(@PathVariable("id") Long id) {
         UserBalanceOrder balanceOrder = userBalanceOrderService.getById(id);
         return ServerResponseEntity.success(balanceOrder);
@@ -49,7 +53,7 @@ public class BalanceOrderController {
      * 保存
      */
     @PostMapping
-    @PreAuthorize("@pms.hasPermission('admin:balance:order:save')")
+    @PreAuthorize("@pms.hasPermission('order:balance:save')")
     public ServerResponseEntity<Void> save(@Valid UserBalanceOrder balanceOrder) {
         userBalanceOrderService.save(balanceOrder);
         return ServerResponseEntity.success();
@@ -59,9 +63,19 @@ public class BalanceOrderController {
      * 修改
      */
     @PutMapping
-    @PreAuthorize("@pms.hasPermission('admin:balance:order:update')")
+    @PreAuthorize("@pms.hasPermission('order:balance:update')")
     public ServerResponseEntity<Void> update(@Valid UserBalanceOrder balanceOrder) {
         userBalanceOrderService.updateById(balanceOrder);
+        return ServerResponseEntity.success();
+    }
+
+    /**
+     * 手动发货
+     */
+    @GetMapping("/sendDeliveryInfo/{orderNumber}")
+    @PreAuthorize("@pms.hasPermission('order:balance:delivery')")
+    public ServerResponseEntity<Void> sendDeliveryInfo(@PathVariable(name = "orderNumber") String orderNumber) {
+        wxShipInfoService.uploadBalanceOrderShip(orderNumber, null);
         return ServerResponseEntity.success();
     }
 
@@ -69,7 +83,7 @@ public class BalanceOrderController {
      * 删除
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("@pms.hasPermission('admin:balance:order:delete')")
+    @PreAuthorize("@pms.hasPermission('order:balance:delete')")
     public ServerResponseEntity<Void> delete(@PathVariable Long id) {
         userBalanceOrderService.removeById(id);
         return ServerResponseEntity.success();

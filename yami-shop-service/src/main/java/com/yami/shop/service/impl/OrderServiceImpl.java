@@ -23,6 +23,7 @@ import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.event.CancelOrderEvent;
 import com.yami.shop.bean.event.ReceiptOrderEvent;
 import com.yami.shop.bean.event.SubmitOrderEvent;
+import com.yami.shop.bean.model.DeliveryOrder;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
 import com.yami.shop.bean.model.UserAddrOrder;
@@ -30,10 +31,7 @@ import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageAdapter;
 import com.yami.shop.dao.*;
-import com.yami.shop.service.OrderItemService;
-import com.yami.shop.service.OrderService;
-import com.yami.shop.service.UserAddrOrderService;
-import com.yami.shop.service.UserService;
+import com.yami.shop.service.*;
 import com.yly.print_sdk_library.RequestMethod;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +57,7 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
 
+    private final DeliveryOrderService deliveryOrderService;
     private final UserService userService;
     private final OrderMapper orderMapper;
     private final CommonMapper commonMapper;
@@ -204,7 +203,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delivery(Order order) {
+    public void delivery(Order orderUpdate, Order order) {
         orderMapper.updateById(order);
         // 发送用户发货通知
         Map<String, String> params = new HashMap<>(16);
@@ -213,7 +212,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //		params.put("dvyName", delivery.getDvyName());
         //		params.put("dvyFlowId", order.getDvyFlowId());
         //		smsLogService.sendSms(SmsType.NOTIFY_DVY, order.getUserId(), order.getMobile(), params);
-
+        // 如果是商家自配送 添加物流订单
+        if(order.getDvyId() == 13){
+            DeliveryOrder deliveryOrder = new DeliveryOrder();
+            deliveryOrder.setOrderNumber(order.getOrderNumber());
+            deliveryOrder.setCreateTime(order.getDvyTime());
+            deliveryOrder.setExpressNumber(order.getDvyFlowId());
+            //物流状态0初始创建1已分配配送员2运送中3已送达
+            deliveryOrder.setExpressStatus(0);
+            deliveryOrder.setAddOrderId(order.getAddrOrderId());
+            deliveryOrderService.save(deliveryOrder);
+        }
     }
 
     @Override
