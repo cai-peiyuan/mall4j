@@ -179,7 +179,7 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
             userBalanceOrder = userBalanceOrderService.getOne(new LambdaQueryWrapper<UserBalanceOrder>().eq(UserBalanceOrder::getOrderNumber, orderNumber));
         }
         log.debug("充值订单已支付 订单编号 {} ", orderNumber);
-        WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, orderNumber).eq(WxPayPrepay::getTradeState, Transaction.TradeStateEnum.SUCCESS));
+        WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, userBalanceOrder.getOrderNumber()).eq(WxPayPrepay::getTradeState, Transaction.TradeStateEnum.SUCCESS));
         if (wxPayPrepay == null) {
             log.debug("未查询到已支付的订单信息");
             return;

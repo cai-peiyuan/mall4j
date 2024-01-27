@@ -363,6 +363,7 @@ public class PayServiceImpl implements PayService {
                     // 充值订单支付成功通知事件 和监听此事件执行进一步的数据操作  如上传发货信息等
                     BalanceOrderPaySuccessEvent balanceOrderPaySuccessEvent = new BalanceOrderPaySuccessEvent();
                     balanceOrderPaySuccessEvent.setUserBalanceOrder(userBalanceOrder);
+                    balanceOrderPaySuccessEvent.setOrderNumber(userBalanceOrder.getOrderNumber());
                     eventPublisher.publishEvent(balanceOrderPaySuccessEvent);
                 }
             }
