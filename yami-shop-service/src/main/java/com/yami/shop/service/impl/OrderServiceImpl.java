@@ -281,8 +281,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //order 信息添加附加信息
         setOrderExtraInfo(order);
         // 写入文件 供测试使用
-        testWriteObject(order);
-        String print_order_auto = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "print_order_auto");
+        // testWriteObject(order);
         String print_machine_code = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "print_machine_code");
         String print_order_content_template = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "print_order_content_template");
         String service_tel = (String) redisTemplate.opsForHash().get(KEY_SYS_CONFIG, "service_tel");
