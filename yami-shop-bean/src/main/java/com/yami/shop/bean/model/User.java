@@ -126,6 +126,11 @@ public class User implements Serializable {
     private Integer score;
 
     /**
+     * 是否为工作人员
+     */
+    private Integer isStaff;
+
+    /**
      * openid
      */
     private String openId;

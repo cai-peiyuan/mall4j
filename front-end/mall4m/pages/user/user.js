@@ -262,6 +262,15 @@ Page({
     })
   },
 
+  /**
+   * 转入管理界面
+   */
+  toAdminPage: function () {
+    wx.navigateTo({
+      url: '/pages/admin/pages/index/index',
+    })
+  },
+
   // 跳转绑定手机号
   toBindingPhone: function () {
     return;

@@ -10,7 +10,8 @@
         "pages/pay-result/pay-result",
         "pages/login/login"
     ],
-    "subPackages": [{
+    "subPackages": [
+        {
             "root": "pages/balance/",
             "pages": [
                 "pages/user-balance/user-balance",
@@ -59,6 +60,14 @@
                 "pages/orderList/orderList",
                 "pages/order-detail/order-detail"
             ]
+        },
+        {
+            "root": "pages/admin",
+            "pages": [
+                "pages/index/index",
+                "pages/order-manage/order-manage",
+                "pages/order-detail/order-detail"
+            ]
         }
     ],
     "window": {
@@ -70,7 +79,8 @@
     "tabBar": {
         "selectedColor": "#3a86b9",
         "color": "#b8b8b8",
-        "list": [{
+        "list": [
+            {
                 "pagePath": "pages/index/index",
                 "text": "首页",
                 "iconPath": "images/tabbar/homepage.png",

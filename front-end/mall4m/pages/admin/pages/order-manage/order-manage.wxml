@@ -1,0 +1,3 @@
+<!--pages/admin/pages/order-manage/order-manage.wxml-->
+<text>订单管理页面</text>
+<view><button bindtap="viewOrderByQRCode">扫描订单二维码</button></view>

@@ -188,6 +188,14 @@
         </view>
         <view class='arrowhead'></view>
       </view>
+
+      <view class='memu-item' wx:if="{{wxUserInfo.isStaff == 1 || true}}" bindtap='toAdminPage'>
+        <view class="i-name">
+          <text>管理入口</text>
+        </view>
+        <view class='arrowhead'></view>
+      </view>
+
     </view>
     
   </view>

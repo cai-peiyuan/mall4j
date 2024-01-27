@@ -32,4 +32,7 @@ public class UserInfoDto implements Serializable {
 
     @Schema(description = "照片URL")
     private String pic;
+
+    @Schema(description = "是否为工作人员")
+    private Integer isStaff;
 }
