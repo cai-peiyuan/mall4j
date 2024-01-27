@@ -239,7 +239,7 @@
                     </el-button>
                     <br>
                     <el-button
-                      v-if="isAuth('order:order:delivery')"
+                      v-if="isAuth('order:order:delivery') && order.status == 2"
                       type="text"
                       @click="changeOrder(order)"
                     >
@@ -253,11 +253,13 @@
                     >
                       退款
                     </el-button>
+                    <br>
                     <span
                       v-if="order.printTimes> 0"
                       style="cursor:pointer;"
                       @click="printOrder(order.orderNumber)"
                     >已打印次数：{{ order.printTimes }}</span>
+                    <br>
                     <el-button
                       v-if="isAuth('order:order:print') && order.printTimes == 0"
                       type="text"
@@ -311,18 +313,11 @@
       ref="devyAddRef"
       @refresh-data-list="getDataList"
     />
-    <!-- 退款 弹窗, 新增 / 修改 -->
-    <order-refund
-      v-if="refundVisible"
-      ref="orderRefundRef"
-      @refresh-data-list="getDataList"
-    />
   </div>
 </template>
 
 <script setup>
 import DevyAdd from './components/order-devy.vue'
-import OrderRefund from './components/order-refund.vue'
 import AddOrUpdate from './components/order-info.vue'
 import ConsignmentInfo from './components/consignment-info.vue'
 import { isAuth } from '@/utils'
@@ -367,16 +362,7 @@ onMounted(() => {
 })
 const devyAddRef = ref(null)
 const orderRefundRef = ref(null)
-/**
- * 发货
- * @param order
- */
-const orderRefund = (order) => {
-  refundVisible.value = true
-  nextTick(() => {
-    orderRefundRef.value?.init(order.orderNumber)
-  })
-}
+
 /**
  * 发货
  * @param order
@@ -384,6 +370,7 @@ const orderRefund = (order) => {
 const changeOrder = (order) => {
   devyVisible.value = true
   nextTick(() => {
+    console.log(devyAddRef)
     devyAddRef.value?.init(order.orderNumber, order.dvyId, order.dvyFlowId)
   })
 }

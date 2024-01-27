@@ -11,32 +11,7 @@
       :rules="dataRule"
       label-width="80px"
       @keyup.enter="onSubmit()"
-    >
-      <el-form-item label="退款原因">
-        <el-select
-          v-model="dataForm.dvyId"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in dataForm.refundNames"
-            :key="item.dvyId"
-            :label="item.dvyName"
-            :value="item.dvyId"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item
-        label="快递单号"
-        prop="dvyFlowId"
-      >
-        <el-input
-          v-model="dataForm.refundAmount"
-          controls-position="right"
-          :min="0"
-          label="快递单号"
-        />
-      </el-form-item>
-    </el-form>
+    />
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="visible = false">取消</el-button>
@@ -52,42 +27,30 @@
 import { ElMessage } from 'element-plus'
 const emit = defineEmits(['refreshDataList'])
 
-// eslint-disable-next-line no-unused-vars
-const validDvyFlowId = (rule, value, callback) => {
-  if (!value.trim()) {
-    callback(new Error('不能为空'))
-  } else {
-    callback()
-  }
-}
 const dataRule = {
-  dvyFlowId: [
-    { required: true, message: '不能为空', trigger: 'blur' },
-    { validator: validDvyFlowId, trigger: 'blur' }
-  ]
+
 }
 
 const visible = ref(false)
 const dataForm = reactive({
-  dvyId: '',
-  dvyFlowId: 0,
   refundAmount: 0,
   refundNames: [],
-  orderNumber: 0
+  orderNumber: 0,
+  refundMsg: ''
 })
 /**
  * 初始化数据方法
  * @param orderNumber
  */
-const init = (orderNumber) => {
+const init = (order) => {
   visible.value = true
-  dataForm.orderNumber = orderNumber || ''
+  dataForm.orderNumber = order.orderNumber || ''
   http({
     url: http.adornUrl('/admin/delivery/list'),
     method: 'get',
     params: http.adornParams()
   }).then(({ data }) => {
-    dataForm.refundNames = data
+    dataForm.orderNumber = data.orderNumber
   })
 }
 defineExpose({ init })
@@ -103,24 +66,20 @@ const onSubmit = () => {
         url: http.adornUrl('/order/order/delivery'),
         method: 'put',
         data: http.adornData({
-          orderNumber: dataForm.orderNumber,
-          dvyId: dataForm.dvyId,
-          dvyFlowId: dataForm.dvyFlowId
+          orderNumber: dataForm.orderNumber
+        })
+      }).then(() => {
+        ElMessage({
+          message: '操作成功',
+          type: 'success',
+          duration: 1500,
+          onClose: () => {
+            visible.value = false
+            emit('refreshDataList')
+          }
         })
       })
-        .then(() => {
-          ElMessage({
-            message: '操作成功',
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              visible.value = false
-              emit('refreshDataList')
-            }
-          })
-        })
     }
   })
 }
-
 </script>

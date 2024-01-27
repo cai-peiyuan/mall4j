@@ -34,7 +34,11 @@
           controls-position="right"
           :min="0"
           label="快递单号"
-        />
+        >
+          <template #append v-if="dataForm.dvyId == 13">
+            <el-button type="primary" @click="getDvyFlowId()">生成单号</el-button>
+          </template>
+        </el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -91,8 +95,23 @@ const init = (orderNumber, dvyId, dvyFlowId) => {
 defineExpose({ init })
 
 const dataFormRef = ref(null)
+
+/**
+ * 生成运单号码
+ */
+const getDvyFlowId = () => {
+  http({
+    url: http.adornUrl('/order/order/generateExpressNumber'),
+    method: 'get',
+    data: http.adornData({
+    })
+  }).then((data) => {
+    dataForm.dvyFlowId = data.data;
+  })
+}
 /**
  * 表单提交
+ * 订单发货
  */
 const onSubmit = () => {
   dataFormRef.value?.validate((valid) => {
