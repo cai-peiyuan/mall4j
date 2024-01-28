@@ -2,155 +2,153 @@
 
 <view class='container'>
 
-  <view class='order-detail'>
-    <view class='delivery-addr'>
-      <view class='user-info'>
-        <text class='item'>{{userAddrDto.receiver}}</text>
-        <text class='item'>{{userAddrDto.mobile}}</text>
-      </view>
-      <view class='addr'>{{userAddrDto.province}}{{userAddrDto.city}}{{userAddrDto.area}}{{userAddrDto.area}}{{userAddrDto.addr}}</view>
-    </view>
+    <view class='order-detail'>
+        <view class='delivery-addr'>
+            <view class='user-info'>
+                <text class='item'>{{userAddrDto.receiver}}</text>
+                <text class='item'>{{userAddrDto.mobile}}</text>
+            </view>
+            <view class='addr'>{{userAddrDto.province}}{{userAddrDto.city}}{{userAddrDto.area}}{{userAddrDto.area}}{{userAddrDto.addr}}</view>
+        </view>
 
-
-
-    <!-- 商品信息 -->
-    <view class='prod-item'>
-      <!-- <view class="order-num">
+        <!-- 商品信息 -->
+        <view class='prod-item'>
+            <!-- <view class="order-num">
         <view class='order-state'>
           <text class="order-sts  gray">{{status}}</text>
         </view>
       </view> -->
-      <block wx:for="{{orderItemDtos}}"  wx:for-index="index" wx:key='id'>
-        <view class='item-cont' bindtap='toProdPage' data-prodid="{{item.prodId}}">
-          <view class='prod-pic'>
-            <image src='{{item.pic}}'></image>
-          </view>
-          <view class='prod-info'>
-            <view class='prodname'>
-              {{item.prodName}}
+            <block wx:for="{{orderItemDtos}}" wx:for-index="index" wx:key='id'>
+                <view class='item-cont' bindtap='toProdPage' data-prodid="{{item.prodId}}">
+                    <view class='prod-pic'>
+                        <image src='{{item.pic}}'></image>
+                    </view>
+                    <view class='prod-info'>
+                        <view class='prodname'>
+                            {{item.prodName}}
+                        </view>
+                        <view class='prod-info-cont'>
+                            <text class='number'>{{item.skuName}}</text>
+                            <text class='info-item'>X{{item.prodCount}}</text>
+                        </view>
+                        <view class='price-nums clearfix'>
+                            <text class='prodprice'><text class='symbol'>￥</text>
+                                <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
+                                <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
+                            <view class='btn-box'>
+                                <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
+                                <!-- <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+
+        <!-- 订单信息 -->
+        <view class='order-msg'>
+            <view class='msg-item'>
+                <view class='item'>
+                    <text class='item-tit'>订单编号：</text>
+                    <text class='item-txt'>{{orderNumber}}</text>
+                    <text class='copy-btn' bindtap='copyBtn'>复制</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>下单时间：</text>
+                    <text class='item-txt'>{{createTime}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>订单备注：</text>
+                    <text class='item-txt'>{{remarks}}</text>
+                </view>
             </view>
-            <view class='prod-info-cont'>
-              <text class='number'>{{item.skuName}}</text>
-              <text class='info-item'>X{{item.prodCount}}</text>
+            <view class='msg-item' wx:if="{{order.isPayed == 1}}">
+                <view class='item'>
+                    <text class='item-tit'>付款时间：</text>
+                    <text class='item-txt'>{{order.payTime}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>支付方式：</text>
+                    <text class='item-txt'>{{dict.getPayTypeName(order.payType)}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>发货状态：</text>
+                    <text class='item-txt'>{{order.dvyFlowId != '' ? '已发货': '未发货'}}</text>
+                </view>
             </view>
-            <view class='price-nums clearfix'>
-              <text class='prodprice'><text class='symbol'>￥</text>
-              <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
-              <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
-              <view class='btn-box'>
-                <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
-                <!-- <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
-              </view>
+
+            <view class='msg-item' wx:if="{{order.dvyFlowId != ''}}">
+                <view class='item'>
+                    <text class='item-tit'>发货时间：</text>
+                    <text class='item-txt'>{{order.dvyTime}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>物流服务：</text>
+                    <text class='item-txt'>{{order.dvyId}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>运单号码：</text>
+                    <text class='item-txt'>{{order.dvyFlowId}}</text>
+                </view>
             </view>
-          </view>
         </view>
-      </block>
+        <view class='order-msg'>
+            <view class='msg-item'>
+                <view class='item'>
+                    <view class='item-tit'>订单总额：</view>
+                    <view class='item-txt price'>
+                        <text class='symbol'>￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(productTotalAmount)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(productTotalAmount)[1]}}</text>
+                    </view>
+                </view>
+                <view class='item'>
+                    <view class='item-tit'>运费：</view>
+                    <view class='item-txt price'>
+                        <text class='symbol'>￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(transfee)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(transfee)[1]}}</text>
+                    </view>
+                </view>
+                <view class='item'>
+                    <view class='item-tit'>优惠券：</view>
+                    <view class='item-txt price'>
+                        <text class='symbol'>-￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(reduceAmount)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(reduceAmount)[1]}}</text>
+                    </view>
+                </view>
+                <view class='item payment'>
+                    <view class='item-txt price'>
+                        实付款：
+                        <text class='symbol'>￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
 
-      <view class='prod-foot'>
-        <view class='btn'>
-          <button wx:if="{{order.status==1}}" class="button" bindtap="onCancelOrder" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>取消订单</button>
-          <button wx:if="{{order.status==1}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
-          <button wx:if="{{order.status==1}}" class="button warn" bindtap="onPayAgain" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>付款</button>
-          <button wx:if="{{order.status==3 || order.status==5}}" class="button" bindtap="toDeliveryPage" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>查看物流</button>
-          <button wx:if="{{order.status==3}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>确认收货</button>
+        <!-- 底部栏 -->
+        <view class='order-detail-footer' wx:if="{{status==5||status==6}}">
+            <text class='dele-order'>删除订单</text>
+            <view class='footer-box'>
+            <text class='apply-service'><button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>联系客服</text>
+            <text class='buy-again'>再次购买</text>
+            </view>
         </view>
-      </view>
-    </view>
 
-    <!-- 订单信息 -->
-    <view class='order-msg'>
-      <view class='msg-item'>
-        <view class='item'>
-          <text class='item-tit'>订单编号：</text>
-          <text class='item-txt'>{{orderNumber}}</text>
-          <text class='copy-btn' bindtap='copyBtn'>复制</text>
+        <view class='prod-foot' wx:if="{{false}}">
+            <view class='btn'>
+            <button wx:if="{{order.status==1}}" class="button" bindtap="onCancelOrder" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>取消订单</button>
+            <button wx:if="{{order.status==1}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
+            <button wx:if="{{order.status==1}}" class="button warn" bindtap="onPayAgain" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>付款</button>
+            <button wx:if="{{order.status==3 || order.status==5}}" class="button" bindtap="toDeliveryPage" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>查看物流</button>
+            <button wx:if="{{order.status==3}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>确认收货</button>
+            </view>
         </view>
-        <view class='item'>
-          <text class='item-tit'>下单时间：</text>
-          <text class='item-txt'>{{createTime}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>订单备注：</text>
-          <text class='item-txt'>{{remarks}}</text>
-        </view>
-      </view>
-      <view class='msg-item' wx:if="{{order.isPayed == 1}}">
-        <view class='item'>
-          <text class='item-tit'>付款时间：</text>
-          <text class='item-txt'>{{order.payTime}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>支付方式：</text>
-          <text class='item-txt'>{{dict.getPayTypeName(order.payType)}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>发货状态：</text>
-          <text class='item-txt'>{{order.dvyFlowId != '' ? '已发货': '未发货'}}</text>
-        </view>
-      </view>
 
-      <view class='msg-item' wx:if="{{order.dvyFlowId != ''}}">
-        <view class='item'>
-          <text class='item-tit'>发货时间：</text>
-          <text class='item-txt'>{{order.dvyTime}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>物流服务：</text>
-          <text class='item-txt'>{{order.dvyId}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>运单号码：</text>
-          <text class='item-txt'>{{order.dvyFlowId}}</text>
-        </view>
     </view>
-    </view>
-    <view class='order-msg'>
-      <view class='msg-item'>
-        <view class='item'>
-          <view class='item-tit'>订单总额：</view>
-          <view class='item-txt price'>
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(productTotalAmount)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(productTotalAmount)[1]}}</text>
-          </view>
-        </view>
-        <view class='item'>
-          <view class='item-tit'>运费：</view>
-          <view class='item-txt price'>
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(transfee)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(transfee)[1]}}</text>
-          </view>
-        </view>
-        <view class='item'>
-          <view class='item-tit'>优惠券：</view>
-          <view class='item-txt price'>
-            <text class='symbol'>-￥</text>
-            <text class='big-num'>{{wxs.parsePrice(reduceAmount)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(reduceAmount)[1]}}</text>
-          </view>
-        </view>
-        <view class='item payment'>
-          <view class='item-txt price'>
-            实付款：
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 底部栏 -->
-    <view class='order-detail-footer' wx:if="{{status==5||status==6}}">
-      <text class='dele-order'>删除订单</text>
-      <!-- <view class='footer-box'> -->
-        <!-- <text class='apply-service'>联系客服</text> -->
-        <!-- <text class='buy-again'>再次购买</text> -->
-      <!-- </view> -->
-    </view>
-
-  </view>
 </view>
 <wxs module="wxs" src="../../../../wxs/number.wxs" />
 <wxs module="dict" src="../../../../wxs/dict.wxs" />

@@ -11,8 +11,6 @@
       <view class='addr'>{{userAddrDto.province}}{{userAddrDto.city}}{{userAddrDto.area}}{{userAddrDto.area}}{{userAddrDto.addr}}</view>
     </view>
 
-
-
     <!-- 商品信息 -->
     <view class='prod-item'>
       <!-- <view class="order-num">
@@ -38,23 +36,14 @@
               <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
               <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
               <view class='btn-box'>
-                <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
-                <!-- <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
+                <!-- <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
+                <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
               </view>
             </view>
           </view>
         </view>
       </block>
 
-      <view class='prod-foot'>
-        <view class='btn'>
-          <button wx:if="{{order.status==1}}" class="button" bindtap="onCancelOrder" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>取消订单</button>
-          <button wx:if="{{order.status==1}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
-          <button wx:if="{{order.status==1}}" class="button warn" bindtap="onPayAgain" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>付款</button>
-          <button wx:if="{{order.status==3 || order.status==5}}" class="button" bindtap="toDeliveryPage" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>查看物流</button>
-          <button wx:if="{{order.status==3}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>确认收货</button>
-        </view>
-      </view>
     </view>
 
     <!-- 订单信息 -->
@@ -96,7 +85,7 @@
         </view>
         <view class='item'>
           <text class='item-tit'>物流服务：</text>
-          <text class='item-txt'>{{order.dvyId}}</text>
+          <text class='item-txt'>{{dict.getDvyNameById(order.dvyId)}}</text>
         </view>
         <view class='item'>
           <text class='item-tit'>运单号码：</text>
@@ -141,13 +130,23 @@
       </view>
     </view>
 
+    <!-- <view class='prod-foot'>
+        <view class='btn'>
+          <button wx:if="{{order.status==1}}" class="button" bindtap="onCancelOrder" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>取消订单</button>
+          <button wx:if="{{order.status==1}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
+          <button wx:if="{{order.status==1}}" class="button warn" bindtap="onPayAgain" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>付款</button>
+          <button wx:if="{{order.status==3 || order.status==5}}" class="button" bindtap="toDeliveryPage" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>查看物流</button>
+          <button wx:if="{{order.status==3}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>确认收货</button>
+        </view>
+      </view> -->
+
     <!-- 底部栏 -->
-    <view class='order-detail-footer' wx:if="{{status==5||status==6}}">
-      <text class='dele-order'>删除订单</text>
-      <!-- <view class='footer-box'> -->
-        <!-- <text class='apply-service'>联系客服</text> -->
-        <!-- <text class='buy-again'>再次购买</text> -->
-      <!-- </view> -->
+    <view class='order-detail-footer' wx:if="{{status==5||status==6 || true}}">
+      <text class='dele-order' bindtap="orderRefund">订单退款</text>
+      <view class='footer-box'>
+        <text class='apply-service' bindtap="orderDelivery">订单发货</text>
+        <text class='buy-again' bingdtap="orderArrived">订单送达</text>
+      </view>
     </view>
 
   </view>

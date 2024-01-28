@@ -60,8 +60,9 @@ const pageObject = {
      */
     viewOrder(orderNumber) {
         console.log(orderNumber)
+        // 订单发货
         wx.navigateTo({
-            url: '/pages/admin/pages/order-detail/order-detail?orderNum=1751226703902019584'
+            url: '/pages/admin/pages/order-delivery/order-delivery?orderNum=1751226703902019584'
         })
     },
     /**
@@ -77,7 +78,7 @@ const pageObject = {
             success(res) {
                 if (res.errMsg == 'scanCode:ok' && res.scanType == "QR_CODE") {
                     const orderNumber = res.result;
-                    //打开订单管理页面
+                    //打开订单管理页面 订单发货
                     wx.navigateTo({
                         url: '/pages/admin/pages/order-detail/order-detail?orderNum=' + orderNumber
                     })
