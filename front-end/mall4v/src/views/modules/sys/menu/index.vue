@@ -106,7 +106,7 @@
         <template #default="scope">
           <el-button
             v-if="isAuth('sys:menu:update')"
-            type="text"
+            type="primary"
 
             @click="onAddOrUpdate(scope.row.menuId)"
           >
@@ -114,7 +114,7 @@
           </el-button>
           <el-button
             v-if="isAuth('sys:menu:delete')"
-            type="text"
+            type="primary"
 
             @click="onDelete(scope.row.menuId)"
           >

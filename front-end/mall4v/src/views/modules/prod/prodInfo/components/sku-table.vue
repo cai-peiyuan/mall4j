@@ -122,14 +122,14 @@
           <template #default="scope">
             <el-button
               v-if="scope.row.status"
-              type="text"
+              type="primary"
               @click="changeSkuStatus(`${scope.$index}`)"
             >
               禁用
             </el-button>
             <el-button
               v-else
-              type="text"
+              type="primary"
               @click="changeSkuStatus(`${scope.$index}`)"
             >
               启用

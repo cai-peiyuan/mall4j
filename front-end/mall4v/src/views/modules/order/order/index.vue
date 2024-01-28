@@ -232,7 +232,7 @@
                   <div class="operate">
                     <el-button
                       v-if="isAuth('order:order:update')"
-                      type="text"
+                      type="primary"
                       @click="onAddOrUpdate(order.orderNumber)"
                     >
                       查看
@@ -240,7 +240,7 @@
                     <br>
                     <el-button
                       v-if="isAuth('order:order:delivery') && order.status == 2"
-                      type="text"
+                      type="primary"
                       @click="changeOrder(order)"
                     >
                       发货
@@ -248,7 +248,7 @@
                     <br>
                     <el-button
                       v-if="isAuth('order:order:refund')"
-                      type="text"
+                      type="primary"
                       @click="orderRefund(order)"
                     >
                       退款
@@ -262,7 +262,7 @@
                     <br>
                     <el-button
                       v-if="isAuth('order:order:print') && order.printTimes == 0"
-                      type="text"
+                      type="primary"
                       @click="printOrder(order.orderNumber)"
                     >
                       打印订单

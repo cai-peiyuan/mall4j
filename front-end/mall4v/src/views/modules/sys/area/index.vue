@@ -25,14 +25,14 @@
         <span class="addr-name">{{ node.label }}</span>
         <span>
           <el-button
-            type="text"
+            type="primary"
             icon="el-icon-edit"
             @click="() => update(node, data)"
           >
             修改
           </el-button>
           <el-button
-            type="text"
+            type="primary"
             icon="el-icon-delete"
             @click="() => remove(node, data)"
           >

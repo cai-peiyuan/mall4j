@@ -11,7 +11,7 @@
         <span>{{ tag.tagName }}</span>
         <el-button
           class="button-new-tag"
-          type="text"
+          type="primary"
           icon="el-icon-delete"
           @click="removeTag(tagIndex)"
         >

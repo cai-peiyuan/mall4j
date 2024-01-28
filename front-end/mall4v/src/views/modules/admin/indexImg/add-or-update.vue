@@ -73,7 +73,7 @@
               <div class="card-prod-bottom">
                 <span class="card-prod-name">{{ card.name }}</span>
                 <el-button
-                  type="text"
+                  type="primary"
                   class="card-prod-name-button"
                   @click="deleteRelation"
                 >

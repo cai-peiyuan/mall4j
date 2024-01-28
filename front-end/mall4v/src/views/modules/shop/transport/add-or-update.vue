@@ -84,7 +84,7 @@
             </span>
             <el-button
               v-if="isAuth('shop:transfee:update') && scope.$index > 0"
-              type="text"
+              type="primary"
 
               @click="onAddOrUpdate(`${scope.$index}`)"
             >
@@ -92,7 +92,7 @@
             </el-button>
             <el-button
               v-if="isAuth('shop:transfee:delete') && scope.$index > 0"
-              type="text"
+              type="primary"
 
               @click="onDelete(`${scope.$index}`)"
             >
@@ -223,7 +223,7 @@
             </el-tag>
             <el-button
               v-if="isAuth('shop:transfee:update')"
-              type="text"
+              type="primary"
 
               @click="addOrUpdateTransfeeFree(`${scope.$index}`)"
             >
@@ -231,7 +231,7 @@
             </el-button>
             <el-button
               v-if="isAuth('shop:transfee:delete')"
-              type="text"
+              type="primary"
 
               @click="deleteTransfeeFree(`${scope.$index}`)"
             >
