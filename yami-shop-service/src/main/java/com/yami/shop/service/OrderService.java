@@ -124,6 +124,7 @@ public interface OrderService extends IService<Order> {
      * @param order
      * @param dvyId
      * @param dvyFlowId
+     * @param deliveryUserId
      */
-    void orderDelivery(Order order, Long dvyId, String dvyFlowId);
+    void orderDelivery(Order order, Long dvyId, String dvyFlowId, Long deliveryUserId);
 }

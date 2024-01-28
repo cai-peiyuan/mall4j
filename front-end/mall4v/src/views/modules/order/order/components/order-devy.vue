@@ -40,6 +40,23 @@
           </template>
         </el-input>
       </el-form-item>
+      <el-form-item
+        label="快递员"
+        prop="deliveryUserId"
+        v-if="dataForm.dvyId == 13"
+      >
+        <el-select
+          v-model="dataForm.deliveryUserId"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in dataForm.dvyUsers"
+            :key="item.id"
+            :label="item.userName + '      ' + item.userPhone"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -76,7 +93,9 @@ const dataForm = reactive({
   dvyId: '',
   dvyFlowId: 0,
   dvyNames: [],
-  orderNumber: 0
+  dvyUsers: [],
+  orderNumber: 0,
+  deliveryUserId: null
 })
 
 const init = (orderNumber, dvyId, dvyFlowId) => {
@@ -90,6 +109,14 @@ const init = (orderNumber, dvyId, dvyFlowId) => {
     params: http.adornParams()
   }).then(({ data }) => {
     dataForm.dvyNames = data
+  })
+
+  http({
+    url: http.adornUrl('/admin/delivery/getDeliveryUsers'),
+    method: 'get',
+    params: http.adornParams()
+  }).then(({ data }) => {
+    dataForm.dvyUsers = data
   })
 }
 defineExpose({ init })
@@ -122,7 +149,8 @@ const onSubmit = () => {
         data: http.adornData({
           orderNumber: dataForm.orderNumber,
           dvyId: dataForm.dvyId,
-          dvyFlowId: dataForm.dvyFlowId
+          dvyFlowId: dataForm.dvyFlowId,
+          deliveryUserId: dataForm.deliveryUserId
         })
       })
         .then(() => {

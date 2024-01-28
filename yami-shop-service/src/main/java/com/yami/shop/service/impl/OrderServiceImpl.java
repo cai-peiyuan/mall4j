@@ -23,10 +23,7 @@ import com.yami.shop.bean.event.OrderCancelEvent;
 import com.yami.shop.bean.event.OrderDeliveryEvent;
 import com.yami.shop.bean.event.OrderReceiptEvent;
 import com.yami.shop.bean.event.OrderSubmitEvent;
-import com.yami.shop.bean.model.DeliveryOrder;
-import com.yami.shop.bean.model.Order;
-import com.yami.shop.bean.model.OrderItem;
-import com.yami.shop.bean.model.UserAddrOrder;
+import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageAdapter;
@@ -62,6 +59,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final WxShipInfoService wxShipInfoService;
 
     private final DeliveryOrderService deliveryOrderService;
+    private final DeliveryUserService deliveryUserService;
+
+    private final DeliveryOrderRouteService deliveryOrderRouteService;
     private final UserService userService;
     private final OrderMapper orderMapper;
     private final CommonMapper commonMapper;
@@ -363,7 +363,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void orderDelivery(Order order, Long dvyId, String dvyFlowId) {
+    public void orderDelivery(Order order, Long dvyId, String dvyFlowId, Long deliveryUserId) {
         /**
          * 更新订单发货状态和物流信息
          */
@@ -385,16 +385,35 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //		smsLogService.sendSms(SmsType.NOTIFY_DVY, order.getUserId(), order.getMobile(), params);
         // 如果是商家自配送 添加物流订单
         if (orderUpdate.getDvyId() == 13) {
+
             log.debug("商品由商家配送 {}", orderUpdate.getDvyId());
             DeliveryOrder deliveryOrder = new DeliveryOrder();
-            deliveryOrder.setOrderNumber(orderUpdate.getOrderNumber());
+            deliveryOrder.setOrderNumber(order.getOrderNumber());
             deliveryOrder.setCreateTime(orderUpdate.getDvyTime());
             deliveryOrder.setExpressNumber(orderUpdate.getDvyFlowId());
             //物流状态0初始创建1已分配配送员2运送中3已送达
             deliveryOrder.setExpressStatus(0);
             deliveryOrder.setAddOrderId(order.getAddrOrderId());
-            deliveryOrderService.save(deliveryOrder);
 
+            if (deliveryUserId != null) {
+                //添加商家自配送运单中派送员信息
+                DeliveryUser deliveryUser = deliveryUserService.getById(deliveryUserId);
+                deliveryOrder.setExpressPerson(deliveryUser.getUserName());
+                deliveryOrder.setExpressPhone(deliveryUser.getUserPhone());
+                deliveryOrder.setExpressStatus(1);
+                DeliveryOrderRoute deliveryOrderRoute = new DeliveryOrderRoute();
+
+                deliveryOrderRoute.setCreateTime(orderUpdate.getDvyTime());
+                deliveryOrderRoute.setOrderNumber(order.getOrderNumber());
+                deliveryOrderRoute.setExpressNumber(orderUpdate.getDvyFlowId());
+                deliveryOrderRoute.setAddOrderId(order.getAddrOrderId());
+                deliveryOrderRoute.setInfo("订单" +
+                        "分配派送员 " + deliveryUser.getUserName() + " 联系电话" + deliveryUser.getUserPhone());
+                //写入物流订单路由
+                deliveryOrderRouteService.save(deliveryOrderRoute);
+            }
+            // 写入物流订单
+            deliveryOrderService.save(deliveryOrder);
             eventPublisher.publishEvent(new OrderDeliveryEvent(order));
         }
     }

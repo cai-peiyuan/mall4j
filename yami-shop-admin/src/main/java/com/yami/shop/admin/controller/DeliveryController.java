@@ -4,6 +4,8 @@ package com.yami.shop.admin.controller;
 
 import java.util.List;
 
+import com.yami.shop.bean.model.DeliveryUser;
+import com.yami.shop.service.DeliveryUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.yami.shop.common.response.ServerResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,9 @@ public class DeliveryController {
     @Autowired
     private DeliveryService deliveryService;
 
+	@Autowired
+	private DeliveryUserService deliveryUserService;
+
 	/**
 	 * 分页获取
 	 */
@@ -34,4 +39,13 @@ public class DeliveryController {
 		return ServerResponseEntity.success(list);
 	}
 
+	/**
+	 * 获取配送员信息
+	 * @author cpy
+	 */
+	@GetMapping("/getDeliveryUsers")
+	public ServerResponseEntity<Object> getDeliveryUsers() {
+		List<DeliveryUser> list = deliveryUserService.list();
+		return ServerResponseEntity.success(list);
+	}
 }

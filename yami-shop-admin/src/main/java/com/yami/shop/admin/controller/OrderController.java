@@ -12,10 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
 import com.yami.shop.bean.enums.OrderStatus;
-import com.yami.shop.bean.model.DeliveryOrder;
-import com.yami.shop.bean.model.Order;
-import com.yami.shop.bean.model.OrderItem;
-import com.yami.shop.bean.model.UserAddrOrder;
+import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.param.DeliveryOrderParam;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.common.exception.YamiShopBindException;
@@ -66,6 +63,7 @@ public class OrderController {
         String expressNumber = deliveryOrderService.generateExpressNumber();
         return ServerResponseEntity.success(expressNumber);
     }
+
     /**
      * 分页获取订单信息
      *
@@ -129,8 +127,7 @@ public class OrderController {
         /**
          * 封装订单发货方法
          */
-        orderService.orderDelivery(order, deliveryOrderParam.getDvyId(), deliveryOrderParam.getDvyFlowId());
-
+        orderService.orderDelivery(order, deliveryOrderParam.getDvyId(), deliveryOrderParam.getDvyFlowId(), deliveryOrderParam.getDeliveryUserId());
 
         /**
          * 删除订单所包含的商品缓存信息
