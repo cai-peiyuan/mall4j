@@ -15,12 +15,12 @@
           <text class="value">{{dvyFlowId}}</text>
         </view>
         <view class="expno" wx:if="{{deliveryOrder.expressPerson}}">
-          <text class="key">姓名：</text>
+          <text class="key">派送人员：</text>
           <text class="value">{{deliveryOrder.expressPerson}}</text>
         </view>
         <view class="expno" wx:if="{{deliveryOrder.expressPhone}}">
           <text class="key">联系电话：</text>
-          <text class="value">{{deliveryOrder.expressPhone}}</text>
+          <text class="value" bindtap="callDeliveryUser" data-expressphone = "{{deliveryOrder.expressPhone}}">{{deliveryOrder.expressPhone}}</text>
         </view>
       </view>
     </view>
