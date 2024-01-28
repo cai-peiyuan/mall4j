@@ -6,10 +6,12 @@ import com.yami.shop.bean.app.dto.DeliveryDto;
 import com.yami.shop.bean.app.dto.DeliveryInfoDto;
 import com.yami.shop.bean.model.Delivery;
 import com.yami.shop.bean.model.DeliveryOrder;
+import com.yami.shop.bean.model.DeliveryOrderRoute;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.Json;
+import com.yami.shop.service.DeliveryOrderRouteService;
 import com.yami.shop.service.DeliveryOrderService;
 import com.yami.shop.service.DeliveryService;
 import com.yami.shop.service.OrderService;
@@ -38,6 +40,8 @@ public class DeliveryController {
     @Autowired
     private DeliveryOrderService deliveryOrderService;
     @Autowired
+    private DeliveryOrderRouteService deliveryOrderRouteService;
+    @Autowired
     private OrderService orderService;
 
     /**
@@ -57,9 +61,11 @@ public class DeliveryController {
         DeliveryDto deliveryDto = new DeliveryDto();
         deliveryDto.setDvyFlowId(order.getDvyFlowId());
         deliveryDto.setCompanyName(delivery.getDvyName());
-        List<DeliveryInfoDto> deliveryInfoDtoList = new ArrayList<>();
-        deliveryDto.setData(deliveryInfoDtoList);
+
         deliveryDto.setDeliveryOrder(deliveryOrder);
+
+        List<DeliveryOrderRoute> list = deliveryOrderRouteService.list(new LambdaQueryWrapper<DeliveryOrderRoute>().eq(DeliveryOrderRoute::getExpressNumber, order.getDvyFlowId()).orderByAsc(DeliveryOrderRoute::getCreateTime));
+        deliveryDto.setDeliveryRoutes(list);
         /*
         String url = delivery.getQueryUrl().replace("{dvyFlowId}", order.getDvyFlowId());
         String deliveryJson = HttpUtil.get(url);
@@ -68,7 +74,6 @@ public class DeliveryController {
         deliveryDto.setDvyFlowId(order.getDvyFlowId());
         deliveryDto.setCompanyHomeUrl(delivery.getCompanyHomeUrl());
         deliveryDto.setCompanyName(delivery.getDvyName());*/
-
         return ServerResponseEntity.success(deliveryDto);
     }
 }

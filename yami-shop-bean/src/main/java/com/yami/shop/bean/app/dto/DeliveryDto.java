@@ -3,6 +3,7 @@
 package com.yami.shop.bean.app.dto;
 
 import com.yami.shop.bean.model.DeliveryOrder;
+import com.yami.shop.bean.model.DeliveryOrderRoute;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -27,5 +28,8 @@ public class DeliveryDto {
 
 	@Schema(description = "查询出的物流信息")
 	private List<DeliveryInfoDto> data;
+
+	@Schema(description = "查询出的物流信息")
+	private  List<DeliveryOrderRoute> deliveryRoutes;
 
 }
