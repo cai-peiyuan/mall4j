@@ -2,19 +2,15 @@
 
 var http = require('../../utils/http.js');
 Page({
-
     /**
      * 页面的初始数据
      */
     data: {
         companyName: "商家配送",
         dvyFlowId: "123123123",
+        deliveryRoutes: [], //订单物流路由信息,
+        deliveryOrder: {},
         dvyData: [{
-            context: "派送员已取快递",
-            ftime: "ftime",
-            location: "location",
-            time: "2024年1月27日 18点35分"
-        },{
             context: "派送员已取快递",
             ftime: "ftime",
             location: "location",
@@ -44,7 +40,9 @@ Page({
                 ths.setData({
                     companyName: res.companyName,
                     dvyFlowId: res.dvyFlowId,
-                    dvyData: res.data
+                    dvyData: res.data,
+                    deliveryOrder: res.deliveryOrder,
+                    deliveryRoutes: res.deliveryRoutes
                 });
                 wx.hideLoading();
             }

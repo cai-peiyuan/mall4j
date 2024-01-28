@@ -14,22 +14,26 @@
           <text class="key">运单号码：</text>
           <text class="value">{{dvyFlowId}}</text>
         </view>
-        <view class="expno">
+        <view class="expno" wx:if="{{deliveryOrder.expressPerson}}">
+          <text class="key">姓名：</text>
+          <text class="value">{{deliveryOrder.expressPerson}}</text>
+        </view>
+        <view class="expno" wx:if="{{deliveryOrder.expressPhone}}">
           <text class="key">联系电话：</text>
-          <text class="value">{{dvyFlowId}}</text>
+          <text class="value">{{deliveryOrder.expressPhone}}</text>
         </view>
       </view>
     </view>
-    <view class="deliveryDetail" wx:if="{{dvyData.length}}">
-      <block wx:for="{{dvyData}}" wx:key=''>
+    <view class="deliveryDetail" wx:if="{{deliveryRoutes.length}}">
+      <block wx:for="{{deliveryRoutes}}" wx:key='id'>
         <view class="detailItem {{index==0?'lastest':''}}" >
           <view class="dot">
             <image src='../../images/icon/delive-dot.png' ></image>
              <image src='../../images/icon/dot.png' ></image>
           </view>
           <view class="detail">
-            <view class="desc">{{item.context}}</view>
-            <view class="time">{{item.time}}</view>
+            <view class="desc">{{item.info}}</view>
+            <view class="time">{{item.createTime}}</view>
           </view>
         </view>
       </block>
