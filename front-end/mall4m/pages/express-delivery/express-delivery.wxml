@@ -2,8 +2,8 @@
 <!-- 物流信息 -->
 <view class='container'>
   <view class="wrapper">
-    <view class="deliveryInfo" style="background:url(http://jiales.gz-yami.com/delivery-bg.png) center center no-repeat #fff;">
-      <view class="icon-express"  style="background:url(http://jiales.gz-yami.com/delivery-car.png) no-repeat;background-size:100% 100%;">
+    <view class="deliveryInfo" style="background:url() center center no-repeat #fff;">
+      <view class="icon-express"  style="background:url(http://cdn.bhgk.cc/xdyx/images/delivery-car.png) no-repeat;background-size:100% 100%;">
       </view>
       <view class="infoWarp">
         <view class="companyname">
@@ -22,7 +22,6 @@
     </view>
     <view class="deliveryDetail" wx:if="{{dvyData.length}}">
       <block wx:for="{{dvyData}}" wx:key=''>
-        
         <view class="detailItem {{index==0?'lastest':''}}" >
           <view class="dot">
             <image src='../../images/icon/delive-dot.png' ></image>
@@ -37,6 +36,6 @@
     </view>
     <view class="empty-space" wx:else>
 		  暂无配送信息
-	  </view>
+	</view>
   </view>
 </view>
