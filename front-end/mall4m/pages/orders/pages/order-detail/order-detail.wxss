@@ -292,3 +292,9 @@ page {
     background: salmon;
     opacity: 0;
 }
+
+.button{
+    width:30vw;
+    background-color: #fff;
+    border-radius: 3vw;
+}

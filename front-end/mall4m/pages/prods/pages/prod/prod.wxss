@@ -96,7 +96,7 @@ swiper image {
 }
 
 .price {
-    color: #eb2444;
+    color: #eb8e1e;
     font-size: 24rpx;
     font-weight: 600;
     margin-right: 50rpx;
@@ -576,8 +576,8 @@ img {
 }
 
 .cart-footer .btn.icon image {
-    width: 50rpx;
-    height: 50rpx;
+    width: 44rpx;
+    height: 44rpx;
 }
 
 .cart-footer .btn.cart {

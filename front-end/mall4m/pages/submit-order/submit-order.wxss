@@ -355,7 +355,7 @@ page {
 .submit-order-footer .footer-box {
   padding: 0 10rpx;
   width: 200rpx;
-  background: #eb2444;
+  background: rgb(238, 147, 27);
   text-align: center;
   line-height: 100rpx;
   color: #fff;
@@ -363,8 +363,8 @@ page {
 
 .submit-order-footer .sub-order .item-txt .price {
   display: inline;
-  color: #eb2444;
-  font-size: 28rpx;
+  color: rgb(243, 141, 8);
+  font-size: 38rpx;
 }
 
 .clearfix:after {

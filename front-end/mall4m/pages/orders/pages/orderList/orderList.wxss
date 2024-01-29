@@ -29,8 +29,8 @@ page {
 }
 
 .order-tit text.on {
-  border-bottom: 4rpx solid #eb2444;
-  color: #eb2444;
+  border-bottom: 4rpx solid #eba851;
+  color: #eba524;
 }
 
 /*  end 头部菜单 */
@@ -231,8 +231,8 @@ page {
 }
 
 .button.warn {
-  color: #eb2444;
-  border-color: #eb2444;
+  color: #eba851;
+  border-color: #eba851;
 }
 
 /* end 商品列表 */

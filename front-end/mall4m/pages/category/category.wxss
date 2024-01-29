@@ -95,7 +95,7 @@ page {
 }
 
 .menu-item.active {
-  color: #eb2444;
+  color: #e8a95b;
   font-size: 28rpx;
   font-weight: bold;
   position: relative;
@@ -109,7 +109,7 @@ page {
   width: 8rpx;
   height: 32rpx;
   top: 29rpx;
-  background: #eb2444;
+  background: #e8a95b;
 }
 
 .menu-item text.tips-num {
@@ -119,7 +119,7 @@ page {
   border-radius: 15rpx;
   width: 30rpx;
   height: 30rpx;
-  background: red;
+  /* background: red; */
   color: #fff;
   font-size: 25rpx;
   line-height: 30rpx;

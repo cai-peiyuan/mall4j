@@ -8,7 +8,7 @@
 .price{
   font-family: Arial;
   display: inline-block;
-  color: #eb2444;
+  color: rgb(243, 141, 8);
   padding-bottom:10rpx;
 padding-left:10rpx;
 
