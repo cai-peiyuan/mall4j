@@ -1,7 +1,6 @@
-
-
 package com.yami.shop.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,6 +10,7 @@ import com.yami.shop.dao.OrderMapper;
 import com.yami.shop.dao.OrderRefundMapper;
 import com.yami.shop.service.OrderRefundService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,6 +31,6 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
      */
     @Override
     public IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundQueryParam orderRefundQueryParam) {
-       return null;
+        return page(page, new LambdaQueryWrapper<OrderRefund>().eq(StringUtils.isNotBlank(orderRefundQueryParam.getOrderNumber()), OrderRefund::getOrderNumber, orderRefundQueryParam.getOrderNumber()));
     }
 }

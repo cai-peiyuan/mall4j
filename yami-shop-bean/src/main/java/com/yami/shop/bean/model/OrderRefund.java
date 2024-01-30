@@ -23,7 +23,7 @@ public class OrderRefund implements Serializable {
     private Long refundId;
 
     /**
-     * shopId
+     * 店铺ID
      */
     private Long shopId;
 

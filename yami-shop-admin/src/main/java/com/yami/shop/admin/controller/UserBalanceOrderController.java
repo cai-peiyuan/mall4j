@@ -35,7 +35,10 @@ public class UserBalanceOrderController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('order:balance:page')")
     public ServerResponseEntity<IPage<UserBalanceOrder>> page(UserBalanceOrder balanceOrder, PageParam<UserBalanceOrder> page) {
-        IPage<UserBalanceOrder> brands = userBalanceOrderService.page(page, new LambdaQueryWrapper<UserBalanceOrder>().like(StrUtil.isNotBlank(balanceOrder.getOrderNumber()), UserBalanceOrder::getOrderNumber, balanceOrder.getOrderNumber()).orderByAsc(UserBalanceOrder::getCreateTime));
+        IPage<UserBalanceOrder> brands = userBalanceOrderService.page(page,
+                new LambdaQueryWrapper<UserBalanceOrder>()
+                        .like(StrUtil.isNotBlank(balanceOrder.getOrderNumber()), UserBalanceOrder::getOrderNumber, balanceOrder.getOrderNumber())
+                        .orderByDesc(UserBalanceOrder::getCreateTime));
         return ServerResponseEntity.success(brands);
     }
 

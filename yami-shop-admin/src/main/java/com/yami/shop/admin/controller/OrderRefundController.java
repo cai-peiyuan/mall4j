@@ -42,9 +42,14 @@ public class OrderRefundController {
      */
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('order:refund:page')")
-    public ServerResponseEntity<IPage<OrderRefund>> page(OrderRefundQueryParam orderRefundQueryParam, PageParam<OrderRefund> page) {
+    public ServerResponseEntity<IPage<OrderRefund>> page(OrderRefundQueryParam queryParam, PageParam<OrderRefund> page) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
-        IPage<OrderRefund> pageData = orderRefundService.page(page, new LambdaQueryWrapper<OrderRefund>().eq(OrderRefund::getShopId, shopId).like(orderRefundQueryParam.getOrderNumber() != null, OrderRefund::getOrderNumber, orderRefundQueryParam.getOrderNumber()).like(orderRefundQueryParam.getApplyType() != null, OrderRefund::getApplyType, orderRefundQueryParam.getApplyType()).orderByDesc(OrderRefund::getApplyTime));
+        IPage<OrderRefund> pageData = orderRefundService.page(page,
+                new LambdaQueryWrapper<OrderRefund>()
+                        .eq(OrderRefund::getShopId, shopId)
+                        .like(queryParam.getOrderNumber() != null, OrderRefund::getOrderNumber, queryParam.getOrderNumber())
+                        .like(queryParam.getApplyType() != null, OrderRefund::getApplyType, queryParam.getApplyType())
+                        .orderByDesc(OrderRefund::getApplyTime));
         return ServerResponseEntity.success(pageData);
     }
 
@@ -58,7 +63,7 @@ public class OrderRefundController {
     public ServerResponseEntity<OrderRefund> info(@PathVariable("orderNumber") String orderNumber) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         OrderRefund orderRefund = orderRefundService.getOne(new LambdaQueryWrapper<OrderRefund>()
-                //.eq(OrderRefund::getShopId, shopId)
+               // .eq(OrderRefund::getShopId, shopId)
                 .eq(OrderRefund::getOrderNumber, orderNumber)
         );
         if (!Objects.equal(shopId, orderRefund.getShopId())) {
