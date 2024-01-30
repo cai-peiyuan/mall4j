@@ -13,7 +13,7 @@
     >
       <template #menu-left>
         <el-button
-          v-if="isAuth('order:refund:save')"
+          v-if="isAuth('shop:refundOption:save')"
           type="primary"
           icon="el-icon-plus"
           @click="onAddOrUpdate()"
@@ -43,7 +43,7 @@
 
       <template #menu="scope">
         <el-button
-          v-if="isAuth('order:refund:update')"
+          v-if="isAuth('shop:refundOption:update')"
           type="primary"
           icon="el-icon-edit"
           @click="onAddOrUpdate(scope.row.id)"
@@ -51,7 +51,7 @@
           修改
         </el-button>
         <el-button
-          v-if="isAuth('order:refund:deconste')"
+          v-if="isAuth('shop:refundOption:deconste')"
           type="danger"
           icon="el-icon-deconste"
           @click.stop="onDeconste(scope.row,scope.index)"
@@ -73,7 +73,7 @@
 <script setup>
 import { isAuth } from '@/utils'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { tableOption } from '@/crud/shop/deliveryUser.js'
+import { tableOption } from '@/crud/shop/refundOption.js'
 import AddOrUpdate from './add-or-update.vue'
 const dataList = ref([])
 const page = reactive({
@@ -88,7 +88,7 @@ const dataListLoading = ref(false)
 const getDataList = (pageParam, params, done) => {
   dataListLoading.value = true
   http({
-    url: http.adornUrl('/shop/deliveryUser/page'),
+    url: http.adornUrl('/shop/refundOption/page'),
     method: 'get',
     params: http.adornParams(Object.assign({
       current: pageParam ? pageParam.currentPage : 1,
@@ -147,7 +147,7 @@ const onDeconste = (row) => {
   })
     .then(() => {
       http({
-        url: http.adornUrl('/shop/deliveryUser'),
+        url: http.adornUrl('/shop/refundOption'),
         method: 'delete',
         data: http.adornData(ids, false)
       })
