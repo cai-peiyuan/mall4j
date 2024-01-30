@@ -9,6 +9,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,10 +20,7 @@ import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.enums.OrderStatus;
-import com.yami.shop.bean.event.OrderCancelEvent;
-import com.yami.shop.bean.event.OrderDeliveryEvent;
-import com.yami.shop.bean.event.OrderReceiptEvent;
-import com.yami.shop.bean.event.OrderSubmitEvent;
+import com.yami.shop.bean.event.*;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.common.exception.YamiShopBindException;
@@ -57,10 +55,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     private final WxShipInfoService wxShipInfoService;
-
     private final DeliveryOrderService deliveryOrderService;
     private final DeliveryUserService deliveryUserService;
-
     private final DeliveryOrderRouteService deliveryOrderRouteService;
     private final UserService userService;
     private final OrderMapper orderMapper;
@@ -71,6 +67,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final ApplicationEventPublisher eventPublisher;
     private final UserAddrOrderService userAddrOrderService;
     private final OrderItemService orderItemService;
+    private final OrderSettlementService orderSettlementService;
+
+    private final OrderRefundService orderRefundService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -205,6 +204,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return orderMapper.listOrderAndOrderItems(orderStatus, lessThanUpdateTime);
     }
 
+    /**
+     * 取消订单
+     *
+     * @param orders
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void cancelOrders(List<Order> orders) {
@@ -226,13 +230,70 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             int prodTotalNum = orderItems.stream().mapToInt(OrderItem::getProdCount).sum();
             prodCollect.put(prodId, prodTotalNum);
         });
+        // 增加商品库存
         productMapper.returnStock(prodCollect);
 
         allOrderItems.stream().collect(Collectors.groupingBy(OrderItem::getSkuId)).forEach((skuId, orderItems) -> {
             int prodTotalNum = orderItems.stream().mapToInt(OrderItem::getProdCount).sum();
             skuCollect.put(skuId, prodTotalNum);
         });
+        // 增加商品属性的库存
         skuMapper.returnStock(skuCollect);
+    }
+
+    /**
+     * 申请退款
+     *
+     * @param orders
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void refundApplyOrders(List<Order> orders) {
+        Date now = new Date();
+        for (Order order : orders) {
+            if (!Objects.equals(order.getStatus(), OrderStatus.PADYED.value())) {
+                throw new YamiShopBindException("订单" + order.getOrderNumber() + "状态不正确，无法申请退款");
+            }
+            /**
+             * 订单已支付并且是微信支付
+             */
+            if (order.getIsPayed() == 1 && order.getPayType() == 1) {
+                OrderSettlement settlement = orderSettlementService.getOne(new LambdaQueryWrapper<OrderSettlement>().eq(OrderSettlement::getOrderNumber, order.getOrderNumber()));
+
+                /**
+                 * 写入退款订单
+                 */
+                OrderRefund orderRefund = new OrderRefund();
+                orderRefund.setShopId(order.getShopId());
+                orderRefund.setOrderId(order.getOrderId());
+                orderRefund.setOrderAmount(order.getActualTotal());
+                orderRefund.setOrderItemId(0L);
+                orderRefund.setOrderPayNo(settlement.getPayNo());
+                orderRefund.setBizPayNo(settlement.getBizPayNo());
+                orderRefund.setPayType(settlement.getPayType());
+                orderRefund.setPayTypeName(settlement.getPayTypeName());
+                orderRefund.setUserId(order.getUserId());
+                orderRefund.setShopId(order.getShopId());
+                orderRefund.setRefundAmount(order.getActualTotal());
+                //申请类型:1,仅退款,2退款退货
+                orderRefund.setApplyType(2);
+                //处理退款状态: 0:退款处理中 1:退款成功 -1:退款失败
+                orderRefund.setReturnMoneySts(1);
+                orderRefund.setApplyTime(now);
+                orderRefund.setBuyerMsg("已付款且未发货订单申请退款");
+                orderRefundService.save(orderRefund);
+
+                /**
+                 * 广播订单退款事件
+                 */
+                eventPublisher.publishEvent(new OrderRefundApplyEvent(order));
+            }
+        }
+
+        /**
+         * 取消订单 恢复库存
+         */
+        cancelOrders(orders);
     }
 
     @Override
@@ -407,8 +468,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 deliveryOrderRoute.setOrderNumber(order.getOrderNumber());
                 deliveryOrderRoute.setExpressNumber(orderUpdate.getDvyFlowId());
                 deliveryOrderRoute.setAddOrderId(order.getAddrOrderId());
-                deliveryOrderRoute.setInfo("订单" +
-                        "分配派送员 " + deliveryUser.getUserName() + " 联系电话" + deliveryUser.getUserPhone());
+                deliveryOrderRoute.setInfo("订单" + "分配派送员 " + deliveryUser.getUserName() + " 联系电话" + deliveryUser.getUserPhone());
                 //写入物流订单路由
                 deliveryOrderRouteService.save(deliveryOrderRoute);
             }

@@ -92,6 +92,33 @@ public class MyOrderController {
     }
 
     /**
+     * 订单退款
+     */
+    @PutMapping("/refundApply/{orderNumber}")
+    @Operation(summary = "根据订单号申请退款", description = "根据订单号申请退款")
+    @Parameter(name = "orderNumber", description = "订单号", required = true)
+    public ServerResponseEntity<String> refundApply(@PathVariable("orderNumber") String orderNumber) {
+        String userId = SecurityUtils.getUser().getUserId();
+        Order order = orderService.getOrderByOrderNumber(orderNumber);
+        if (!Objects.equals(order.getUserId(), userId)) {
+            throw new YamiShopBindException("你没有权限操作该订单");
+        }
+        if (!Objects.equals(order.getStatus(), OrderStatus.PADYED.value())) {
+            throw new YamiShopBindException("订单状态不正确，无法申请退款");
+        }
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(orderNumber);
+        order.setOrderItems(orderItems);
+        // 取消订单
+        orderService.refundApplyOrders(Collections.singletonList(order));
+
+        // 清除缓存
+        for (OrderItem orderItem : orderItems) {
+            productService.removeProductCacheByProdId(orderItem.getProdId());
+            skuService.removeSkuCacheBySkuId(orderItem.getSkuId(), orderItem.getProdId());
+        }
+        return ServerResponseEntity.success();
+    }
+/**
      * 取消订单
      */
     @PutMapping("/cancel/{orderNumber}")
@@ -118,7 +145,6 @@ public class MyOrderController {
         }
         return ServerResponseEntity.success();
     }
-
 
     /**
      * 确认收货

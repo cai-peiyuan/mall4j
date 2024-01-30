@@ -15,7 +15,7 @@
       还没有任何相关订单
     </view>
     <!-- 订单列表 -->
-    <block wx:for="{{list}}" wx:key=''>
+    <block wx:for="{{list}}" wx:key='id'>
       <view class='prod-item'>
         <view class="order-num">
           <text>订单编号：{{item.orderNumber}}</text>
@@ -31,7 +31,7 @@
         <!-- 商品列表 -->
         <!-- 一个订单单个商品的显示 -->
         <block wx:if="{{item.orderItemDtos.length==1}}">
-          <block wx:for="{{item.orderItemDtos}}" wx:for-item="prod" wx:key=''>
+          <block wx:for="{{item.orderItemDtos}}" wx:for-item="prod" wx:key='id'>
             <view>
               <view class='item-cont' bindtap='toOrderDetailPage' data-ordernum="{{item.orderNumber}}">
                 <view class='prod-pic'>
@@ -57,7 +57,7 @@
         <block wx:else>
           <view class='item-cont' bindtap='toOrderDetailPage' data-ordernum="{{item.orderNumber}}">
             <scroll-view scroll-x="true" scroll-left='0' scroll-with-animation="false" class="categories">
-              <block wx:for="{{item.orderItemDtos}}" wx:for-item="prod" wx:key=''>
+              <block wx:for="{{item.orderItemDtos}}" wx:for-item="prod" wx:key='id'>
                 <view class='prod-pic'>
                   <image src="{{prod.pic}}"></image>
                 </view>

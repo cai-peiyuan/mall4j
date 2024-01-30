@@ -28,7 +28,6 @@ import java.util.List;
 @Component("orderTask")
 public class OrderTask {
 
-
     private static final Logger logger = LoggerFactory.getLogger(OrderTask.class);
 
     @Autowired
@@ -38,6 +37,9 @@ public class OrderTask {
     @Autowired
     private SkuService skuService;
 
+    /**
+     * 取消超时未支付订单
+     */
     @XxlJob("cancelOrder")
     public void cancelOrder(){
         Date now = new Date();
@@ -58,13 +60,14 @@ public class OrderTask {
     }
 
     /**
-     * 确认收货
+     * 获取15天之前发货的商品订单
+     * 自动确认收货
      */
     @XxlJob("confirmOrder")
     public void confirmOrder(){
         Date now = new Date();
         logger.info("系统自动确认收货订单。。。");
-        // 获取15天之前未支付的订单
+        // 获取15天之前发货的商品订单
         List<Order> orders = orderService.listOrderAndOrderItems(OrderStatus.CONSIGNMENT.value(),DateUtil.offsetDay(now, -15));
         if (CollectionUtil.isEmpty(orders)) {
             return;

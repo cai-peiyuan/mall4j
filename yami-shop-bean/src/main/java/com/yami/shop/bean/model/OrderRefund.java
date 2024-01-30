@@ -57,6 +57,18 @@ public class OrderRefund implements Serializable {
     private String refundSn;
 
     /**
+     * 订单支付单号（内部）
+     */
+
+    private String orderPayNo;
+
+    /**
+     * 订单支付交易号（支付平台）
+     */
+
+    private String bizPayNo;
+
+    /**
      * 订单支付流水号
      */
 

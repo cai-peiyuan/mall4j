@@ -1,0 +1,8 @@
+{
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "订单退款",
+    "navigationBarTextStyle": "black",
+    "usingComponents": {
+    }
+}

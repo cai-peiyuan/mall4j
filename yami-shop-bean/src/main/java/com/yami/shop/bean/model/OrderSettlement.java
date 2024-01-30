@@ -36,12 +36,18 @@ public class OrderSettlement implements Serializable {
      * 订单号
      */
     private String orderNumber;
+
     
     /**
      * 支付方式 0 手动代付 1 微信支付 2 支付宝
      */
 
     private Integer payType;
+
+    /**
+     * 支付方式 0 手动代付 1 微信支付 2 支付宝
+     */
+    private String payTypeName;
 
     /**
      * 支付金额

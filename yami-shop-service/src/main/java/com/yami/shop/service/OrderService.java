@@ -71,6 +71,12 @@ public interface OrderService extends IService<Order> {
     void cancelOrders(List<Order> orders);
 
     /**
+     * 订单申请退款
+     * @param orders
+     */
+    void refundApplyOrders(List<Order> orders);
+
+    /**
      * 订单确认收货
      * @param orders
      */

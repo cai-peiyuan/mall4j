@@ -58,7 +58,8 @@
             "root": "pages/orders",
             "pages": [
                 "pages/orderList/orderList",
-                "pages/order-detail/order-detail"
+                "pages/order-detail/order-detail",
+                "pages/order-refund/order-refund"
             ]
         },
         {
