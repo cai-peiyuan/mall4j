@@ -266,15 +266,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 OrderRefund orderRefund = new OrderRefund();
                 orderRefund.setShopId(order.getShopId());
                 orderRefund.setOrderId(order.getOrderId());
+                orderRefund.setOrderNumber(order.getOrderNumber());
                 orderRefund.setOrderAmount(order.getActualTotal());
                 orderRefund.setOrderItemId(0L);
+                orderRefund.setUserId(order.getUserId());
+                orderRefund.setShopId(order.getShopId());
+
                 orderRefund.setOrderPayNo(settlement.getPayNo());
                 orderRefund.setBizPayNo(settlement.getBizPayNo());
                 orderRefund.setPayType(settlement.getPayType());
                 orderRefund.setPayTypeName(settlement.getPayTypeName());
-                orderRefund.setUserId(order.getUserId());
-                orderRefund.setShopId(order.getShopId());
-                orderRefund.setRefundAmount(order.getActualTotal());
+                orderRefund.setRefundAmount(settlement.getPayAmount());
                 //申请类型:1,仅退款,2退款退货
                 orderRefund.setApplyType(2);
                 //处理退款状态: 0:退款处理中 1:退款成功 -1:退款失败
@@ -282,6 +284,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderRefund.setApplyTime(now);
                 orderRefund.setBuyerMsg("已付款且未发货订单申请退款");
                 orderRefundService.save(orderRefund);
+
+                /**
+                 * 更新订单退款状态
+                 *
+                 */
+                Order upOrder = new Order();
+                //0:默认,1:在处理,2:处理完成
+                upOrder.setRefundSts(1);
+                //订单关闭原因 1-超时未支付 2-退款关闭 4-买家取消 15-已通过货到付款交易
+                upOrder.setCloseType(2);
+                upOrder.setStatus(6);
+                upOrder.setCancelTime(now);
+                upOrder.setOrderId(order.getOrderId());
+                updateById(upOrder);
 
                 /**
                  * 广播订单退款事件

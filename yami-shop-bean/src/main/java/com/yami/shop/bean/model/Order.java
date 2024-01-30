@@ -156,6 +156,16 @@ public class Order implements Serializable {
      */
     private Integer refundSts;
 
+    /**
+     * 订单类型
+     */
+    private Integer orderType;
+
+    /**
+     * 订单关闭原因 1-超时未支付 2-退款关闭 4-买家取消 15-已通过货到付款交易
+     */
+    private Integer closeType;
+
 
     /**
      * 打印次数
