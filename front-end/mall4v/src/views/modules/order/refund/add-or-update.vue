@@ -121,7 +121,7 @@ const init = (id) => {
     dataFormRef.value?.resetFields()
     if (dataForm.value.id) {
       http({
-        url: http.adornUrl('/shop/deliveryUser/info/' + dataForm.value.id),
+        url: http.adornUrl('/order/refund/info/' + dataForm.value.id),
         method: 'get',
         params: http.adornParams()
       })
@@ -141,7 +141,7 @@ const onSubmit = Debounce(() => {
     if (valid) {
       const param = dataForm.value
       http({
-        url: http.adornUrl('/shop/deliveryUser'),
+        url: http.adornUrl('/order/refund'),
         method: param.id ? 'put' : 'post',
         data: http.adornData(param)
       })

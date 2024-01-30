@@ -73,7 +73,7 @@
 <script setup>
 import { isAuth } from '@/utils'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { tableOption } from '@/crud/shop/deliveryUser.js'
+import { tableOption } from '@/crud/order/orderRefund.js'
 import AddOrUpdate from './add-or-update.vue'
 const dataList = ref([])
 const page = reactive({
@@ -88,7 +88,7 @@ const dataListLoading = ref(false)
 const getDataList = (pageParam, params, done) => {
   dataListLoading.value = true
   http({
-    url: http.adornUrl('/shop/deliveryUser/page'),
+    url: http.adornUrl('/order/refund/page'),
     method: 'get',
     params: http.adornParams(Object.assign({
       current: pageParam ? pageParam.currentPage : 1,
@@ -147,7 +147,7 @@ const onDeconste = (row) => {
   })
     .then(() => {
       http({
-        url: http.adornUrl('/shop/deliveryUser'),
+        url: http.adornUrl('/order/refund'),
         method: 'delete',
         data: http.adornData(ids, false)
       })
