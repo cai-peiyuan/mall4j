@@ -113,6 +113,38 @@ Page({
 
   },
 
+  /**
+   * 删除订单
+   * @param {*} e 
+   */
+  deleteOrder: function(e){
+    var ordernum = e.currentTarget.dataset.ordernum;
+    var ths = this
+    wx.showModal({
+      title: '',
+      content: '确定要删除此订单吗？',
+      confirmColor: "#eb2444",
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading();
+          var params = {
+            url: "/p/myOrder/" + ordernum,
+            method: "DELETE",
+            data: {},
+            callBack: function(res) {
+              wx.hideLoading();
+              wx.navigateBack({
+                delta: 1
+              })
+            }
+          }
+          http.request(params);
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面初次渲染完成

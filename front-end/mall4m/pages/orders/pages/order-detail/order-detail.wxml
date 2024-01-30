@@ -36,8 +36,8 @@
                                 <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
                                 <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
                             <view class='btn-box'>
-                                <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
-                                <!-- <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
+                                <!-- <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
+                                 <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
                             </view>
                         </view>
                     </view>
@@ -131,7 +131,7 @@
 
         <!-- 底部栏 -->
         <view class='order-detail-footer' wx:if="{{status==5||status==6}}">
-            <text class='dele-order'>删除订单</text>
+            <text class='dele-order' bindtap="deleteOrder" data-ordernum="{{orderNumber}}">删除订单</text>
             <view class='footer-box'>
             <text class='apply-service'><button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>联系客服</text>
             <text class='buy-again'>再次购买</text>
