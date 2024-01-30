@@ -43,20 +43,22 @@
 
       <template #menu="scope">
         <el-button
-          v-if="isAuth('order:refund:update')"
+          v-if="isAuth('order:refund:accept') && scope.row.refundSts == 1"
           type="primary"
+          link
           icon="el-icon-edit"
-          @click="onAddOrUpdate(scope.row.id)"
+          @click="acceptRefund(scope.row.id)"
         >
-          修改
+          退款
         </el-button>
         <el-button
-          v-if="isAuth('order:refund:deconste')"
+          v-if="isAuth('order:refund:reject')"
           type="danger"
+          link
           icon="el-icon-deconste"
-          @click.stop="onDeconste(scope.row,scope.index)"
+          @click.stop="rejectRefund(scope.row, scope.index)"
         >
-          删除
+          拒绝
         </el-button>
       </template>
     </avue-crud>
@@ -82,6 +84,21 @@ const page = reactive({
   pageSize: 10 // 每页显示多少条
 })
 const dataListLoading = ref(false)
+
+/**
+ * 审批同意退款
+ * @param id
+ */
+const acceptRefund = (id) => {
+  console.log('审批同意退款', id)
+}
+/**
+ * 审批拒绝退款
+ * @param id
+ */
+const rejectRefund = (id, index) => {
+  console.log('审批拒绝退款', id)
+}
 /**
  * 获取数据列表
  */

@@ -38,6 +38,16 @@ export const tableOption = {
       sortable: true
     },
     {
+      label: '订单支付单号（内部）',
+      prop: 'orderPayNo',
+      sortable: true
+    },
+    {
+      label: '订单支付交易号（支付平台）',
+      prop: 'bizPayNo',
+      sortable: true
+    },
+    {
       label: '退款编号',
       prop: 'refundSn',
       sortable: true

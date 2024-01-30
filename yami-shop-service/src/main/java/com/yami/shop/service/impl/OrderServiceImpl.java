@@ -279,8 +279,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderRefund.setRefundAmount(settlement.getPayAmount());
                 //申请类型:1,仅退款,2退款退货
                 orderRefund.setApplyType(2);
+                // 处理状态:1为待审核,2为同意,3为不同意
+                orderRefund.setRefundSts(1);
                 //处理退款状态: 0:退款处理中 1:退款成功 -1:退款失败
-                orderRefund.setReturnMoneySts(1);
+                orderRefund.setReturnMoneySts(0);
                 orderRefund.setApplyTime(now);
                 orderRefund.setBuyerMsg("已付款且未发货订单申请退款");
                 orderRefundService.save(orderRefund);
