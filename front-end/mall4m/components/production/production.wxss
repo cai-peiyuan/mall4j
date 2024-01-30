@@ -1,28 +1,29 @@
 @import "../../app.wxss";
+prod{box-sizing: border-box;}
 .prod-items {
-  width: 375rpx;
-  float: left;
+  width: 45.5vw;
   background: #fff;
-  padding-bottom: 20rpx;
   box-sizing: border-box;
+  border: solid 1px #eee;
+  border-radius: 3vw;
+  overflow: hidden;
 }
 
 prod:nth-child(2n-1) .prod-items {
-  padding: 20rpx 10rpx 10rpx 20rpx;
+  margin:1.5vw 1.5vw 1.5vw 3vw;
 }
 
 prod:nth-child(2n) .prod-items {
-  padding: 20rpx 20rpx 10rpx 10rpx;
+  margin:1.5vw 3vw 1.5vw 1.5vw;
 }
 
 .hot-imagecont .hotsaleimg {
- width:345rpx;
-height:345rpx;
-
+    width:45vw;
+    height:45vw;
+    border-radius: 2vw 2vw 0 0;
 }
 
 .hot-text .hotprod-text {
-  height: 76rpx;
   font-size: 28rpx;
   display: -webkit-box;
   word-break: break-all;
@@ -41,7 +42,8 @@ height:345rpx;
 }
 
 .prod-items .hot-text {
-  margin-top: 20rpx;
+    /* margin-top:20rpx; */
+    padding:20rpx;
 }
 
 .prod-items .hot-text .prod-info {
@@ -52,13 +54,12 @@ height:345rpx;
 
 .prod-items .hot-text .prod-text-info {
   position: relative;
-  height: 50rpx;
-  line-height: 70rpx;
+  margin-top: 3vw;
   font-family: Arial;
 }
 
 .prod-items .hot-text .prod-text-info .price {
-  color: #eb2444;
+  color: #f38d08;
 }
 .deadline-price{
   font-size: 22rpx;

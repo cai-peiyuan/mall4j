@@ -6,11 +6,14 @@
         <view class='hotprod-text'>{{item.prodName}}</view>
         <view class='prod-info' wx:if='{{sts==6}}'>{{item.prodCommNumber}}评价 {{item.positiveRating}}%好评</view>
         <view class='prod-text-info'>
-          <view class='price'>
-            <text wx:if='{{sts==2}}' class='deadline-price'>限时价</text>
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
+          <view class='price spaceBetweenFlex'>
+            <view>
+                <text wx:if='{{sts==2}}' class='deadline-price'>限时价</text>
+                <text class='symbol'>￥</text>
+                <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
+                <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
+            </view>
+            <image src="../../images/icon/basket.png" class="basket-img" style="width:50rpx; height:50rpx"/>
           </view>
         </view>
       </view>

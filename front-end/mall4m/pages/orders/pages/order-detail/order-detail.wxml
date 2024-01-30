@@ -139,7 +139,7 @@
         </view>
 
         <view class='prod-foot' wx:if="{{false}}">
-            <view class='btn'>
+            <view class='btn spaceBetweenFlex' >
             <button wx:if="{{order.status==1}}" class="button" bindtap="onCancelOrder" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>取消订单</button>
             <button wx:if="{{order.status==1}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
             <button wx:if="{{order.status==1}}" class="button warn" bindtap="onPayAgain" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>付款</button>

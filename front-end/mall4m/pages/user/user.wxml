@@ -1,7 +1,7 @@
 <!--pages/user/user.wxml-->
 <view class='container'>
   <!-- 用户信息 -->
-  <view class='userinfo' style="box-sizing:border-box;background:linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);">
+  <view class='userinfo' style="box-sizing:border-box;background:linear-gradient(170deg, rgba(230, 185, 90, 0.8), rgba(255,0,0,0) 70.71%),linear-gradient(336deg, #f5673f, rgba(0,0,255,0) 70.71%);">
     <view style="display: flex; justify-content: flex-start; height: 66px; padding-bottom: 1vw;">
       <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" style="min-width: 66px; margin-right: 0;">
         <image class="avatar" src="{{avatarUrl}}"></image>
@@ -26,7 +26,7 @@
     <!-- 积分和余额 -->
     <view>
       <view wx:if="{{userMobile==null}}">
-        <view class='binding-phone'>
+        <view class='binding-phone' style="color: #fff;">
           <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="getphone-btn"></button>
           <text class='show-tip'>请先注册会员</text>
         </view>

@@ -74,7 +74,7 @@
 
   <view class="empty" wx:if="{{shopCartItemDiscounts.length==0}}">
     <view class="img">
-      <image src='../../images/tabbar/basket.png'></image>
+      <image src='../../images/icon/basket.png'></image>
     </view>
     <view class="txt">
       您还没有添加任何商品哦~

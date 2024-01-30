@@ -131,14 +131,14 @@
 
 
   <!-- 底部栏 -->
-  <view class='submit-order-footer'>
+  <view class='submit-order-footer' style="height: 50px;">
     <view class='sub-order'>
       <view class='item-txt'>
         合计：
         <view class='price'>
           <text class='symbol'>￥</text>
-          <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
-          <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+          <text class='big-num' style="font-size: 44rpx;">{{wxs.parsePrice(actualTotal)[0]}}</text>
+          <text class='small-num' style="font-size: 32rpx;">.{{wxs.parsePrice(actualTotal)[1]}}</text>
         </view>
       </view>
     </view>

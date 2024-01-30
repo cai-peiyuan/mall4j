@@ -1,9 +1,9 @@
 <!--pages/prod-classify/prod-classify.wxml-->
 
-<view class='container'>
+<view class='container' style="min-height: 100vh; background:linear-gradient(#fff, #e98b11,  #fff)">
   <!-- <view class='line-fix'></view>
   <view class='tit-background'></view> -->
-  <view>
+  <view class="flex" style="flex-wrap: wrap; ">
     <block wx:for="{{prodList}}" wx:key ="key">
       <prod item="{{item}}" ></prod>
     </block>
