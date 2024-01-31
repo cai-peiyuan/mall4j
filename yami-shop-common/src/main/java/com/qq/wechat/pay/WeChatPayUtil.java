@@ -10,6 +10,7 @@ import com.wechat.pay.java.core.notification.RequestParam;
 import com.wechat.pay.java.core.util.GsonUtil;
 import com.wechat.pay.java.service.payments.jsapi.JsapiService;
 import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
+import com.wechat.pay.java.service.refund.RefundService;
 import com.yami.shop.common.util.Json;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -82,6 +83,8 @@ public class WeChatPayUtil {
     public static NotificationConfig notificationConfig;
     public static JsapiService jsApiService;
     public static JsapiServiceExtension jsapiServiceExtension;
+
+    public static RefundService refundService;
 
     /**
      * 从request中获取原始的数据字符串
@@ -177,6 +180,7 @@ public class WeChatPayUtil {
         merchantId = (String) entries.get("wxpay_mchid");
         apiV3Key = (String) entries.get("wxpay_apiv3_key");
         WXPAY_NOTIFY_URL_TRANSACTION = (String) entries.get("wxpay_notify_url_transaction");
+
         WXPAY_NOTIFY_URL_REFUND = (String) entries.get("wxpay_notify_url_refund");
         merchantSerialNumber = (String) entries.get("wxpay_merchantSerialNumber");
         appId = (String) entries.get("wxapp_appId");
@@ -195,12 +199,10 @@ public class WeChatPayUtil {
         // 使用自动更新平台证书的RSA配置
         // 一个商户号只能初始化一个配置，否则会因为重复的下载任务报错
         config = new RSAAutoCertificateConfig.Builder().merchantId(merchantId).privateKey(privateKey).merchantSerialNumber(merchantSerialNumber).apiV3Key(apiV3Key).build();
-
         notificationConfig = new RSAAutoCertificateConfig.Builder().merchantId(merchantId).privateKey(privateKey).merchantSerialNumber(merchantSerialNumber).apiV3Key(apiV3Key).build();
-
         jsApiService = new JsapiService.Builder().config(config).build();
         jsapiServiceExtension = new JsapiServiceExtension.Builder().config(config).build();
+        refundService = new RefundService.Builder().config(config).build();
         log.debug("微信支付服务初始化完成");
-
     }
 }

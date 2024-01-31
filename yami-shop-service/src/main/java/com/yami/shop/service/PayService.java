@@ -6,7 +6,9 @@ import com.qq.wechat.pay.config.WechatPaySign;
 import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.yami.shop.bean.app.param.PayParam;
+import com.yami.shop.bean.model.OrderRefund;
 import com.yami.shop.bean.model.UserBalanceOrder;
+import com.yami.shop.bean.model.WxPayRefund;
 import com.yami.shop.bean.pay.PayInfoDto;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public interface PayService {
 
     /**
      * 支付结果
+     * @param transaction
      * @return
      */
     String handleWxPayNotifyTransaction(Transaction transaction);
@@ -58,4 +61,13 @@ public interface PayService {
      * @date 2024/1/23 13:03 星期二
      */
     WechatPaySign createWeChatPrePayOrder(UserBalanceOrder userBalanceOrder);
+
+    /**
+     * 创建微信退款订单
+     *
+     * @param orderRefund
+     * @return
+     * @author peiyuan.cai
+     */
+    WxPayRefund createWeChatRefundOrder(OrderRefund orderRefund);
 }

@@ -2,6 +2,7 @@ package com.yami.shop.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
@@ -72,6 +73,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final OrderRefundService orderRefundService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    private final Snowflake snowflake;
 
     /**
      * 从文件中读取Java对象
@@ -277,6 +280,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderRefund.setPayType(settlement.getPayType());
                 orderRefund.setPayTypeName(settlement.getPayTypeName());
                 orderRefund.setRefundAmount(settlement.getPayAmount());
+                // 平台自己的退款
+                String outRefundNo = String.valueOf(snowflake.nextId());
+                orderRefund.setOutRefundNo(outRefundNo);
+
                 //申请类型:1,仅退款,2退款退货
                 orderRefund.setApplyType(2);
                 // 处理状态:1为待审核,2为同意,3为不同意
@@ -284,7 +291,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 //处理退款状态: 0:退款处理中 1:退款成功 -1:退款失败
                 orderRefund.setReturnMoneySts(0);
                 orderRefund.setApplyTime(now);
-                orderRefund.setBuyerMsg("已付款且未发货订单申请退款");
+                orderRefund.setBuyerMsg("已付款且未发货订单退款");
                 orderRefundService.save(orderRefund);
 
                 /**

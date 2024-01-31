@@ -51,7 +51,7 @@ public class OrderRefund implements Serializable {
     private Long orderItemId;
 
     /**
-     * 退款编号
+     * 退款编号(微信退款单号)
      */
 
     private String refundSn;
@@ -75,7 +75,7 @@ public class OrderRefund implements Serializable {
     private String flowTradeNo;
 
     /**
-     * 第三方退款单号(微信退款单号)
+     * 传给第三方退款单号
      */
 
     private String outRefundNo;

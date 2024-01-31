@@ -42,15 +42,18 @@
       </template>
 
       <template #menu="scope">
-        <el-button
-          v-if="isAuth('order:refund:accept') && scope.row.refundSts == 1"
-          type="primary"
-          link
-          icon="el-icon-edit"
-          @click="acceptRefund(scope.row.id)"
-        >
-          退款
-        </el-button>
+
+        <el-popconfirm v-if="isAuth('order:refund:accept') && scope.row.refundSts == 1"
+                       confirm-button-text="确定" cancel-button-text="取消" :icon="InfoFilled" icon-color="#626AEF"
+                       title="确定执行退款操作？" @confirm="acceptRefund(scope.row.id)" @cancel="cancelEvent">
+          <template #reference>
+            <el-button icon="el-icon-edit" type="primary"
+                       link >
+              退款
+            </el-button>
+          </template>
+        </el-popconfirm>
+
         <el-button
           v-if="isAuth('order:refund:reject')"
           type="danger"
@@ -91,6 +94,21 @@ const dataListLoading = ref(false)
  */
 const acceptRefund = (id) => {
   console.log('审批同意退款', id)
+  // 后台接口验证按钮权限  order:refund:accept
+  http({
+    url: http.adornUrl('/order/refund'),
+    method: 'get',
+    data: http.adornData(ids, false)
+  }).then(() => {
+      ElMessage({
+        message: '操作成功',
+        type: 'success',
+        duration: 1500,
+        onClose: () => {
+          getDataList()
+        }
+      })
+    })
 }
 /**
  * 审批拒绝退款
@@ -99,6 +117,11 @@ const acceptRefund = (id) => {
 const rejectRefund = (id, index) => {
   console.log('审批拒绝退款', id)
 }
+
+const cancelEvent = () => {
+  console.log('cancel!')
+}
+
 /**
  * 获取数据列表
  */

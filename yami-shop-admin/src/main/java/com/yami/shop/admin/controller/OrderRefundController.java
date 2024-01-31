@@ -1,6 +1,5 @@
 package com.yami.shop.admin.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
@@ -11,9 +10,6 @@ import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.OrderRefundService;
-import com.yami.shop.service.OrderService;
-import com.yami.shop.service.ProductService;
-import com.yami.shop.service.SkuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,6 +50,23 @@ public class OrderRefundController {
     }
 
     /**
+     * 针对退款订单执行退款操作 发送到腾讯支付平台的退款
+     *
+     * @author cpy
+     */
+    @GetMapping("/accept/{refundId}")
+    @PreAuthorize("@pms.hasPermission('order:refund:accept')")
+    public ServerResponseEntity<Object> refundAccept(@PathVariable(name = "refundId") String refundId) {
+        Long shopId = SecurityUtils.getSysUser().getShopId();
+        OrderRefund refund = orderRefundService.getById(refundId);
+        if (!Objects.equal(shopId, refund.getShopId())) {
+            throw new YamiShopBindException("您没有权限操作该订单信息");
+        }
+        orderRefundService.refundAccept(refund);
+        return ServerResponseEntity.success();
+    }
+
+    /**
      * 获取订单退款详细信息
      *
      * @author cpy
@@ -63,7 +76,7 @@ public class OrderRefundController {
     public ServerResponseEntity<OrderRefund> info(@PathVariable("orderNumber") String orderNumber) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         OrderRefund orderRefund = orderRefundService.getOne(new LambdaQueryWrapper<OrderRefund>()
-               // .eq(OrderRefund::getShopId, shopId)
+                // .eq(OrderRefund::getShopId, shopId)
                 .eq(OrderRefund::getOrderNumber, orderNumber)
         );
         if (!Objects.equal(shopId, orderRefund.getShopId())) {

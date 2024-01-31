@@ -33,4 +33,14 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
     public IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundQueryParam orderRefundQueryParam) {
         return page(page, new LambdaQueryWrapper<OrderRefund>().eq(StringUtils.isNotBlank(orderRefundQueryParam.getOrderNumber()), OrderRefund::getOrderNumber, orderRefundQueryParam.getOrderNumber()));
     }
+
+    /**
+     * 执行退款操作
+     *
+     * @param refund
+     */
+    @Override
+    public void refundAccept(OrderRefund refund) {
+
+    }
 }

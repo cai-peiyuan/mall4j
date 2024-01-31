@@ -22,4 +22,9 @@ public interface OrderRefundService extends IService<OrderRefund> {
      */
     IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundQueryParam orderRefundQueryParam);
 
+    /**
+     * 执行退款操作
+     * @param refund
+     */
+    void refundAccept(OrderRefund refund);
 }

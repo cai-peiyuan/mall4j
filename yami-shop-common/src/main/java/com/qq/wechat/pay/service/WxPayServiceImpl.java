@@ -16,6 +16,7 @@ import com.wechat.pay.java.core.util.PemUtil;
 import com.wechat.pay.java.service.payments.jsapi.JsapiService;
 import com.wechat.pay.java.service.payments.jsapi.model.*;
 import com.wechat.pay.java.service.payments.model.Transaction;
+import com.wechat.pay.java.service.refund.RefundService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -200,5 +201,23 @@ public class WxPayServiceImpl implements IWxPayService {
                         .build();
         config.createSigner().getAlgorithm();
         return new JsapiService.Builder().config(config).build();
+    }
+
+    /**
+     * 创建小程序退款服务
+     *
+     * @return
+     */
+    protected RefundService getRefundService() {
+        Config config =
+                new RSAAutoCertificateConfig.Builder()
+                        .merchantId(WxV3PayConfig.MCH_ID)
+                        .privateKey(WxV3PayConfig.PRIVATE_KEY)
+                        .merchantSerialNumber(WxV3PayConfig.MCH_SERIAL_NO)
+                        .apiV3Key(WxV3PayConfig.API_V3_KEY)
+                        .build();
+        // config.createSigner().getAlgorithm();
+        // 初始化服务
+        return new RefundService.Builder().config(config).build();
     }
 }

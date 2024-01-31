@@ -13,6 +13,8 @@ import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.wechat.pay.java.service.refund.model.CreateRequest;
+import com.wechat.pay.java.service.refund.model.Refund;
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.enums.PayType;
 import com.yami.shop.bean.event.BalanceOrderPaySuccessEvent;
@@ -62,6 +64,9 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private WxPayPrepayService wxPayPrepayService;
+
+    @Autowired
+    private WxPayPrepayService wxPayRefundService;
 
     @Autowired
     private UserBalanceOrderService userBalanceOrderService;
@@ -437,6 +442,58 @@ public class PayServiceImpl implements PayService {
      */
     @Override
     public WechatPaySign createWeChatPrePayOrder(UserBalanceOrder userBalanceOrder) {
+        // request.setXxx(val)设置所需参数，具体参数可见Request定义
+        PrepayRequest request = new PrepayRequest();
+        Amount amount = new Amount();
+        amount.setTotal(Arith.toAmount(userBalanceOrder.getActualTotal()));
+        request.setAmount(amount);
+        request.setAppid(WeChatPayUtil.appId);
+        request.setMchid(WeChatPayUtil.merchantId);
+        request.setDescription(userBalanceOrder.getProdName());
+        request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
+        request.setOutTradeNo(userBalanceOrder.getOrderNumber());
+        Payer payer = new Payer();
+        payer.setOpenid(userBalanceOrder.getUserId());
+        request.setPayer(payer);
+        //通过返回的消息通知中attach字段判断支付订单类型
+        request.setAttach(ORDER_TYPE_BALANCE);
+        PrepayWithRequestPaymentResponse response = WeChatPayUtil.jsapiServiceExtension.prepayWithRequestPayment(request);
+
+        WechatPaySign wechatPaySign = new WechatPaySign();
+        wechatPaySign.setSign(response.getPaySign());
+        wechatPaySign.setNonceStr(response.getNonceStr());
+        wechatPaySign.setTimeStamp(response.getTimeStamp());
+        wechatPaySign.setPackageStr(response.getPackageVal());
+        wechatPaySign.setPrepayId(response.getPackageVal());
+        //保存预支付订单到数据库
+        wxPayPrepayService.saveWxPayPrepayUserBalance(userBalanceOrder, request, response);
+        return wechatPaySign;
+    }
+
+    /**
+     * 创建微信退款订单
+     *
+     * @param orderRefund
+     * @return
+     * @author peiyuan.cai
+     */
+    @Override
+    public WxPayRefund createWeChatRefundOrder(OrderRefund orderRefund) {
+
+        CreateRequest request = new CreateRequest();
+
+        //【微信支付订单号】 原支付交易对应的微信订单号，与out_trade_no二选一
+        request.setTransactionId(orderRefund.getBizPayNo());
+        //【商户订单号】 原支付交易对应的商户订单号，与transaction_id二选一
+        request.setOutTradeNo(orderRefund.getOrderPayNo());
+        //【商户退款单号】 商户系统内部的退款单号，商户系统内部唯一，只能是数字、大小写字母_-|*@ ，同一退款单号多次请求只退一笔。
+        request.setOutRefundNo(orderRefund.getOutRefundNo());
+        //【退款原因】 若商户传入，会在下发给用户的退款消息中体现退款原因
+        request.setReason(orderRefund.getBuyerMsg());
+        //【退款结果回调url】 异步接收微信支付退款结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。 如果参数中传了notify_url，则商户平台上配置的回调地址将不会生效，优先回调当前传的这个地址。
+        request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_REFUND);
+        // 调用接口
+        Refund refund = WeChatPayUtil.refundService.create(request);
         // request.setXxx(val)设置所需参数，具体参数可见Request定义
         PrepayRequest request = new PrepayRequest();
         Amount amount = new Amount();
