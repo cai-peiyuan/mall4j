@@ -3,6 +3,7 @@ package com.yami.shop.api.controller;
 import com.jfinal.kit.Ret;
 import com.qq.wechat.pay.WeChatPayUtil;
 import com.wechat.pay.java.core.exception.ValidationException;
+import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.core.notification.NotificationParser;
 import com.wechat.pay.java.core.notification.RequestParam;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
@@ -82,16 +83,21 @@ public class PayNoticeController {
         try {
             // 接口传入的json格式字符串
             String requestBody = WeChatPayUtil.getBodyUTF8(request);
+            Notification notification = WeChatPayUtil.getNotificationSummary(requestBody);
+
             Map<String, String> requestHeaders = WeChatPayUtil.getRequestHeaders(request);
 
             log.debug("微信支付退款通知接口处理数据 {}", requestBody);
             log.debug("微信支付退款通知接口 RequestHeader {}", Json.toJsonString(requestHeaders));
+
             RequestParam requestParam = WeChatPayUtil.getRequestParam(request, requestBody);
             NotificationParser parser = new NotificationParser(WeChatPayUtil.notificationConfig);
             try {
                 Refund refund = parser.parse(requestParam, Refund.class);
-                log.debug("通过加密数据解析的通知内容 {}", refund);
-                wxPayNotifyService.saveNotify("/wechat/refund", requestBody, requestHeaders, refund, "");
+                //处理退款结果通知
+                log.debug("通过加密数据解析的通知内容 {}", Json.toJsonString(refund));
+                String handleNotifyResult = payService.handleWxPayNotifyRefund(notification, refund);
+                wxPayNotifyService.saveNotify("/wechat/refund", requestBody, requestHeaders, notification, refund, handleNotifyResult);
             } catch (ValidationException e) {
                 log.error("验证微信支付退款通知接口数据出错 {}", e.getLocalizedMessage());
                 success = false;
@@ -132,7 +138,10 @@ public class PayNoticeController {
         try {
             // 接口传入的json格式字符串
             String requestBody = WeChatPayUtil.getBodyUTF8(request);
+            Notification notification = WeChatPayUtil.getNotificationSummary(requestBody);
+
             Map<String, String> requestHeaders = WeChatPayUtil.getRequestHeaders(request);
+
             log.debug("微信支付交易通知接口处理数据 {}", requestBody);
             log.debug("微信支付交易通知接口 RequestHeader {}", Json.toJsonString(requestHeaders));
 
@@ -142,8 +151,9 @@ public class PayNoticeController {
                 Transaction transaction = parser.parse(requestParam, Transaction.class);
                 //处理支付结果通知
                 String handleNotifyResult = payService.handleWxPayNotifyTransaction(transaction);
-                log.debug("通过加密数据解析的通知内容 {}", transaction);
-                wxPayNotifyService.saveNotify("/wechat/transaction", requestBody, requestHeaders, transaction, handleNotifyResult);
+                log.debug("通过加密数据解析的通知内容 {}", Json.toJsonString(transaction));
+
+                wxPayNotifyService.saveNotify("/wechat/transaction", requestBody, requestHeaders, notification, transaction, handleNotifyResult);
             } catch (ValidationException e) {
                 log.error("验证微信支付成功通知接口数据出错 {}", e.getLocalizedMessage());
                 success = false;

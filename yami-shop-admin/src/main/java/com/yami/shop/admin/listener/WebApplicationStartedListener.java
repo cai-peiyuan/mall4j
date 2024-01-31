@@ -1,4 +1,4 @@
-package com.yami.shop.api.listener;
+package com.yami.shop.admin.listener;
 
 import com.qq.wechat.pay.WeChatPayUtil;
 import com.yami.shop.common.util.SpringContextUtils;
@@ -13,10 +13,9 @@ import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 
 /**
  * @author peiyuan.cai
- * @date 2024/1/23 13:26 星期二
  */
 @Slf4j
-public class ApiApplicationStartedListener implements ApplicationListener<ApplicationStartedEvent> {
+public class WebApplicationStartedListener implements ApplicationListener<ApplicationStartedEvent> {
     /**
      * @param event
      * @author peiyuan.cai
@@ -24,7 +23,7 @@ public class ApiApplicationStartedListener implements ApplicationListener<Applic
      */
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        log.debug("Api接口服务启动完成");
+        log.debug("web管理端接口服务启动完成");
         RedisTemplate<String, Object> redisTemplate = SpringContextUtils.getBean("redisTemplate", RedisTemplate.class);
         Map<Object, Object> entries = redisTemplate.opsForHash().entries(KEY_SYS_CONFIG);
         WeChatPayUtil.setValues(entries);

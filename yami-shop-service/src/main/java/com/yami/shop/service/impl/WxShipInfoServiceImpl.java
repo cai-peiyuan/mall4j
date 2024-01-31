@@ -171,6 +171,7 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void uploadBalanceOrderShip(String orderNumber, UserBalanceOrder userBalanceOrder) {
+        log.debug("开始上传充值订单虚拟发货信息到小程序平台.....");
         if (orderNumber == null) {
             log.debug("orderNumber数据为空  ");
         }
@@ -179,11 +180,15 @@ public class WxShipInfoServiceImpl extends ServiceImpl<WxShipInfoMapper, WxShipI
             userBalanceOrder = userBalanceOrderService.getOne(new LambdaQueryWrapper<UserBalanceOrder>().eq(UserBalanceOrder::getOrderNumber, orderNumber));
         }
         log.debug("充值订单已支付 订单编号 {} ", orderNumber);
-        WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOutTradeNo, userBalanceOrder.getOrderNumber()).eq(WxPayPrepay::getTradeState, Transaction.TradeStateEnum.SUCCESS));
+        WxPayPrepay wxPayPrepay = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>()
+                .eq(WxPayPrepay::getOutTradeNo, userBalanceOrder.getOrderNumber())
+               // .eq(WxPayPrepay::getTradeState, Transaction.TradeStateEnum.SUCCESS)
+        );
         if (wxPayPrepay == null) {
             log.debug("未查询到已支付的订单信息");
             return;
         }
+
         log.debug("查询到已支付的订单 {}", Json.toJsonString(wxPayPrepay));
 
         if (checkTradeManaged()) {

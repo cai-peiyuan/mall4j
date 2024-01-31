@@ -61,15 +61,15 @@ public class WxPayNotifyServiceImpl extends ServiceImpl<WxPayNotifyMapper, WxPay
      * @param api
      * @param requestBody
      * @param requestHeaders
-     * @param object
+     * @param notification
+     * @param parsedObject
      * @author peiyuan.cai@
      * @date 2024/1/23 16:39 星期二
      */
     @Override
-    public void saveNotify(String api, String requestBody, Map<String, String> requestHeaders, Object object, String handleNotifyResult) {
+    public void saveNotify(String api, String requestBody, Map<String, String> requestHeaders, Notification notification, Object parsedObject, String handleNotifyResult) {
         try {
             WxPayNotify wxPayNotify = WxPayNotify.builder().build();
-            Notification notification = WeChatPayUtil.getNotificationSummary(requestBody);
             wxPayNotify.setNotifyApi(api);
             wxPayNotify.setDataNotifyId(notification.getId());
             wxPayNotify.setCreateTime(new Date());
@@ -79,7 +79,7 @@ public class WxPayNotifyServiceImpl extends ServiceImpl<WxPayNotifyMapper, WxPay
             wxPayNotify.setReqBody(requestBody);
             wxPayNotify.setReqHeader(Json.toJsonString(requestHeaders));
             wxPayNotify.setDataResource(Json.toJsonString(notification.getResource()));
-            wxPayNotify.setDataResourceDecrypt(Json.toJsonString(object));
+            wxPayNotify.setDataResourceDecrypt(Json.toJsonString(parsedObject));
             wxPayNotify.setNotifyHandleResult(handleNotifyResult);
             save(wxPayNotify);
         } catch (Exception e) {

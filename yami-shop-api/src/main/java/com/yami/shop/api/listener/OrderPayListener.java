@@ -38,7 +38,6 @@ public class OrderPayListener {
      * 购物订单已支付事件
      */
     @EventListener(OrderPaySuccessEvent.class)
-    @Async
     public void paySuccessOrderEventListener(OrderPaySuccessEvent event) {
         List<String> orderNumbers = event.getOrderNumbers();
         log.debug("收到已支付的订单 {}", Json.toJsonString(orderNumbers));
@@ -56,10 +55,10 @@ public class OrderPayListener {
      * 充值订单已支付事件
      */
     @EventListener(BalanceOrderPaySuccessEvent.class)
-    @Async
     public void paySuccessBalanceOrderEventListener(BalanceOrderPaySuccessEvent event) {
         String orderNumber = event.getOrderNumber();
         UserBalanceOrder userBalanceOrder = event.getUserBalanceOrder();
+        log.debug("事件通知：充值订单支付成功，处理支付成功业务 orderNumber {} 充值订单  {}", orderNumber, Json.toJsonString(userBalanceOrder));
         wxShipInfoService.uploadBalanceOrderShip(orderNumber, userBalanceOrder);
     }
 

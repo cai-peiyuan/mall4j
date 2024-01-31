@@ -6,12 +6,40 @@
     :close-on-click-modal="false"
   >
     <el-form
-      ref="dataFormRef"
-      :model="dataForm"
+      ref="refundDataFormRef"
+      :model="refundDataForm"
       :rules="dataRule"
       label-width="80px"
       @keyup.enter="onSubmit()"
-    />
+    >
+      <el-form-item label="退款原因" prop="refundName">
+        <el-select
+            v-model="refundDataForm.refundName"
+            placeholder="请选择"
+        >
+          <el-option
+              v-for="item in refundDataForm.refundOptions"
+              :key="item.refundName"
+              :label="item.refundName"
+              :value="item.refundName"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item
+          label="退款备注"
+          prop="refundMsg"
+      >
+        <el-input
+            v-model="refundDataForm.refundMsg"
+            controls-position="right"
+            :min="0"
+            label="退款备注"
+        >
+        </el-input>
+      </el-form-item>
+
+    </el-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="visible = false">取消</el-button>
@@ -32,10 +60,12 @@ const dataRule = {
 }
 
 const visible = ref(false)
-const dataForm = reactive({
+const refundDataForm = reactive({
   refundAmount: 0,
-  refundNames: [],
+  refundOptions: [],
   orderNumber: 0,
+  refundReason: '',
+  refundName: '',
   refundMsg: ''
 })
 /**
@@ -44,29 +74,30 @@ const dataForm = reactive({
  */
 const init = (order) => {
   visible.value = true
-  dataForm.orderNumber = order.orderNumber || ''
+  refundDataForm.orderNumber = order.orderNumber || ''
   http({
-    url: http.adornUrl('/admin/delivery/list'),
+    url: http.adornUrl('/shop/refundOption/list'),
     method: 'get',
     params: http.adornParams()
   }).then(({ data }) => {
-    dataForm.orderNumber = data.orderNumber
+    console.log(data)
+    refundDataForm.refundOptions = data
   })
 }
 defineExpose({ init })
 
-const dataFormRef = ref(null)
+const refundDataFormRef = ref(null)
 /**
  * 表单提交
  */
 const onSubmit = () => {
-  dataFormRef.value?.validate((valid) => {
+  refundDataFormRef.value?.validate((valid) => {
     if (valid) {
       http({
         url: http.adornUrl('/order/order/delivery'),
         method: 'put',
         data: http.adornData({
-          orderNumber: dataForm.orderNumber
+          orderNumber: refundDataForm.orderNumber
         })
       }).then(() => {
         ElMessage({

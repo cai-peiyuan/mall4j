@@ -30,11 +30,10 @@ public class DeliveryController {
 	private DeliveryUserService deliveryUserService;
 
 	/**
-	 * 分页获取
+	 * 获取所有物流公司名称
 	 */
     @GetMapping("/list")
-	public ServerResponseEntity<List<Delivery>> page(){
-
+	public ServerResponseEntity<List<Delivery>> list(){
 		List<Delivery> list = deliveryService.list();
 		return ServerResponseEntity.success(list);
 	}

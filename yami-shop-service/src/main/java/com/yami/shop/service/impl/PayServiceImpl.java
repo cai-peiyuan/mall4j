@@ -1,5 +1,3 @@
-
-
 package com.yami.shop.service.impl;
 
 import cn.hutool.core.lang.Snowflake;
@@ -8,13 +6,16 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qq.wechat.pay.WeChatPayUtil;
 import com.qq.wechat.pay.config.WechatPaySign;
+import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.wechat.pay.java.service.refund.model.AmountReq;
 import com.wechat.pay.java.service.refund.model.CreateRequest;
 import com.wechat.pay.java.service.refund.model.Refund;
+import com.wechat.pay.java.service.refund.model.Status;
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.enums.PayType;
 import com.yami.shop.bean.event.BalanceOrderPaySuccessEvent;
@@ -25,7 +26,9 @@ import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.Arith;
 import com.yami.shop.common.util.Json;
 import com.yami.shop.dao.OrderMapper;
+import com.yami.shop.dao.OrderRefundMapper;
 import com.yami.shop.dao.OrderSettlementMapper;
+import com.yami.shop.dao.WxPayRefundMapper;
 import com.yami.shop.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +57,7 @@ public class PayServiceImpl implements PayService {
     private OrderMapper orderMapper;
 
     @Autowired
-    private OrderService orderService;
+    private OrderRefundMapper orderRefundMapper;
 
     @Autowired
     private OrderSettlementMapper orderSettlementMapper;
@@ -66,7 +69,7 @@ public class PayServiceImpl implements PayService {
     private WxPayPrepayService wxPayPrepayService;
 
     @Autowired
-    private WxPayPrepayService wxPayRefundService;
+    private WxPayRefundMapper wxPayRefundMapper;
 
     @Autowired
     private UserBalanceOrderService userBalanceOrderService;
@@ -181,6 +184,100 @@ public class PayServiceImpl implements PayService {
             result = handleNotifyGoodsOrder(transaction, attach);
         }
         return result;
+    }
+
+    /**
+     * 支付结果
+     *
+     * @param refund
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String handleWxPayNotifyRefund(Notification notification, Refund refund) {
+        Date now = new Date();
+        StringBuilder result = new StringBuilder();
+        //判断如果是退款成功事件  继续处理
+        if (StrUtil.equalsAnyIgnoreCase(notification.getEventType(), "REFUND.SUCCESS")) {
+            String transactionId = refund.getTransactionId();
+            String outTradeNo = refund.getOutTradeNo();
+            log.debug("处理退款通知结果，查询是否为购物订单退款到账通知");
+            OrderRefund orderRefund = orderRefundMapper.selectOne(new LambdaQueryWrapper<OrderRefund>()
+                    //微信支付编号
+                    .eq(transactionId != null, OrderRefund::getBizPayNo, transactionId)
+                    //申请退款时 传入的内部退款订单编号
+                    .eq(outTradeNo != null, OrderRefund::getOrderPayNo, outTradeNo)
+            );
+            log.debug("购物订单退款查询结果 {}", Json.toJsonString(orderRefund));
+            if (orderRefund != null) {
+                OrderRefund update = new OrderRefund();
+                // 主键
+                update.setRefundId(orderRefund.getRefundId());
+
+                update.setRefundSn(refund.getRefundId());
+                update.setRefundSts(1);
+                update.setRefundTime(new Date());
+                int b = orderRefundMapper.updateById(update);
+                result.append("更新购物退款订单信息 ").append(b).append(" transactionId = ").append(transactionId).append("\n");
+            } else {
+                result.append("未查询到购物退款订单信息 ").append(" transactionId = ").append(transactionId).append("\n");
+            }
+
+            log.debug("处理退款通知结果， 查询是否为购物订单退款到账通知");
+            WxPayRefund wxPayRefund = wxPayRefundMapper.selectOne(new LambdaQueryWrapper<WxPayRefund>()
+                    //微信支付编号
+                    .eq(transactionId != null, WxPayRefund::getTransactionId, transactionId)
+                    //申请退款时 传入的内部退款订单编号
+                    .eq(outTradeNo != null, WxPayRefund::getOutTradeNo, outTradeNo)
+            );
+            log.debug("微信支付平台退款订单查询结果 {}", Json.toJsonString(wxPayRefund));
+
+            if (wxPayRefund != null) {
+                WxPayRefund update = new WxPayRefund();
+                // 主键
+                update.setId(wxPayRefund.getId());
+                update.setUserReceivedAccount(refund.getUserReceivedAccount());
+                update.setSuccessTime(refund.getSuccessTime());
+                com.wechat.pay.java.service.refund.model.Amount amount = refund.getAmount();
+                update.setTotalAmount(amount.getTotal());
+                update.setRefundAmount(amount.getRefund());
+                update.setPayerTotal(amount.getPayerTotal());
+                update.setPayerRefund(amount.getPayerRefund());
+                update.setStatus(Status.SUCCESS.name());
+                if (orderRefund != null) {
+                    update.setOrderType(ORDER_TYPE_GOODS);
+                } else {
+                    update.setOrderType(ORDER_TYPE_BALANCE);
+                }
+                int b = wxPayRefundMapper.updateById(update);
+                result.append("更新支付平台退款订单信息 ").append(b).append(" id = ").append(wxPayRefund.getId()).append("\n");
+            } else {
+                result.append("未查询到支付平台退款订单信息 ").append(" id = ").append(wxPayRefund.getId()).append("\n");
+            }
+
+            if (orderRefund != null) {
+                Order order = orderMapper.getOrderByOrderNumber(orderRefund.getOrderNumber());
+                if (order != null) {
+                    Order update = new Order();
+                    update.setOrderId(order.getOrderId());
+                    update.setCloseType(2);
+                    update.setRefundSts(2);
+                    update.setFinallyTime(now);
+                    update.setUpdateTime(now);
+                    update.setStatus(6);
+                    update.setRemarks(order.getRemarks() + "订单退款已到账 退款交易单号" + orderRefund.getRefundId());
+                    int updateOrder = orderMapper.updateById(update);
+                    result.append("已更新购物订单信息 ").append(" orderNumber = ").append(orderRefund.getOrderNumber()).append(" 更新结果 ").append(updateOrder).append("\n");
+                }else{
+                    result.append("未查询到购物订单信息 ").append(" orderNumber = ").append(orderRefund.getOrderNumber()).append("\n");
+                }
+            }
+
+        } else {
+            log.debug("退款处理事件不正确 应该为  {}  实际为 {}", "REFUND.SUCCESS", notification.getEventType());
+            result.append("退款处理事件不正确 ").append("\n");
+        }
+        return result.toString();
     }
 
     /**
@@ -355,7 +452,7 @@ public class PayServiceImpl implements PayService {
                     userBalanceDetail.setUserId(userBalanceOrder.getUserId());
                     userBalanceDetail.setDetailType("1");
                     userBalanceDetail.setNewBalance(newBalance);
-                    userBalanceDetail.setDescription("在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()) + " 最新余额 "+ newBalance);
+                    userBalanceDetail.setDescription("在线充值 " + NumberUtil.decimalFormat("#.##", userBalanceOrder.getTotal()) + " 最新余额 " + newBalance);
                     userBalanceDetail.setOrderNumber(userBalanceOrder.getOrderNumber());
                     userBalanceDetail.setUseTime(now);
                     userBalanceDetail.setUseTime(now);
@@ -478,8 +575,10 @@ public class PayServiceImpl implements PayService {
      * @author peiyuan.cai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public WxPayRefund createWeChatRefundOrder(OrderRefund orderRefund) {
-
+        WxPayRefund wxPayRefund = new WxPayRefund();
+        Date now = new Date();
         CreateRequest request = new CreateRequest();
 
         //【微信支付订单号】 原支付交易对应的微信订单号，与out_trade_no二选一
@@ -492,34 +591,57 @@ public class PayServiceImpl implements PayService {
         request.setReason(orderRefund.getBuyerMsg());
         //【退款结果回调url】 异步接收微信支付退款结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。 如果参数中传了notify_url，则商户平台上配置的回调地址将不会生效，优先回调当前传的这个地址。
         request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_REFUND);
+
+        /**
+         * funds_account
+         * 选填
+         * string
+         * 【退款资金来源】 若传递此参数则使用对应的资金账户退款，否则默认使用未结算资金退款（仅对老资金流商户适用）
+         * 可选取值：
+         * AVAILABLE: 仅对老资金流商户适用，指定从可用余额账户出资
+         */
+        AmountReq amount = new AmountReq();
+        //【退款金额】 退款金额，单位为分，只能为整数，不能超过原订单支付金额。
+        amount.setRefund(Arith.toAmount(orderRefund.getRefundAmount()).longValue());
+        amount.setTotal(Arith.toAmount(orderRefund.getOrderAmount()).longValue());
+        amount.setCurrency("CNY");
+        request.setAmount(amount);
         // 调用接口
         Refund refund = WeChatPayUtil.refundService.create(request);
-        // request.setXxx(val)设置所需参数，具体参数可见Request定义
-        PrepayRequest request = new PrepayRequest();
-        Amount amount = new Amount();
-        amount.setTotal(Arith.toAmount(userBalanceOrder.getActualTotal()));
-        request.setAmount(amount);
-        request.setAppid(WeChatPayUtil.appId);
-        request.setMchid(WeChatPayUtil.merchantId);
-        request.setDescription(userBalanceOrder.getProdName());
-        request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
-        request.setOutTradeNo(userBalanceOrder.getOrderNumber());
-        Payer payer = new Payer();
-        payer.setOpenid(userBalanceOrder.getUserId());
-        request.setPayer(payer);
-        //通过返回的消息通知中attach字段判断支付订单类型
-        request.setAttach(ORDER_TYPE_BALANCE);
-        PrepayWithRequestPaymentResponse response = WeChatPayUtil.jsapiServiceExtension.prepayWithRequestPayment(request);
 
-        WechatPaySign wechatPaySign = new WechatPaySign();
-        wechatPaySign.setSign(response.getPaySign());
-        wechatPaySign.setNonceStr(response.getNonceStr());
-        wechatPaySign.setTimeStamp(response.getTimeStamp());
-        wechatPaySign.setPackageStr(response.getPackageVal());
-        wechatPaySign.setPrepayId(response.getPackageVal());
-        //保存预支付订单到数据库
-        wxPayPrepayService.saveWxPayPrepayUserBalance(userBalanceOrder, request, response);
-        return wechatPaySign;
+        /**
+         * 保存退款订单信息
+         */
+        wxPayRefund.setAppId(WeChatPayUtil.appId);
+        wxPayRefund.setMchId(WeChatPayUtil.merchantId);
+        wxPayRefund.setNotifyUrl(request.getNotifyUrl());
+        wxPayRefund.setCreateTime(now);
+        wxPayRefund.setReason(orderRefund.getBuyerMsg());
+        wxPayRefund.setTransactionId(request.getTransactionId());
+        wxPayRefund.setOutTradeNo(request.getOutTradeNo());
+        wxPayRefund.setOutRefundNo(request.getOutRefundNo());
+        wxPayRefund.setAppId(WeChatPayUtil.appId);
+        wxPayRefund.setTotalAmount(amount.getTotal());
+        wxPayRefund.setRefundAmount(amount.getRefund());
+        wxPayRefund.setGoodsDetail(Json.toJsonString(request.getGoodsDetail()));
+        wxPayRefund.setFromAmount(Json.toJsonString(amount.getFrom()));
+        wxPayRefund.setCurrency(amount.getCurrency());
+
+        /**
+         * 退款接口响应结果
+         */
+        wxPayRefund.setRefundId(refund.getRefundId());
+        wxPayRefund.setRefundCreateTime(refund.getCreateTime());
+        wxPayRefund.setSuccessTime(refund.getSuccessTime());
+        wxPayRefund.setRefundCreateTime(refund.getCreateTime());
+        wxPayRefund.setPromotionDetail(Json.toJsonString(refund.getPromotionDetail()));
+        wxPayRefund.setResultAmount(Json.toJsonString(refund.getAmount()));
+        wxPayRefund.setChannel(refund.getChannel().name());
+        wxPayRefund.setStatus(refund.getStatus().name());
+        //保存退款订单到数据库
+        int save = wxPayRefundMapper.insert(wxPayRefund);
+
+        return wxPayRefund;
     }
 
 }

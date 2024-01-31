@@ -37,13 +37,27 @@ public class WxPayRefund implements Serializable {
 
     private String outTradeNo;
 
+    private String outRefundNo;
+
+    private String fundsAccount;
+
     private String attach;
 
     private String notifyUrl;
 
     private String goodsTag;
 
-    private Integer totalAmount;
+    private Long totalAmount;
+
+    private Long refundAmount;
+
+    private Long payerTotal;
+
+    private Long payerRefund;
+
+    private String fromAmount;
+    private String goodsDetail;
+    private String currency;
 
     private String payerOpenid;
 
@@ -81,9 +95,19 @@ public class WxPayRefund implements Serializable {
 
     private String bankType;
 
-    private String successTime;
+    private String reason;
 
     private String promotionDetail;
+
+    private String successTime;
+    private String refundCreateTime;
+    private String resultAmount;
+    private String status;
+    private String userReceivedAccount;
+    private String channel;
+    private String refundId;
+
+    private String refundOrderType;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

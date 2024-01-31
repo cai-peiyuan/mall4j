@@ -5,6 +5,7 @@ package com.yami.shop.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderRefund;
 import com.yami.shop.bean.param.OrderRefundQueryParam;
 
@@ -27,4 +28,9 @@ public interface OrderRefundService extends IService<OrderRefund> {
      * @param refund
      */
     void refundAccept(OrderRefund refund);
+    /**
+     * 执行某一个购物订单的退款操作
+     * @param order
+     */
+    void refundOrder(Order order);
 }

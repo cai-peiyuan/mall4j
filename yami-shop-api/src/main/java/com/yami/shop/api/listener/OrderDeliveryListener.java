@@ -33,7 +33,6 @@ public class OrderDeliveryListener {
      * 购物订单已发货事件
      */
     @EventListener(OrderDeliveryEvent.class)
-    @Async
     public void orderDeliveryEventListener(OrderDeliveryEvent event) {
 
         Order order = event.getOrder();

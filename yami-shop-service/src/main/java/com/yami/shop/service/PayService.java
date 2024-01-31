@@ -5,6 +5,7 @@ package com.yami.shop.service;
 import com.qq.wechat.pay.config.WechatPaySign;
 import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
+import com.wechat.pay.java.service.refund.model.Refund;
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.model.OrderRefund;
 import com.yami.shop.bean.model.UserBalanceOrder;
@@ -40,6 +41,14 @@ public interface PayService {
      * @return
      */
     String handleWxPayNotifyTransaction(Transaction transaction);
+
+    /**
+     * 支付结果
+     * @param notification
+     * @param refund
+     * @return
+     */
+    String handleWxPayNotifyRefund(Notification notification, Refund refund);
 
     /**
      * 创建提交商品订单 微信预支付订单 并且返回支付参数

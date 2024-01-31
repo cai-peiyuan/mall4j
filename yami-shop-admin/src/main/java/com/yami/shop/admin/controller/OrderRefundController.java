@@ -62,6 +62,8 @@ public class OrderRefundController {
         if (!Objects.equal(shopId, refund.getShopId())) {
             throw new YamiShopBindException("您没有权限操作该订单信息");
         }
+
+        refund.setSellerMsg("已同意退款");
         orderRefundService.refundAccept(refund);
         return ServerResponseEntity.success();
     }

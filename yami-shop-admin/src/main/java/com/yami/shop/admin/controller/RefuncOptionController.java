@@ -3,6 +3,7 @@ package com.yami.shop.admin.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yami.shop.bean.model.Delivery;
 import com.yami.shop.bean.model.RefundOption;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
@@ -26,6 +27,16 @@ public class RefuncOptionController {
 
     @Autowired
     private RefundOptionService refundOptionService;
+
+
+    /**
+     * 获取所有的退款申请原因
+     */
+    @GetMapping("/list")
+    public ServerResponseEntity<List<RefundOption>> list(){
+        List<RefundOption> list = refundOptionService.list(new LambdaQueryWrapper<RefundOption>().orderByAsc(RefundOption::getSeq));
+        return ServerResponseEntity.success(list);
+    }
 
     /**
      * 分页获取

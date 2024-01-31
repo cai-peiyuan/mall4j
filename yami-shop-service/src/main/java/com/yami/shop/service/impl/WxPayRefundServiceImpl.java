@@ -48,7 +48,7 @@ public class WxPayRefundServiceImpl extends ServiceImpl<WxPayRefundMapper, WxPay
             wxPayPrepay.setAttach(request.getAttach());
             wxPayPrepay.setNotifyUrl(request.getNotifyUrl());
             wxPayPrepay.setGoodsTag(request.getGoodsTag());
-            wxPayPrepay.setTotalAmount(request.getAmount().getTotal());
+            wxPayPrepay.setTotalAmount(request.getAmount().getTotal().longValue());
             wxPayPrepay.setPayerOpenid(request.getPayer().getOpenid());
             wxPayPrepay.setDetail(Json.toJsonString(request.getDetail()));
             wxPayPrepay.setSettleInfo(Json.toJsonString(request.getSettleInfo()));
@@ -94,7 +94,7 @@ public class WxPayRefundServiceImpl extends ServiceImpl<WxPayRefundMapper, WxPay
             wxPayPrepay.setAttach(request.getAttach());
             wxPayPrepay.setNotifyUrl(request.getNotifyUrl());
             wxPayPrepay.setGoodsTag(request.getGoodsTag());
-            wxPayPrepay.setTotalAmount(request.getAmount().getTotal());
+            wxPayPrepay.setTotalAmount(request.getAmount().getTotal().longValue());
             wxPayPrepay.setPayerOpenid(request.getPayer().getOpenid());
             wxPayPrepay.setDetail(Json.toJsonString(request.getDetail()));
             wxPayPrepay.setSettleInfo(Json.toJsonString(request.getSettleInfo()));

@@ -184,7 +184,7 @@ Page({
      * 2、提交退款
      * 3、刷新页面数据
      */
-    orderRefund: function(e){
+    orderRefund: function (e) {
         console.log(e)
     },
 
@@ -200,7 +200,7 @@ Page({
      * 2、确定提交
      * 3、刷新页面数据
      */
-    orderDelivery: function(e){
+    orderDelivery: function (e) {
         console.log(e)
     },
 
@@ -211,7 +211,7 @@ Page({
      * 2、确定提交
      * 3、刷新页面数据
      */
-    orderArrived: function(e){
+    orderArrived: function (e) {
         console.log(e)
     }
 })

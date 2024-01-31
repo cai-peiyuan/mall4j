@@ -45,7 +45,7 @@
 
         <el-popconfirm v-if="isAuth('order:refund:accept') && scope.row.refundSts == 1"
                        confirm-button-text="确定" cancel-button-text="取消" :icon="InfoFilled" icon-color="#626AEF"
-                       title="确定执行退款操作？" @confirm="acceptRefund(scope.row.id)" @cancel="cancelEvent">
+                       title="确定执行退款操作？" @confirm="acceptRefund(scope.row.refundId)" @cancel="cancelEvent">
           <template #reference>
             <el-button icon="el-icon-edit" type="primary"
                        link >
@@ -55,7 +55,7 @@
         </el-popconfirm>
 
         <el-button
-          v-if="isAuth('order:refund:reject')"
+          v-if="isAuth('order:refund:reject') && scope.row.refundSts == 1"
           type="danger"
           link
           icon="el-icon-deconste"
@@ -92,13 +92,15 @@ const dataListLoading = ref(false)
  * 审批同意退款
  * @param id
  */
-const acceptRefund = (id) => {
-  console.log('审批同意退款', id)
+const acceptRefund = (refundId) => {
+  console.log('审批同意退款', refundId)
   // 后台接口验证按钮权限  order:refund:accept
   http({
-    url: http.adornUrl('/order/refund'),
+    url: http.adornUrl('/order/refund/accept/'+refundId),
     method: 'get',
-    data: http.adornData(ids, false)
+    data: {
+
+    }
   }).then(() => {
       ElMessage({
         message: '操作成功',

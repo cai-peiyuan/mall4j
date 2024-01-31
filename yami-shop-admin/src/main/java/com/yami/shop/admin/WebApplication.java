@@ -3,6 +3,7 @@
 package com.yami.shop.admin;
 
 
+import com.yami.shop.admin.listener.WebApplicationStartedListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +22,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class WebApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
-        SpringApplication.run(WebApplication.class, args);
+		SpringApplication app = new SpringApplication(WebApplication.class);
+		app.addListeners(new WebApplicationStartedListener());
+		app.run(args);
 	}
 
 	@Override

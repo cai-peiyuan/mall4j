@@ -77,7 +77,7 @@
               <span class="item">实付金额</span>
             </el-col>
             <el-col :span="2">
-              <span class="item">支付方式</span>
+              <span class="item">支付</span>
             </el-col>
             <el-col :span="2">
               <span class="item">订单状态</span>
@@ -152,6 +152,11 @@
                     <span v-else-if="order.payType === 2">支付宝</span>
                     <span v-else-if="order.payType === 3">储值余额</span>
                     <span v-else>手动代付</span>
+                    <span v-if="order.isPayed === 1">已支付</span>
+                    <span v-if="order.refundSts === 1">已退款</span>
+                  </div>
+                  <div>
+
                   </div>
                 </div>
               </el-col>
@@ -183,7 +188,7 @@
                   >成功</span>
                   <span
                     v-else
-                  >失败</span>
+                  >订单关闭</span>
                 </div>
               </el-col>
               <!-- 下单用户，购买人信息 -->
@@ -233,6 +238,7 @@
                     <el-button
                       v-if="isAuth('order:order:update')"
                       type="primary"
+                      link
                       @click="onAddOrUpdate(order.orderNumber)"
                     >
                       查看
@@ -241,28 +247,32 @@
                     <el-button
                       v-if="isAuth('order:order:delivery') && order.status == 2"
                       type="primary"
+                      link
                       @click="changeOrder(order)"
                     >
                       发货
                     </el-button>
                     <br>
                     <el-button
-                      v-if="isAuth('order:order:refund')"
+                      v-if="isAuth('order:order:refund') && order.refundSts == 0 && order.isPayed == 1 && order.payType == 1"
                       type="primary"
+                      link
                       @click="orderRefund(order)"
                     >
                       退款
                     </el-button>
                     <br>
-                    <span
+                    <el-button
                       v-if="order.printTimes> 0"
-                      style="cursor:pointer;"
+                      type="primary"
+                      link
                       @click="printOrder(order.orderNumber)"
-                    >已打印次数：{{ order.printTimes }}</span>
+                    >已打印次数：{{ order.printTimes }}</el-button>
                     <br>
                     <el-button
                       v-if="isAuth('order:order:print') && order.printTimes == 0"
                       type="primary"
+                      link
                       @click="printOrder(order.orderNumber)"
                     >
                       打印订单
@@ -313,11 +323,18 @@
       ref="devyAddRef"
       @refresh-data-list="getDataList"
     />
+    <!-- 退款 -->
+    <refund-add
+      v-if="refundVisible"
+      ref="orderRefundRef"
+      @refresh-data-list="getDataList"
+    />
   </div>
 </template>
 
 <script setup>
 import DevyAdd from './components/order-devy.vue'
+import RefundAdd from './components/order-refund.vue'
 import AddOrUpdate from './components/order-info.vue'
 import ConsignmentInfo from './components/consignment-info.vue'
 import { isAuth } from '@/utils'
@@ -349,7 +366,7 @@ const options = [{
 },
 {
   value: 6,
-  label: '失败'
+  label: '订单关闭'
 }]
 const dataList = ref([])
 const page = reactive({
@@ -372,6 +389,19 @@ const changeOrder = (order) => {
   nextTick(() => {
     console.log(devyAddRef)
     devyAddRef.value?.init(order.orderNumber, order.dvyId, order.dvyFlowId)
+  })
+}
+
+/**
+ * 显示退款选项对话框
+ * @param order
+ */
+const orderRefund = (order) =>{
+  refundVisible.value = true
+  console.log(order, refundVisible)
+  nextTick(() => {
+    console.log(devyAddRef)
+    orderRefundRef.value?.init(order)
   })
 }
 /**

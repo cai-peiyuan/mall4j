@@ -3,6 +3,7 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wechat.pay.java.core.notification.Notification;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.refund.model.Refund;
 import com.yami.shop.bean.model.WxPayNotify;
@@ -38,9 +39,10 @@ public interface WxPayNotifyService extends IService<WxPayNotify> {
      * @param api
      * @param requestBody
      * @param requestHeaders
-     * @param object
+     * @param notification
+     * @param parsedObject
      * @author peiyuan.cai@
      * @date 2024/1/23 16:39 星期二
      */
-    void saveNotify(String api, String requestBody, Map<String, String> requestHeaders, Object object, String handleNotifyResult);
+    void saveNotify(String api, String requestBody, Map<String, String> requestHeaders, Notification notification, Object parsedObject, String handleNotifyResult);
 }

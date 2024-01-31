@@ -190,7 +190,7 @@ Page({
                         mask: true
                     });
                     var params = {
-                        url: "/p/myOrder/receipt/" + e.currentTarget.dataset.ordernum,
+                        url: "/p/myOrder/refundApply/" + e.currentTarget.dataset.ordernum,
                         method: "PUT",
                         data: {},
                         callBack: function (res) {
