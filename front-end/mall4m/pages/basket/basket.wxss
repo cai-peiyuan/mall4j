@@ -161,7 +161,7 @@ container .prod-list {
 }
 
 .prodinfo .opt .price-count .price {
-  color: #eb2444;
+  color: #f7840e;
 }
 
 .lose-efficacy .prodinfo .opt .price-count .price {
@@ -348,7 +348,7 @@ align-items:flex-start;
 
 }
 .cart-footer .btn.del {
-  color:#eb2444;
+  color:#f7840e;
 width:70rpx;
 font-size:22rpx;
 text-align:left;
@@ -374,13 +374,13 @@ line-height:102rpx;
 }
 
 .cart-footer .btn.total .price {
-  color: #eb2444;
+  color: #f7840e;
   font-size: 30rpx;
 }
 
 .cart-footer .btn.settle {
   width: 200rpx;
-  background: #eb2444;
+  background: #f7840e;
   color: #fff;
 }
 
