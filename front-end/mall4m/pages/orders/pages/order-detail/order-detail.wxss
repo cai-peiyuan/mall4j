@@ -242,18 +242,18 @@ page {
 .order-detail-footer .footer-box .buy-again {
     font-size: 26rpx;
     color: #fff;
-    background: #eb2444;
+    background: #f38d08;
     border-radius: 50rpx;
-    padding: 10rpx 20rpx;
-    margin-right: 20rpx;
+    padding: 2vw 5vw;
+    margin-right: 3vw;
 }
 
 .order-detail-footer .footer-box .apply-service {
     font-size: 26rpx;
     border-radius: 50rpx;
-    padding: 10rpx 20rpx;
+    padding:2vw 5vw;
     border: 1px solid #e4e4e4;
-    margin-right: 20rpx;
+    margin-right: 3vw;
 }
 
 .clearfix:after {

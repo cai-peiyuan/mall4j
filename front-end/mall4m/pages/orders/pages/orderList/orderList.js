@@ -271,7 +271,7 @@ Page({
         wx.showModal({
             title: '',
             content: '我已收到货？',
-            confirmColor: "#eb2444",
+            confirmColor: "#f38d08",
             success(res) {
                 if (res.confirm) {
                     wx.showLoading({

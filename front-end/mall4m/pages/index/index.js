@@ -21,6 +21,7 @@ Page({
     taglist: [],
     sts: 0,
     statuBarHeight:wx.getMenuButtonBoundingClientRect().top,//wx.getSystemInfoSync().statusBarHeight,
+    showADDialog:true,
   },
   //事件处理函数
   bindViewTap: function() {
@@ -343,5 +344,11 @@ Page({
         url: 'pages/prods/pages/prod/prod',
       })
     }
+  },
+  //关闭广告弹框
+  closeDialog:function(){
+      console.log(111);
+      this.setData({showADDialog:false});
+      console.log(this.data.showADDialog)
   }
 })

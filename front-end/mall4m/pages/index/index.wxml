@@ -1,5 +1,16 @@
 <!--index.wxml-->
 <view class="container">
+    <!-- 广告弹框 -->
+    <view wx:if="{{showADDialog}}" class="dialogMask centerFlex">
+        <view class="dialogInfo">
+            <view>
+                <image src="/images/dialog.jpg" mode="widthFix" style="width: 70vw;  border-radius: 3vw;"/>
+            </view>
+           <view style="margin-top: 5vw;" bindtap="closeDialog">
+               <image src="/images/icon/close1.png" mode="widthFix" style="width:10vw; height:10vw"/>
+           </view>
+        </view>
+    </view>
 	<view style="background-color: rgb(235, 168, 81);position: fixed; top:0;; height:141px; width:100vw;z-index: 999;">
       <view style="height:70rpx; line-height: 70rpx; padding-top:{{statuBarHeight}}px; color:#fff; font-weight: bold; width:100vw; text-align: center;">
           小岛袋鼠优选
