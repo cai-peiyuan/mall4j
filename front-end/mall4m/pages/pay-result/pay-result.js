@@ -1,4 +1,6 @@
 // pages/pay-result/pay-result.js
+var http = require('../../utils/http.js');
+
 Page({
 
     /**
@@ -67,7 +69,7 @@ Page({
                         })
                     },
                     fail: err => {
-                        console.log("wx.requestPayment支付失败", e);
+                        console.log("wx.requestPayment支付失败", err);
                     }
                 })
 

@@ -29,7 +29,7 @@
                         </view>
                         <view class='prod-info-cont'>
                             <text class='number'>{{item.skuName}}</text>
-                            <text class='info-item'>X{{item.prodCount}}</text>
+                            <text class='info-item'>x{{item.prodCount}}</text>
                         </view>
                         <view class='price-nums clearfix'>
                             <text class='prodprice'><text class='symbol'>￥</text>

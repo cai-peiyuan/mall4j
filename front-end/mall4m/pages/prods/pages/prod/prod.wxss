@@ -586,7 +586,7 @@ img {
 }
 
 .cart-footer .btn.buy {
-    background: rgb(238, 147, 27);
+    background: #f5c57a;
     color: #fff;
 }
 

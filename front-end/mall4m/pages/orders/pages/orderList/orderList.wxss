@@ -36,15 +36,17 @@ page {
 /*  end 头部菜单 */
 
 .main {
-  margin-top: 100rpx;
+  padding-top: 104rpx;
 }
 
 /* 商品列表 */
 
 .prod-item {
   background-color: #fff;
-  margin-top: 15rpx;
   font-size: 28rpx;
+  width:94vw;
+  margin:2vw auto 0;
+  border-radius: 2vw;
 }
 
 .prod-item .item-cont .prod-pic image {
@@ -115,6 +117,7 @@ page {
   overflow: hidden;
   background: #fff;
   margin-right: 16rpx;
+  border-radius: 2vw;
 }
 
 .prod-item .item-cont .prod-pic image {
