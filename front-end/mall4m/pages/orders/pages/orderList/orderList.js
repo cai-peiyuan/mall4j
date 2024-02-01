@@ -183,7 +183,7 @@ Page({
         wx.showModal({
             title: '',
             content: '尚未发货的订单支持无理由退款，是否申请退款？',
-            confirmColor: "#eb2444",
+            confirmColor: "#eba524",
             success(res) {
                 if (res.confirm) {
                     wx.showLoading({
@@ -301,7 +301,7 @@ Page({
         wx.showModal({
             title: '',
             content: '确定要删除此订单吗？',
-            confirmColor: "#eb2444",
+            confirmColor: "#eba524",
             success(res) {
                 if (res.confirm) {
                     var ordernum = e.currentTarget.dataset.ordernum;

@@ -13,7 +13,7 @@ Page({
         picDomain: config.picDomain,
         indicatorDots: true,
         indicatorColor: '#f2f2f2',
-        indicatorActiveColor: '#eb2444',
+        indicatorActiveColor: '#eba524',
         autoplay: true,
         interval: 3000,
         duration: 1000,

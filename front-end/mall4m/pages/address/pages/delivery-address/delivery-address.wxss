@@ -79,7 +79,7 @@ page {
 
 .footer text {
   font-size: 32rpx;
-  color: #eb2444;
+  color: #eba524;
 }
 
 .empty .img {

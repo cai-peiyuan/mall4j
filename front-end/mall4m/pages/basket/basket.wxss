@@ -29,8 +29,8 @@ container .prod-list {
   /* padding: 0 5rpx; */
   border-radius: 8rpx;
   font-size: 22rpx;
-  color: #eb2444;
-  border: 2rpx solid #eb2444;
+  color: #eba524;
+  border: 2rpx solid #eba524;
 }
 
 .prod-list .prod-block .discount-tips .text-list {
@@ -238,8 +238,8 @@ checkbox .wx-checkbox-input {
 /*checkbox选中后样式  */
 
 checkbox .wx-checkbox-input.wx-checkbox-input-checked {
-  background: #eb2444;
-  border-color: #eb2444;
+  background: #eba524;
+  border-color: #eba524;
 }
 
 /*checkbox选中后图标样式  */
@@ -348,7 +348,7 @@ align-items:flex-start;
 
 }
 .cart-footer .btn.del {
-  color:#f7840e;
+  color:#eba524;
 width:70rpx;
 font-size:22rpx;
 text-align:left;
@@ -374,13 +374,13 @@ line-height:102rpx;
 }
 
 .cart-footer .btn.total .price {
-  color: #f7840e;
+  color: #eba524;
   font-size: 30rpx;
 }
 
 .cart-footer .btn.settle {
   width: 200rpx;
-  background: #f7840e;
+  background: #eba524;
   color: #fff;
 }
 

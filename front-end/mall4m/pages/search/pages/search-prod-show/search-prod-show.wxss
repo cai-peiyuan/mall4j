@@ -53,7 +53,7 @@ page {
   position: absolute;
   right: 30rpx;
   top: 31rpx;
-  color: #eb2444;
+  color: #eba524;
 }
 
 .search-bar .search-box .search-img {
@@ -105,7 +105,7 @@ page {
 }
 
 .fixed-box .tabs .tab-item.on {
-  color: #eb2444;
+  color: #eba524;
 }
 
 /* 横向列表 */
@@ -167,7 +167,7 @@ page {
 
 .prod-list .cont-item .show-item .prod-text-right .go-to-buy {
   font-size: 26rpx;
-  background: #eb2444;
+  background: #eba524;
   color: #fff;
   border-radius: 50rpx;
   width: 150rpx;
@@ -194,6 +194,6 @@ page {
 
 .prod-list .cont-item .show-item .prod-text-right .prod-price.more {
   font-size: 28rpx;
-  color: #eb2444;
+  color: #eba524;
   font-family: arial;
 }

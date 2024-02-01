@@ -143,8 +143,8 @@ page {
   position: absolute;
   top: -15rpx;
   right: -12rpx;
-  color: #eb2444;
-  border: 3rpx solid #eb2444;
+  color: #f5a72a;
+  border: 3rpx solid #f5a72a;
   border-radius: 50rpx;
   background: #fff;
   min-width: 30rpx;

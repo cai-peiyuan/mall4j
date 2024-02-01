@@ -16,8 +16,8 @@ page {
 }
 
 .delivery-addr .addr-bg .add-addr .plus-sign {
-  color: #eb2444;
-  border: 2rpx solid #eb2444;
+  color: #eba524;
+  border: 2rpx solid #eba524;
   padding: 0rpx 6rpx;
   margin-right: 10rpx;
 }
@@ -275,7 +275,7 @@ page {
 
 .order-msg .msg-item .item.payment {
   border-top: 2rpx solid #f1f1f1;
-  color: #eb2444;
+  color: #eba524;
 }
 
 .order-msg .msg-item .item .item-tit {
@@ -435,7 +435,7 @@ page {
 }
 
 .coupon-tab.on {
-  border-bottom: 2px solid #eb2444;
+  border-bottom: 2px solid #eba524;
   font-weight: 600;
 }
 
@@ -487,8 +487,8 @@ checkbox .wx-checkbox-input {
 /*checkbox选中后样式  */
 
 checkbox .wx-checkbox-input.wx-checkbox-input-checked {
-  background: #eb2444;
-  border-color: #eb2444;
+  background: #eba524;
+  border-color: #eba524;
 }
 
 /*checkbox选中后图标样式  */

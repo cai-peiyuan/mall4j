@@ -177,7 +177,7 @@ page {
 
 .order-msg .msg-item .item.payment {
     border-top: 2rpx solid #f1f1f1;
-    color: #eb2444;
+    color: #eba524;
     padding-top: 30rpx;
 }
 
@@ -272,7 +272,7 @@ page {
 }
 
 .order-state .order-sts {
-    color: #eb2444;
+    color: #eba524;
     font-size: 28rpx;
 }
 

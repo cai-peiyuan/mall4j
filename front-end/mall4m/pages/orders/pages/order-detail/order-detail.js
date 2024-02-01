@@ -123,7 +123,7 @@ Page({
     wx.showModal({
       title: '',
       content: '确定要删除此订单吗？',
-      confirmColor: "#eb2444",
+      confirmColor: "#eba524",
       success(res) {
         if (res.confirm) {
           wx.showLoading();

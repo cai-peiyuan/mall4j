@@ -33,14 +33,14 @@ button {
   line-height: 70rpx;
   font-size: 30rpx;
   color: #fff;
-  background: #eb2444;
-  border: 2rpx solid #eb2444;
+  background: #eba524;
+  border: 2rpx solid #eba524;
 }
 
 
 .button-hover{
   background-color: #fff;
-  color: #eb2444;
+  color: #eba524;
 }
 
 page{

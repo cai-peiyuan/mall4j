@@ -185,7 +185,7 @@ swiper image {
     display: inline-block;
     vertical-align: top;
     padding: 0 18rpx;
-    background: #eb2444;
+    background: #eba524;
     height: 36rpx;
     line-height: 36rpx;
     color: #fff;
@@ -291,7 +291,7 @@ swiper image {
 }
 
 .cmt-good {
-    color: #eb2444;
+    color: #eba524;
     font-size: 24rpx;
 }
 
@@ -488,7 +488,7 @@ swiper image {
 }
 
 .cmt-reply .reply-tit {
-    color: #eb2444;
+    color: #eba524;
 }
 
 .cmt-popup .load-more {
@@ -581,12 +581,12 @@ img {
 }
 
 .cart-footer .btn.cart {
-    background: #9d9b9e;
+    background: #4c4444;
     color: #fff;
 }
 
 .cart-footer .btn.buy {
-    background: #f5c57a;
+    background: #eba524;
     color: #fff;
 }
 
@@ -603,7 +603,7 @@ img {
     width: 28rpx;
     height: 28rpx;
     border-radius: 14rpx;
-    background-color: #eb2444;
+    background-color: #eba524;
     text-align: center;
     line-height: 28rpx;
     font-size: 18rpx;
@@ -797,8 +797,8 @@ img {
 }
 
 .sku-choose-item.active {
-    background-color: #eb2444;
-    border: 1px solid #eb2444 !important;
+    background-color: #eba524;
+    border: 1px solid #eba524 !important;
     color: #fff;
 }
 
@@ -921,7 +921,7 @@ img {
 }
 
 .pup-sku-footer .btn.buy {
-    background: #eb2444;
+    background: #eba524;
     color: #fff;
 }
 

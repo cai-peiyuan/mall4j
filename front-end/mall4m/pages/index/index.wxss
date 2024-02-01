@@ -292,7 +292,7 @@ line-height:44rpx;
 
 .up-to-date .item-cont .prod-item .prod-price {
   font-size: 25rpx;
-  color: #eb2444;
+  color: #eba524;
   font-family: Arial;
   padding: 0 10rpx;
 }
@@ -369,7 +369,7 @@ line-height:44rpx;
 .prod-items .hot-text .prod-text-info .hotprod-price {
   display: inline;
   font-size: 26rpx;
-  color: #eb2444;
+  color: #eba524;
 }
 
 .prod-items .hot-text .prod-text-info .basket-img {
@@ -428,7 +428,7 @@ line-height:44rpx;
 .more-prod .prod-show .show-item .prod-text-right .go-to-buy {
   font-size: 26rpx;
   background: #fff2f5;
-  color: #eb2444;
+  color: #eba524;
   border-radius: 50rpx;
   text-align: center;
   padding: 12rpx 20rpx;

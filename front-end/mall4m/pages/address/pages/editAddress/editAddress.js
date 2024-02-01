@@ -465,7 +465,7 @@ Page({
     wx.showModal({
       title: '',
       content: '确定要删除此收货地址吗？',
-      confirmColor: "#eb2444",
+      confirmColor: "#eba524",
       success(res) {
         if (res.confirm) {
           var addrId = ths.data.addrId;

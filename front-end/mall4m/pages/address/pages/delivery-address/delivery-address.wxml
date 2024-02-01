@@ -24,7 +24,7 @@
           <view class='select-btn'>
             <view class="box">
               <label  bindtap='onDefaultAddr' data-addrid="{{item.addrId}}">
-                <radio value="{{item.prodId}}" checked="{{item.commonAddr==1}}" color="#eb2444" />设为默认地址</label>
+                <radio value="{{item.prodId}}" checked="{{item.commonAddr==1}}" color="#eba524" />设为默认地址</label>
             </view>
           </view>
         </view>

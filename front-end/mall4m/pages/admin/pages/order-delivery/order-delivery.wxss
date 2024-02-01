@@ -177,7 +177,7 @@ page {
 
 .order-msg .msg-item .item.payment {
   border-top: 2rpx solid #f1f1f1;
-  color: #eb2444;
+  color: #eba524;
   padding-top: 30rpx;
 }
 
@@ -242,7 +242,7 @@ page {
 .order-detail-footer .footer-box .buy-again {
   font-size: 26rpx;
   color: #fff;
-  background: #eb2444;
+  background: #eba524;
   border-radius: 50rpx;
   padding: 10rpx 20rpx;
   margin-right: 20rpx;
@@ -272,7 +272,7 @@ page {
 }
 
 .order-state .order-sts {
-  color: #eb2444;
+  color: #eba524;
   font-size: 28rpx;
 }
 

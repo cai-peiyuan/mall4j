@@ -22,7 +22,7 @@
       <text class="c-btn get-btn" wx:if="{{!item.canReceive && !order}}" bindtap='useCoupon'>立即使用</text>
     </view>
     <view wx:if="{{order && canUse}}" class="sel-btn">
-      <checkbox color="#eb2444" data-couponid="{{item.couponId}}" checked="{{item.choose}}" bindtap="checkCoupon"></checkbox>
+      <checkbox color="#eba524" data-couponid="{{item.couponId}}" checked="{{item.choose}}" bindtap="checkCoupon"></checkbox>
     </view>
   </view>
   <image class="tag-img" src="../../images/icon/coupon-used.png" wx:if="{{type==1}}"></image>

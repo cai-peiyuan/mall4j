@@ -56,7 +56,7 @@
 .coupon-item .right .c-des .c-type{
   font-size: 24rpx;
     background: #fdf0f0;
-    color: #eb2444;
+    color: #eba524;
     border-radius: 8px;
     padding:3px 10px;
 }
@@ -80,14 +80,14 @@
     background: -o-linear-gradient(left,#6c96da,#6b83d7);
     background: linear-gradient(left,#6c96da,#6b83d7);
     background: -webkit-linear-gradient(left,#6c96da,#6b83d7); */
-    background: #eb2444;
-    border: 1px solid #eb2444;
+    background: #eba524;
+    border: 1px solid #eba524;
 }
 
 .coupon-item .right .c-date .c-btn.get-btn{
   background: #fff;
-  border: 1px solid #eb2444;
-  color:#eb2444;
+  border: 1px solid #eba524;
+  color:#eba524;
 }
 
 .coupon-item.gray .left{

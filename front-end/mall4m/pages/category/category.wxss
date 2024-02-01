@@ -222,6 +222,6 @@ page {
 
 .rightcontent .cont-item .show-item .prod-text-right .prod-price.more {
   font-size: 28rpx;
-  color: #eb2444;
+  color: #eba524;
   font-family: arial;
 }

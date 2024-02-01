@@ -279,7 +279,7 @@ Page({
       wx.showModal({
         title: '',
         content: '确认要删除选中的商品吗？',
-        confirmColor: "#eb2444",
+        confirmColor: "#eba524",
         success(res) {
           if (res.confirm) {
 

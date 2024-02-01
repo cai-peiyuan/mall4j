@@ -252,7 +252,7 @@ page {
 /* 根据状态显示不同的颜色 */
 
 .order-state .order-sts.red {
-  color: #eb2444;
+  color: #eba524;
 }
 
 .order-state .order-sts.gray {
