@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
 import com.yami.shop.bean.model.OrderRefund;
-import com.yami.shop.bean.param.OrderRefundQueryParam;
+import com.yami.shop.bean.param.OrderRefundParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
@@ -38,7 +38,7 @@ public class OrderRefundController {
      */
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('order:refund:page')")
-    public ServerResponseEntity<IPage<OrderRefund>> page(OrderRefundQueryParam queryParam, PageParam<OrderRefund> page) {
+    public ServerResponseEntity<IPage<OrderRefund>> page(OrderRefundParam queryParam, PageParam<OrderRefund> page) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         IPage<OrderRefund> pageData = orderRefundService.page(page,
                 new LambdaQueryWrapper<OrderRefund>()

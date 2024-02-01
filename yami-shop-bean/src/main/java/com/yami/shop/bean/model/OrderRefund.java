@@ -1,14 +1,13 @@
-
-
 package com.yami.shop.bean.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
 
 /**
  * @author lanhai
@@ -197,6 +196,11 @@ public class OrderRefund implements Serializable {
      * 拒绝原因
      */
     private String rejectMessage;
+
+    /**
+     * 商家备注
+     */
+    private String refundMsg;
 
     /**
      * 订单列表

@@ -20,11 +20,9 @@ public class OrderRefundParam {
     @NotNull(message = "申请类型不能为空")
     private Integer applyType;
 
-
     @Schema(description = "订单项id(全部退款是0)" , required = true)
     @NotNull(message = "订单项id不能为空")
     private Long orderItemId;
-
 
     @Schema(description = "凭证图片列表" , required = true)
     private String photoFiles;

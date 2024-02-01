@@ -12,9 +12,25 @@
       label-width="80px"
       @keyup.enter="onSubmit()"
     >
-      <el-form-item label="退款原因" prop="refundName">
+      <el-form-item label="退款类型" prop="applyType">
         <el-select
-            v-model="refundDataForm.refundName"
+            v-model="refundDataForm.applyType"
+            placeholder="请选择"
+        >
+          <el-option
+              label="仅退款"
+              value="1"
+          />
+          <el-option
+              label="退款退货"
+              value="2"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="退款原因" prop="sellerMsg">
+        <el-select
+            v-model="refundDataForm.sellerMsg"
             placeholder="请选择"
         >
           <el-option
@@ -60,14 +76,16 @@ const dataRule = {
 }
 
 const visible = ref(false)
+
 const refundDataForm = reactive({
+  applyType: '1',
   refundAmount: 0,
   refundOptions: [],
   orderNumber: 0,
-  refundReason: '',
-  refundName: '',
+  sellerMsg: '',
   refundMsg: ''
 })
+
 /**
  * 初始化数据方法
  * @param orderNumber
@@ -75,6 +93,7 @@ const refundDataForm = reactive({
 const init = (order) => {
   visible.value = true
   refundDataForm.orderNumber = order.orderNumber || ''
+  //加载退款原因字典信息
   http({
     url: http.adornUrl('/shop/refundOption/list'),
     method: 'get',
@@ -84,6 +103,7 @@ const init = (order) => {
     refundDataForm.refundOptions = data
   })
 }
+
 defineExpose({ init })
 
 const refundDataFormRef = ref(null)
@@ -94,11 +114,9 @@ const onSubmit = () => {
   refundDataFormRef.value?.validate((valid) => {
     if (valid) {
       http({
-        url: http.adornUrl('/order/order/delivery'),
+        url: http.adornUrl('/order/order/refund'),
         method: 'put',
-        data: http.adornData({
-          orderNumber: refundDataForm.orderNumber
-        })
+        data: http.adornData(refundDataForm)
       }).then(() => {
         ElMessage({
           message: '操作成功',

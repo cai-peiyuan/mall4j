@@ -10,6 +10,7 @@ import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.param.OrderParam;
+import com.yami.shop.bean.param.OrderRefundParam;
 
 import java.util.Date;
 import java.util.List;
@@ -133,4 +134,10 @@ public interface OrderService extends IService<Order> {
      * @param deliveryUserId
      */
     void orderDelivery(Order order, Long dvyId, String dvyFlowId, Long deliveryUserId);
+
+    /**
+     * 针对某个订单退款
+     * @param order
+     */
+    void refundApplyOrder(Order order, OrderRefundParam refundForm);
 }

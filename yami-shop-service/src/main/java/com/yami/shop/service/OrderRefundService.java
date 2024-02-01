@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderRefund;
-import com.yami.shop.bean.param.OrderRefundQueryParam;
+import com.yami.shop.bean.param.OrderRefundParam;
 
 /**
  * @author c'p'y
@@ -18,10 +18,10 @@ public interface OrderRefundService extends IService<OrderRefund> {
     /**
      * 根据参数分页获取订单退款数据
      * @param page
-     * @param orderRefundQueryParam
+     * @param orderRefundParam
      * @return
      */
-    IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundQueryParam orderRefundQueryParam);
+    IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundParam orderRefundParam);
 
     /**
      * 执行退款操作

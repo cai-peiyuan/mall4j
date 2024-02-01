@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderRefund;
 import com.yami.shop.bean.model.WxPayRefund;
-import com.yami.shop.bean.param.OrderRefundQueryParam;
+import com.yami.shop.bean.param.OrderRefundParam;
 import com.yami.shop.dao.OrderMapper;
 import com.yami.shop.dao.OrderRefundMapper;
 import com.yami.shop.service.OrderRefundService;
@@ -33,12 +33,12 @@ public class OrderRefundServiceImpl extends ServiceImpl<OrderRefundMapper, Order
      * 根据参数分页获取订单退款数据
      *
      * @param page
-     * @param orderRefundQueryParam
+     * @param orderRefundParam
      * @return
      */
     @Override
-    public IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundQueryParam orderRefundQueryParam) {
-        return page(page, new LambdaQueryWrapper<OrderRefund>().eq(StringUtils.isNotBlank(orderRefundQueryParam.getOrderNumber()), OrderRefund::getOrderNumber, orderRefundQueryParam.getOrderNumber()));
+    public IPage<OrderRefund> pageOrderRefundsDetailByOrderParam(Page<OrderRefund> page, OrderRefundParam orderRefundParam) {
+        return page(page, new LambdaQueryWrapper<OrderRefund>().eq(StringUtils.isNotBlank(orderRefundParam.getOrderNumber()), OrderRefund::getOrderNumber, orderRefundParam.getOrderNumber()));
     }
 
     /**

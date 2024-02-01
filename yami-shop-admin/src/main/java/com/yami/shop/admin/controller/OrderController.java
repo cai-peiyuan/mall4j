@@ -1,5 +1,3 @@
-
-
 package com.yami.shop.admin.controller;
 
 import cn.hutool.core.date.DatePattern;
@@ -12,9 +10,12 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.base.Objects;
 import com.yami.shop.bean.enums.OrderStatus;
-import com.yami.shop.bean.model.*;
+import com.yami.shop.bean.model.Order;
+import com.yami.shop.bean.model.OrderItem;
+import com.yami.shop.bean.model.UserAddrOrder;
 import com.yami.shop.bean.param.DeliveryOrderParam;
 import com.yami.shop.bean.param.OrderParam;
+import com.yami.shop.bean.param.OrderRefundParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
@@ -141,6 +142,28 @@ public class OrderController {
     }
 
     /**
+     * 订单退款
+     */
+    @PutMapping("/refund")
+    @PreAuthorize("@pms.hasPermission('order:order:refund')")
+    public ServerResponseEntity<Void> refund(@RequestBody OrderRefundParam refundForm) {
+        Long shopId = SecurityUtils.getSysUser().getShopId();
+        Order order = orderService.getOrderByOrderNumber(refundForm.getOrderNumber());
+        if (!Objects.equal(shopId, order.getShopId())) {
+            throw new YamiShopBindException("您没有权限修改该订单信息");
+        }
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(refundForm.getOrderNumber());
+        order.setOrderItems(orderItems);
+        orderService.refundApplyOrder(order, refundForm);
+        // 清除缓存
+        for (OrderItem orderItem : orderItems) {
+            productService.removeProductCacheByProdId(orderItem.getProdId());
+            skuService.removeSkuCacheBySkuId(orderItem.getSkuId(), orderItem.getProdId());
+        }
+        return ServerResponseEntity.success();
+    }
+
+    /**
      * 打印待发货的订单表
      *
      * @param order
@@ -150,9 +173,7 @@ public class OrderController {
      */
     @GetMapping("/waitingConsignmentExcel")
     @PreAuthorize("@pms.hasPermission('order:order:waitingConsignmentExcel')")
-    public void waitingConsignmentExcel(Order order, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
-                                        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, String consignmentName, String consignmentMobile,
-                                        String consignmentAddr, HttpServletResponse response) {
+    public void waitingConsignmentExcel(Order order, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, String consignmentName, String consignmentMobile, String consignmentAddr, HttpServletResponse response) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         order.setShopId(shopId);
         order.setStatus(OrderStatus.PADYED.value());
@@ -205,8 +226,7 @@ public class OrderController {
      */
     @GetMapping("/soldExcel")
     @PreAuthorize("@pms.hasPermission('order:order:soldExcel')")
-    public void soldExcel(Order order, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
-                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, HttpServletResponse response) {
+    public void soldExcel(Order order, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, HttpServletResponse response) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         order.setShopId(shopId);
         order.setIsPayed(1);

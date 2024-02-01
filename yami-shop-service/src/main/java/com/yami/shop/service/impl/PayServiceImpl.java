@@ -268,7 +268,7 @@ public class PayServiceImpl implements PayService {
                     update.setRemarks(order.getRemarks() + "订单退款已到账 退款交易单号" + orderRefund.getRefundId());
                     int updateOrder = orderMapper.updateById(update);
                     result.append("已更新购物订单信息 ").append(" orderNumber = ").append(orderRefund.getOrderNumber()).append(" 更新结果 ").append(updateOrder).append("\n");
-                }else{
+                } else {
                     result.append("未查询到购物订单信息 ").append(" orderNumber = ").append(orderRefund.getOrderNumber()).append("\n");
                 }
             }
@@ -589,6 +589,12 @@ public class PayServiceImpl implements PayService {
         request.setOutRefundNo(orderRefund.getOutRefundNo());
         //【退款原因】 若商户传入，会在下发给用户的退款消息中体现退款原因
         request.setReason(orderRefund.getBuyerMsg());
+        if (StrUtil.isBlank(request.getReason())) {
+            request.setReason(orderRefund.getRefundMsg());
+        }
+        if (StrUtil.isBlank(request.getReason())) {
+            request.setReason(orderRefund.getSellerMsg());
+        }
         //【退款结果回调url】 异步接收微信支付退款结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。 如果参数中传了notify_url，则商户平台上配置的回调地址将不会生效，优先回调当前传的这个地址。
         request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_REFUND);
 

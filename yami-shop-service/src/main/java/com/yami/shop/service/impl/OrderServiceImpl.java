@@ -24,6 +24,7 @@ import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.event.*;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.param.OrderParam;
+import com.yami.shop.bean.param.OrderRefundParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageAdapter;
 import com.yami.shop.dao.*;
@@ -71,10 +72,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private final OrderSettlementService orderSettlementService;
 
     private final OrderRefundService orderRefundService;
+    private final Snowflake snowflake;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-
-    private final Snowflake snowflake;
 
     /**
      * 从文件中读取Java对象
@@ -215,7 +215,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void cancelOrders(List<Order> orders) {
-
         orderMapper.cancelOrders(orders);
         List<OrderItem> allOrderItems = new ArrayList<>();
         for (Order order : orders) {
@@ -503,4 +502,84 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
     }
 
+    /**
+     * 针对某个订单退款
+     *
+     * @param order
+     * @param refundForm
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void refundApplyOrder(Order order, OrderRefundParam refundForm) {
+        Date now = new Date();
+        if (Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) || order.getStatus() < OrderStatus.PADYED.value()) {
+            throw new YamiShopBindException("订单" + order.getOrderNumber() + " 状态不正确，没有付款，无法申请退款");
+        }
+        /**
+         * 订单已支付并且是微信支付
+         */
+        if (order.getIsPayed() == 1 && order.getPayType() == 1) {
+            OrderSettlement settlement = orderSettlementService.getOne(new LambdaQueryWrapper<OrderSettlement>().eq(OrderSettlement::getOrderNumber, order.getOrderNumber()));
+
+            /**
+             * 写入退款订单
+             */
+            OrderRefund orderRefund = new OrderRefund();
+            orderRefund.setShopId(order.getShopId());
+            orderRefund.setOrderId(order.getOrderId());
+            orderRefund.setOrderNumber(order.getOrderNumber());
+            orderRefund.setOrderAmount(order.getActualTotal());
+            orderRefund.setOrderItemId(0L);
+            orderRefund.setUserId(order.getUserId());
+            orderRefund.setShopId(order.getShopId());
+
+            orderRefund.setOrderPayNo(settlement.getPayNo());
+            orderRefund.setBizPayNo(settlement.getBizPayNo());
+            orderRefund.setPayType(settlement.getPayType());
+            orderRefund.setPayTypeName(settlement.getPayTypeName());
+            orderRefund.setRefundAmount(settlement.getPayAmount());
+            // 平台自己的退款
+            String outRefundNo = String.valueOf(snowflake.nextId());
+            orderRefund.setOutRefundNo(outRefundNo);
+
+            //申请类型:1,仅退款,2退款退货
+            orderRefund.setApplyType(2);
+            // 处理状态:1为待审核,2为同意,3为不同意
+            orderRefund.setRefundSts(1);
+            //处理退款状态: 0:退款处理中 1:退款成功 -1:退款失败
+            orderRefund.setReturnMoneySts(0);
+            orderRefund.setApplyTime(now);
+            orderRefund.setBuyerMsg("");
+            // 退款操作
+            orderRefund.setSellerMsg(refundForm.getSellerMsg());
+            orderRefund.setApplyType(refundForm.getApplyType());
+            orderRefund.setRefundMsg(refundForm.getRefundMsg());
+            orderRefundService.save(orderRefund);
+
+            /**
+             * 更新订单退款状态
+             *
+             */
+            Order upOrder = new Order();
+            //0:默认,1:在处理,2:处理完成
+            upOrder.setRefundSts(1);
+            //订单关闭原因 1-超时未支付 2-退款关闭 4-买家取消 15-已通过货到付款交易
+            upOrder.setCloseType(2);
+            upOrder.setStatus(6);
+            upOrder.setCancelTime(now);
+            upOrder.setOrderId(order.getOrderId());
+            updateById(upOrder);
+
+            /**
+             * 商家操作 直接同意退款
+             */
+            orderRefundService.refundAccept(orderRefund);
+
+        }
+
+        /**
+         * 取消订单 恢复库存
+         */
+        cancelOrders(Arrays.asList(order));
+    }
 }
