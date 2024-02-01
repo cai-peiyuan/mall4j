@@ -142,6 +142,7 @@
         <result column="is_payed" jdbcType="BIT" property="isPayed"/>
         <result column="delete_status" jdbcType="INTEGER" property="deleteStatus"/>
         <result column="refund_sts" jdbcType="INTEGER" property="refundSts"/>
+        <result column="close_type" jdbcType="INTEGER" property="closeType"/>
         <association property="userAddrOrder" javaType="com.yami.shop.bean.model.UserAddrOrder">
             <id column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
             <result column="province" jdbcType="VARCHAR" property="province"/>

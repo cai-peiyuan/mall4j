@@ -51,21 +51,21 @@ public class DeliveryController {
     @Operation(summary = "查看物流", description = "根据订单号查看物流")
     @Parameter(name = "orderNumber", description = "订单号", required = true)
     public ServerResponseEntity<DeliveryDto> checkDelivery(@PathVariable(name="orderNumber") String orderNumber) {
-
         Order order = orderService.getOrderByOrderNumber(orderNumber);
         if (order == null) {
             throw new YamiShopBindException("订单不存在");
         }
-        Delivery delivery = deliveryService.getById(order.getDvyId());
+       /* Delivery delivery = deliveryService.getById(order.getDvyId());
         DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, order.getDvyFlowId()));
         DeliveryDto deliveryDto = new DeliveryDto();
         deliveryDto.setDvyFlowId(order.getDvyFlowId());
         deliveryDto.setCompanyName(delivery.getDvyName());
-
         deliveryDto.setDeliveryOrder(deliveryOrder);
-
         List<DeliveryOrderRoute> list = deliveryOrderRouteService.list(new LambdaQueryWrapper<DeliveryOrderRoute>().eq(DeliveryOrderRoute::getExpressNumber, order.getDvyFlowId()).orderByAsc(DeliveryOrderRoute::getCreateTime));
-        deliveryDto.setDeliveryRoutes(list);
+        deliveryDto.setDeliveryRoutes(list);*/
+
+        DeliveryDto deliveryDto = deliveryService.getDeliveryInfoByOrderNumber(orderNumber);
+        /// deliveryDto = deliveryService.getDeliveryInfoByExpressNumber(orderNumber);
         /*
         String url = delivery.getQueryUrl().replace("{dvyFlowId}", order.getDvyFlowId());
         String deliveryJson = HttpUtil.get(url);

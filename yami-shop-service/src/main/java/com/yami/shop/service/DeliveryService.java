@@ -3,6 +3,7 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yami.shop.bean.app.dto.DeliveryDto;
 import com.yami.shop.bean.model.Delivery;
 
 /**
@@ -11,4 +12,7 @@ import com.yami.shop.bean.model.Delivery;
  */
 public interface DeliveryService extends IService<Delivery> {
 
+    DeliveryDto getDeliveryInfoByOrderNumber(String orderNumber);
+
+    DeliveryDto getDeliveryInfoByExpressNumber(String expressNumber);
 }

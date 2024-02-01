@@ -179,8 +179,8 @@ const onSearch = (params, done) => {
  * 删除
  */
 const onDeconste = (row) => {
-  const ids = row.id ? [row.id] : dataListSelections.value?.map(item => {
-    return item.id
+  const ids = row.refundId ? [row.refundId] : dataListSelections.value?.map(item => {
+    return item.refundId
   })
   ElMessageBox.confirm(`确定进行[${row.id ? '删除' : '批量删除'}]操作?`, '提示', {
     confirmButtonText: '确定',

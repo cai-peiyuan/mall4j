@@ -86,10 +86,13 @@
               <span class="item">下单用户</span>
             </el-col>
             <el-col :span="2">
-              <span class="item">收货地址</span>
+              <span class="item">物流</span>
             </el-col>
             <el-col :span="2">
               <span class="item">操作</span>
+            </el-col>
+            <el-col :span="2">
+              <span class="item">备注</span>
             </el-col>
           </el-row>
         </div>
@@ -153,7 +156,8 @@
                     <span v-else-if="order.payType === 3">储值余额</span>
                     <span v-else>手动代付</span>
                     <span v-if="order.isPayed === 1">已支付</span>
-                    <span v-if="order.refundSts === 1">已退款</span>
+                    <span v-if="order.refundSts === 1">退款正在处理</span>
+                    <span v-if="order.refundSts === 2">退款已到账</span>
                   </div>
                   <div>
 
@@ -189,6 +193,29 @@
                   <span
                     v-else
                   >订单关闭</span>
+
+
+                  <view v-if="order.status === 6" style="color: #cc0000">
+                    <span
+                        v-if="order.closeType === 1"
+                        type="danger"
+                      >(超时未支付)</span>
+                    <span
+                        v-else-if="order.closeType === 2"
+                        type="danger"
+                    >(退款关闭)</span>
+                    <span
+                        v-else-if="order.closeType === 4"
+                        type="danger"
+                    >(买家取消)</span>
+                    <span
+                        v-else-if="order.closeType === 15"
+                        type="danger"
+                    >(已通过货到付款交易)</span>
+                    <span
+                        v-else
+                    >{{order.closeType}}</span>
+                  </view>
                 </div>
               </el-col>
               <!-- 下单用户，购买人信息 -->
@@ -221,11 +248,15 @@
                 :span="2"
                 style="height: 100%;"
               >
-                <div class="item">
+                <div class="item" style="font-size: 10px">
                   <div>
                     <span>{{ order.userAddrOrder.receiver }}</span>
                     <span>{{ order.userAddrOrder.mobile }}</span>
                     <span>{{ order.userAddrOrder.province }}{{ order.userAddrOrder.city }}{{ order.userAddrOrder.area }}{{ order.userAddrOrder.addr }}</span>
+                    <span v-if="order.dvyId != null" style="font-size: 12px; font-weight: bold; color: #cc0000">
+                      <span>已发货物流单号：</span>
+                      <span>{{ order.dvyFlowId }}</span>
+                    </span>
                   </div>
                 </div>
               </el-col>
@@ -251,6 +282,15 @@
                       @click="changeOrder(order)"
                     >
                       发货
+                    </el-button>
+                    <br>
+                    <el-button
+                      v-if="isAuth('order:order:delivery') && order.status == 3"
+                      type="primary"
+                      link
+                      @click="arriveOrder(order)"
+                    >
+                      订单送达
                     </el-button>
                     <br>
                     <el-button
@@ -329,12 +369,19 @@
       ref="orderRefundRef"
       @refresh-data-list="getDataList"
     />
+    <!-- 送达 -->
+    <order-arrive
+      v-if="arriveVisible"
+      ref="orderArriveRef"
+      @refresh-data-list="getDataList"
+    />
   </div>
 </template>
 
 <script setup>
 import DevyAdd from './components/order-devy.vue'
 import RefundAdd from './components/order-refund.vue'
+import OrderArrive from './components/order-arrive.vue'
 import AddOrUpdate from './components/order-info.vue'
 import ConsignmentInfo from './components/consignment-info.vue'
 import { isAuth } from '@/utils'
@@ -344,6 +391,7 @@ const dataForm = ref({})
 const dateRange = ref([])
 const devyVisible = ref(false)
 const refundVisible = ref(false)
+const arriveVisible = ref(false)
 const options = [{
   value: 1,
   label: '待付款'
@@ -379,6 +427,7 @@ onMounted(() => {
 })
 const devyAddRef = ref(null)
 const orderRefundRef = ref(null)
+const orderArriveRef = ref(null)
 
 /**
  * 发货
@@ -389,6 +438,17 @@ const changeOrder = (order) => {
   nextTick(() => {
     console.log(devyAddRef)
     devyAddRef.value?.init(order.orderNumber, order.dvyId, order.dvyFlowId)
+  })
+}
+
+/**
+ * 订单送达
+ * @param order
+ */
+const arriveOrder = (order) => {
+  arriveVisible.value = true
+  nextTick(() => {
+    orderArriveRef.value?.init(order.orderNumber, order.dvyId, order.dvyFlowId)
   })
 }
 

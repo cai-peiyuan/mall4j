@@ -510,7 +510,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void refundApplyOrder(Order order, OrderRefundParam refundForm) {
+    public void refundOrder(Order order, OrderRefundParam refundForm) {
         Date now = new Date();
         if (Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) || order.getStatus() < OrderStatus.PADYED.value()) {
             throw new YamiShopBindException("订单" + order.getOrderNumber() + " 状态不正确，没有付款，无法申请退款");
@@ -545,11 +545,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             //申请类型:1,仅退款,2退款退货
             orderRefund.setApplyType(2);
             // 处理状态:1为待审核,2为同意,3为不同意
-            orderRefund.setRefundSts(1);
+            orderRefund.setRefundSts(2);
             //处理退款状态: 0:退款处理中 1:退款成功 -1:退款失败
             orderRefund.setReturnMoneySts(0);
             orderRefund.setApplyTime(now);
-            orderRefund.setBuyerMsg("");
+            orderRefund.setBuyerMsg("卖家操作退款");
             // 退款操作
             orderRefund.setSellerMsg(refundForm.getSellerMsg());
             orderRefund.setApplyType(refundForm.getApplyType());

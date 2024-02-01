@@ -139,5 +139,5 @@ public interface OrderService extends IService<Order> {
      * 针对某个订单退款
      * @param order
      */
-    void refundApplyOrder(Order order, OrderRefundParam refundForm);
+    void refundOrder(Order order, OrderRefundParam refundForm);
 }

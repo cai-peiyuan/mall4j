@@ -154,7 +154,7 @@ public class OrderController {
         }
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(refundForm.getOrderNumber());
         order.setOrderItems(orderItems);
-        orderService.refundApplyOrder(order, refundForm);
+        orderService.refundOrder(order, refundForm);
         // 清除缓存
         for (OrderItem orderItem : orderItems) {
             productService.removeProductCacheByProdId(orderItem.getProdId());

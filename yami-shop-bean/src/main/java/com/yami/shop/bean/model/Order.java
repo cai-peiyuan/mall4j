@@ -166,7 +166,6 @@ public class Order implements Serializable {
      */
     private Integer closeType;
 
-
     /**
      * 打印次数
      */

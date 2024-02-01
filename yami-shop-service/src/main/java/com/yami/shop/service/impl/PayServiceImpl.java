@@ -265,7 +265,7 @@ public class PayServiceImpl implements PayService {
                     update.setFinallyTime(now);
                     update.setUpdateTime(now);
                     update.setStatus(6);
-                    update.setRemarks(order.getRemarks() + "订单退款已到账 退款交易单号" + orderRefund.getRefundId());
+                    update.setRemarks("买家备注："+ order.getRemarks() + " 商家备注：订单退款已到账 退款交易单号" + orderRefund.getRefundId());
                     int updateOrder = orderMapper.updateById(update);
                     result.append("已更新购物订单信息 ").append(" orderNumber = ").append(orderRefund.getOrderNumber()).append(" 更新结果 ").append(updateOrder).append("\n");
                 } else {
