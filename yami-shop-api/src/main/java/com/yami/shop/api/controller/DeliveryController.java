@@ -49,7 +49,6 @@ public class DeliveryController {
      */
     @GetMapping("/check/{orderNumber}")
     @Operation(summary = "查看物流", description = "根据订单号查看物流")
-    @Parameter(name = "orderNumber", description = "订单号", required = true)
     public ServerResponseEntity<DeliveryDto> checkDelivery(@PathVariable(name="orderNumber") String orderNumber) {
         Order order = orderService.getOrderByOrderNumber(orderNumber);
         if (order == null) {

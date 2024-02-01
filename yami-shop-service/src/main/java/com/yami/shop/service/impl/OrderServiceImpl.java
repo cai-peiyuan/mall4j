@@ -23,6 +23,7 @@ import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.event.*;
 import com.yami.shop.bean.model.*;
+import com.yami.shop.bean.param.DeliveryArriveParam;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.bean.param.OrderRefundParam;
 import com.yami.shop.common.exception.YamiShopBindException;
@@ -581,5 +582,65 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
          * 取消订单 恢复库存
          */
         cancelOrders(Arrays.asList(order));
+    }
+
+    /**
+     * @param order
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void orderArrive(Order order, DeliveryArriveParam deliveryArriveParam) {
+        Date now = new Date();
+        /**
+         * 更新订单发货状态和物流信息
+         */
+        /*Order orderUpdate = new Order();
+        orderUpdate.setOrderId(order.getOrderId());
+        orderUpdate.setStatus(OrderStatus.SUCCESS.value());
+        orderUpdate.setFinallyTime(now);
+        orderUpdate.setUpdateTime(now);
+        updateById(orderUpdate);
+        log.debug("确认送达，更新订单状态成已完成");*/
+        // 如果是商家自配送 添加物流订单
+        if (deliveryArriveParam.getDvyId() == 13) {
+            log.debug("商品由商家配送 配送商家编号 {}", deliveryArriveParam.getDvyId());
+            boolean save = false;
+            DeliveryOrder deliveryOrder1 = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getOrderNumber, order.getOrderNumber()));
+            if (deliveryOrder1 != null) {
+                save = false;
+            } else {
+                log.debug("未查询到物流订单");
+                save = true;
+                deliveryOrder1 = new DeliveryOrder();
+                deliveryOrder1.setCreateTime(now);
+                deliveryOrder1.setAddOrderId(order.getAddrOrderId());
+                deliveryOrder1.setExpressNumber(deliveryArriveParam.getDvyFlowId());
+            }
+            deliveryOrder1.setOrderNumber(order.getOrderNumber());
+            //物流状态0初始创建1已分配配送员2运送中3已送达
+            deliveryOrder1.setExpressStatus(3);
+
+            if (deliveryArriveParam.getDeliveryUserId() != null) {
+                //添加商家自配送运单中派送员信息
+                DeliveryUser deliveryUser = deliveryUserService.getById(deliveryArriveParam.getDeliveryUserId());
+                deliveryOrder1.setExpressPerson(deliveryUser.getUserName());
+                deliveryOrder1.setExpressPhone(deliveryUser.getUserPhone());
+                DeliveryOrderRoute deliveryOrderRoute = new DeliveryOrderRoute();
+
+                deliveryOrderRoute.setCreateTime(now);
+                deliveryOrderRoute.setOrderNumber(order.getOrderNumber());
+                deliveryOrderRoute.setExpressNumber(deliveryArriveParam.getDvyFlowId());
+                deliveryOrderRoute.setAddOrderId(order.getAddrOrderId());
+                deliveryOrderRoute.setInfo(" 商品订单 " + "" + deliveryArriveParam.getRemark() + " 派送员 " + deliveryUser.getUserName() + " 联系电话" + deliveryUser.getUserPhone() +" 已送达");
+                //写入物流订单路由
+                deliveryOrderRouteService.save(deliveryOrderRoute);
+            }
+            // 写入物流订单
+            if (save) {
+                deliveryOrderService.save(deliveryOrder1);
+            } else {
+                deliveryOrderService.updateById(deliveryOrder1);
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ const pageObject = {
         loading: false,
         showOrderDialog:false,//是否显示订单管理弹框
         showReasonSel:false,//是否显示更多原因
-        reasonArr:["原因1","原因2","原因3","原因4"],
+        reasonArr:["原因1","原因2","原因2","原因2","原因2","原因2","原因2","原因2","原因3","原因4"],
         selectedReason:-1,
     },
     taggleShowOrderDialog(){

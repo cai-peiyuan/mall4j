@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.model.Order;
+import com.yami.shop.bean.param.DeliveryArriveParam;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.bean.param.OrderRefundParam;
 
@@ -140,4 +141,6 @@ public interface OrderService extends IService<Order> {
      * @param order
      */
     void refundOrder(Order order, OrderRefundParam refundForm);
+
+    void orderArrive(Order order, DeliveryArriveParam deliveryArriveParam);
 }

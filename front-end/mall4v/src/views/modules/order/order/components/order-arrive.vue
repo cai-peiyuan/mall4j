@@ -6,7 +6,7 @@
     :close-on-click-modal="false"
   >
     <el-form
-      ref="dataFormRef"
+      ref="orderArriveDataFormRef"
       :model="orderArriveDataForm"
       :rules="dataRule"
       label-width="80px"
@@ -92,10 +92,6 @@ const validDvyFlowId = (rule, value, callback) => {
   }
 }
 const dataRule = {
-  dvyFlowId: [
-    { required: true, message: '不能为空', trigger: 'blur' },
-    { validator: validDvyFlowId, trigger: 'blur' }
-  ]
 }
 
 const visible = ref(false)
@@ -132,7 +128,7 @@ const init = (orderNumber, dvyId, dvyFlowId) => {
   })
 
   http({
-    url: http.adornUrl('/admin/delivery/info/'+dvyFlowId),
+    url: http.adornUrl('/admin/delivery/info/'+orderNumber),
     method: 'get',
     params: http.adornParams()
   }).then(({ data }) => {
@@ -148,17 +144,14 @@ const orderArriveDataFormRef = ref(null)
  * 订单发货
  */
 const onSubmit = () => {
+  console.log("提交表单", orderArriveDataFormRef)
   orderArriveDataFormRef.value?.validate((valid) => {
+    console.log(valid)
     if (valid) {
       http({
-        url: http.adornUrl('/order/order/delivery'),
+        url: http.adornUrl('/order/order/arrive'),
         method: 'put',
-        data: http.adornData({
-          orderNumber: orderArriveDataForm.orderNumber,
-          dvyId: orderArriveDataForm.dvyId,
-          dvyFlowId: orderArriveDataForm.dvyFlowId,
-          deliveryUserId: orderArriveDataForm.deliveryUserId
-        })
+        data: http.adornData(orderArriveDataForm)
       })
         .then(() => {
           ElMessage({
@@ -168,6 +161,7 @@ const onSubmit = () => {
             onClose: () => {
               visible.value = false
               emit('refreshDataList')
+
             }
           })
         })

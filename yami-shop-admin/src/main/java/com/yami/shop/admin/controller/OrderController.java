@@ -13,6 +13,7 @@ import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
 import com.yami.shop.bean.model.UserAddrOrder;
+import com.yami.shop.bean.param.DeliveryArriveParam;
 import com.yami.shop.bean.param.DeliveryOrderParam;
 import com.yami.shop.bean.param.OrderParam;
 import com.yami.shop.bean.param.OrderRefundParam;
@@ -113,6 +114,23 @@ public class OrderController {
         return ServerResponseEntity.success().setData(JSON.parse(printResult));
     }
 
+    /**
+     * 确认送达物流
+     */
+    @PutMapping("/arrive")
+    @PreAuthorize("@pms.hasPermission('order:order:arrive')")
+    public ServerResponseEntity<Void> arrive(@RequestBody DeliveryArriveParam deliveryArriveParam) {
+        Long shopId = SecurityUtils.getSysUser().getShopId();
+        Order order = orderService.getOrderByOrderNumber(deliveryArriveParam.getOrderNumber());
+        if (!Objects.equal(shopId, order.getShopId())) {
+            throw new YamiShopBindException("您没有权限修改该订单信息");
+        }
+        /**
+         * 订单物流送达
+         */
+        orderService.orderArrive(order, deliveryArriveParam);
+        return ServerResponseEntity.success();
+    }
     /**
      * 订单发货
      */

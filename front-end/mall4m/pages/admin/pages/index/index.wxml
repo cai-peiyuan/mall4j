@@ -54,14 +54,7 @@
             <view class="flex" style="margin-top: 5vw;">
                 <label class="labelName">原因</label>
                 <view style="position: relative;">
-                   <view bindtap="showReasonSel" style="border:solid 1px #eee; line-height: 40px; padding-left:3vw; font-size: 14px; width:60vw; height: 40px;border-radius: 2vw; margin-left: 3vw;">
-                    {{selectedReason==-1?'请选择':selectedReason}}
-                   </view>
-                   <view wx:if="{{showReasonSel}}" style="height: 30vw; width:60vw; overflow: auto; position: absolute; left:3vw; top:40px; border:solid 1px #eee; border-radius: 2vw;">
-                       <view bindtap="selectReason" data-value="{{item}}" wx:for="{{reasonArr}}" wx:key="item"  style="height: 30px; line-height: 30px; padding-left: 3vw; font-size: 14px;">
-                           {{item}}
-                       </view>
-                   </view>
+                
                 </view>
             </view>
             <view class="aroundFlex" style="position: absolute; left:0; bottom:5vw; width:100vw; height: 20vw;">
