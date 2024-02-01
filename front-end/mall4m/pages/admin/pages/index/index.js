@@ -6,9 +6,24 @@ const pageObject = {
         warnSize: 'default',
         disabled: false,
         plain: false,
-        loading: false
+        loading: false,
+        showOrderDialog:false,//是否显示订单管理弹框
+        showReasonSel:false,//是否显示更多原因
+        reasonArr:["原因1","原因2","原因3","原因4"],
+        selectedReason:-1,
     },
-
+    taggleShowOrderDialog(){
+        this.setData({showOrderDialog:!this.data.showOrderDialog});
+    },
+    showReasonSel(){
+        this.setData({showReasonSel:!this.data.showReasonSel});
+    },
+    selectReason(e){
+        this.setData({
+            selectedReason: e.target.dataset.value
+        });
+        this.showReasonSel();
+    },
     onShareAppMessage() {
         return {
             title: 'button',
