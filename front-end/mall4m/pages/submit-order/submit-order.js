@@ -1,4 +1,5 @@
 // pages/submit-order/submit-order.js
+const app = getApp();
 var http = require("../../utils/http.js");
 Page({
 
@@ -24,7 +25,8 @@ Page({
         transfee: 0,
         reduceAmount: 0,
         remark: "",
-        couponIds: []
+        couponIds: [],
+        imageUrl:app.globalData.imageUrl,
     },
 
     /**

@@ -1,5 +1,5 @@
 // pages/user/user.js
-
+const app = getApp();
 var http = require("../../utils/http.js");
 var util = require("../../utils/util.js");
 var myBehavior = require('../../utils/my-behavior.js')
@@ -19,7 +19,8 @@ Page({
     phonenum: '',
     closeEye: false,
     wxUserInfo: {},
-    userBalance: {}
+    userBalance: {},
+    imageUrl:app.globalData.imageUrl,
   },
 
   /**

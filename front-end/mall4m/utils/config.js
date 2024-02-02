@@ -3,6 +3,7 @@
 var domain = "http://192.168.50.163:8086";
 // domain = "http://192.168.50.163:8086/mall-wx-api";
 domain = "https://xdyx.bhgk.cc/wx-apis";
+let imageDomain="http://cdn.bhgk.cc/xdyx/images"
 let openSource = true;
 
 function compareVersion(v1, v2) {
@@ -35,6 +36,7 @@ exports.domain = domain;
 exports.openSource = openSource;
 exports.compareVersion = compareVersion;
 exports.debug = true;
+exports.imageDomain=imageDomain;
 exports.log = function (data) {
     if (exports.debug) {
         console.log(data);

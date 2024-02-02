@@ -22,6 +22,7 @@ Page({
         sts: 0,
         statuBarHeight: wx.getMenuButtonBoundingClientRect().top, //wx.getSystemInfoSync().statusBarHeight,
         showADDialog: false,
+        imageUrl:app.globalData.imageUrl,
     },
     //事件处理函数
     bindViewTap: function () {

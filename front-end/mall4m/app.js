@@ -42,6 +42,7 @@ App({
     // 是否正在进行登陆
     isLanding: true,
     // 购物车商品数量
-    totalCartCount: 0
+    totalCartCount: 0,
+    imageUrl:config.imageDomain
   }
 })

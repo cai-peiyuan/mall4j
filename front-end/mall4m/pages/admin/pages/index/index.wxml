@@ -2,7 +2,7 @@
     <view class="btnArea flex">
         <view class="btnItem columnFlex" bindtap="taggleShowOrderDialog">
             <view class="imgArea">
-                <image src="/images/admin/setOrder.png" mode="widthFix" class="btnImg" />
+                <image src="{{imageUrl}}/admin/setOrder.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 订单管理
@@ -10,7 +10,7 @@
         </view>
         <view class="btnItem columnFlex" wx:if="{{false}}">
             <view class="imgArea">
-                <image src="/images/admin/setRefund.png" mode="widthFix" class="btnImg" />
+                <image src="{{imageUrl}}/admin/setRefund.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 退款管理
@@ -18,7 +18,7 @@
         </view>
         <view class="btnItem columnFlex" wx:if="{{false}}">
             <view class="imgArea">
-                <image src="/images/admin/setDelivery.png" mode="widthFix" class="btnImg" />
+                <image src="{{imageUrl}}/admin/setDelivery.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 物流管理
@@ -26,7 +26,7 @@
         </view>
         <view class="btnItem columnFlex" wx:if="{{false}}">
             <view class="imgArea">
-                <image src="/images/admin/setOrder.png" mode="widthFix" class="btnImg" />
+                <image src="{{imageUrl}}/admin/setOrder.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 订单管理

@@ -1,5 +1,5 @@
 // pages/search-prod-show/search-prod-show.js
-
+const app = getApp();
 var http = require('../../../../utils/http.js');
 Page({
 
@@ -11,6 +11,7 @@ Page({
     showType:2,
     searchProdList:[],
     prodName:"",
+    imageUrl:app.globalData.imageUrl,
   },
 
   changeShowType:function(){

@@ -23,7 +23,7 @@
             <text class="order-sts  {{item.status==1?'red':''}}  {{(item.status==5||item.status==6)?'gray':''}}">{{item.status==1?'待支付':(item.status==2?'待发货':(item.status==3?'待收货':(item.status==5?'已完成':'已取消')))}}</text>
 
             <view class='clear-btn' wx:if="{{item.status==5 || item.status==6}}">
-              <image src='../../images/icon/clear-his.png' class='clear-list-btn' bindtap='delOrderList' data-ordernum="{{item.orderNumber}}"></image>
+              <image src='{{imageUrl}}/icon/clear-his.png' class='clear-list-btn' bindtap='delOrderList' data-ordernum="{{item.orderNumber}}"></image>
             </view>
           </view>
         </view>

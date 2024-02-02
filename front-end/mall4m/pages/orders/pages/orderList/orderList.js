@@ -1,3 +1,4 @@
+const app = getApp();
 var http = require('../../../../utils/http.js');
 var config = require('../../../../utils/config.js');
 
@@ -10,7 +11,8 @@ Page({
         list: [],
         current: 1,
         pages: 0,
-        sts: 0
+        sts: 0,
+        imageUrl:app.globalData.imageUrl,
     },
 
     /**

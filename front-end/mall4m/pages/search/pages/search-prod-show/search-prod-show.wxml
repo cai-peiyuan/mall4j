@@ -6,11 +6,11 @@
     <view class='search-bar'>
       <view class='search-box'>
         <input class='sear-input' value="{{prodName}}" bindinput='getSearchContent' confirm-type='search' bindconfirm='toSearchConfirm'></input>
-        <image src='../../images/icon/search.png' class='search-img'></image>
+        <image src='{{imageUrl}}/icon/search.png' class='search-img'></image>
       </view>
       <view class='search-list-img' bindtap='changeShowType'>
-        <image wx:if="{{showType==1}}" src='../../images/icon/search-col.png'></image>
-        <image wx:if="{{showType==2}}" src='../../images/icon/search-col2.png'></image>
+        <image wx:if="{{showType==1}}" src='{{imageUrl}}/icon/search-col.png'></image>
+        <image wx:if="{{showType==2}}" src='{{imageUrl}}/icon/search-col2.png'></image>
       </view>
     </view>
     <view class='tabs'>

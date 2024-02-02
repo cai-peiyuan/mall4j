@@ -4,10 +4,10 @@
     <view wx:if="{{showADDialog}}" class="dialogMask centerFlex">
         <view class="dialogInfo">
             <view>
-                <image src="/images/dialog.jpg" mode="widthFix" style="width: 70vw;  border-radius: 3vw;" />
+                <image src="{{imageUrl}}/dialog.jpg" mode="widthFix" style="width: 70vw;  border-radius: 3vw;" />
             </view>
             <view style="margin-top: 5vw;" bindtap="closeDialog">
-                <image src="/images/icon/close1.png" mode="widthFix" style="width:10vw; height:10vw" />
+                <image src="{{imageUrl}}/icon/close1.png" mode="widthFix" style="width:10vw; height:10vw" />
             </view>
         </view>
     </view>
@@ -20,7 +20,7 @@
         <view class='bg-sear' style="top: 100px; background: transparent;">
             <view class="scrolltop">
                 <view class='section' bindtap='toSearchPage'>
-                    <image src='../../images/icon/search.png' class='search-img'></image>
+                    <image src='{{imageUrl}}/icon/search.png' class='search-img'></image>
                     <text class='placeholder'>搜索</text>
                 </view>
             </view>
@@ -42,26 +42,26 @@
 
         <view class='cat-item'>
             <view class='item' bindtap='toClassifyPage' data-sts="1" data-title="新品推荐">
-                <image src='../../images/icon/newProd.png'></image>
+                <image src='{{imageUrl}}/icon/newProd.png'></image>
                 <text>新品推荐</text>
             </view>
             <view class='item' bindtap='toClassifyPage' data-sts="2" data-title="限时特惠">
-                <image src='../../images/icon/timePrice.png'></image>
+                <image src='{{imageUrl}}/icon/timePrice.png'></image>
                 <text>限时特惠</text>
             </view>
             <view class='item' bindtap='toClassifyPage' data-sts="3" data-title="日销量榜">
-                <image src='../../images/icon/neweveryday.png'></image>
+                <image src='{{imageUrl}}/icon/neweveryday.png'></image>
                 <text>日销量榜</text>
             </view>
             <view class='item' bindtap='toCouponCenter'>
-                <image src='../../images/icon/newprods.png'></image>
+                <image src='{{imageUrl}}/icon/newprods.png'></image>
                 <text>领优惠券</text>
             </view>
         </view>
 
         <!-- 消息播放 -->
         <view class='message-play' bindtap='onNewsPage'>
-            <image src='../../images/icon/horn.png' class='hornpng'></image>
+            <image src='{{imageUrl}}/icon/horn.png' class='hornpng'></image>
             <swiper vertical='true' autoplay='true' duration='1000' class='swiper-cont'>
                 <block wx:for='{{news}}' wx:key='id'>
                     <swiper-item class="items">{{item.title}}</swiper-item>
@@ -130,7 +130,7 @@
                                     <text>￥</text>
                                     <text>{{wxs.toPrice(prod.oriPrice)}}</text>
                                 </view>
-                                <image src='../../images/icon/basket.png' class='basket-img'></image>
+                                <image src='{{imageUrl}}/icon/basket.png' class='basket-img'></image>
                             </view>
                         </view>
                     </view>
@@ -156,7 +156,7 @@
                   <text class='big-num'>{{wxs.parsePrice(prod.price)[0]}}</text>
                   <text class='small-num'>.{{wxs.parsePrice(prod.price)[1]}}</text>
                 </view>
-                <image src='../../images/tabbar/basket-sel.png' class='basket-img' data-prodid="{{prod.prodId}}" catchtap="addToCart"></image>
+                <image src='{{imageUrl}}/tabbar/basket-sel.png' class='basket-img' data-prodid="{{prod.prodId}}" catchtap="addToCart"></image>
               </view>
             </view>
           </view>

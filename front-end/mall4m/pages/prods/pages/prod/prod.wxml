@@ -27,13 +27,13 @@
                     <view class="prod-tit">{{prodName}}</view>
                     <view class="col">
                         <view style="position: absolute;left: 0px;" bindtap='addOrCannelCollection'>
-                            <image wx-if="{{!isCollection}}" src="../../images/icon/prod-col.png"></image>
-                            <image wx-if="{{isCollection}}" src="../../images/icon/prod-col-red.png"></image>
+                            <image wx-if="{{!isCollection}}" src="{{imageUrl}}/icon/prod-col.png"></image>
+                            <image wx-if="{{isCollection}}" src="{{imageUrl}}/icon/prod-col-red.png"></image>
                             收藏
                         </view>
                         <view style="position: absolute;right: 0px;">
                             <button class="share-icon" open-type="share">
-                                <image src='../../images/icon/share.png'></image>
+                                <image src='{{imageUrl}}/icon/share.png'></image>
                                 分享
                             </button>
                         </view>
@@ -121,16 +121,16 @@
     <!-- 底部按钮 -->
     <view class="cart-footer {{findSku?'':'gray'}}">
         <view class="btn icon" bindtap='toHomePage'>
-            <image src="../../../../images/tabbar/homepage.png"></image>
+            <image src="{{imageUrl}}/tabbar/homepage.png"></image>
             首页
         </view>
         <view class="btn icon" bindtap='toCartPage'>
-            <image src="../../../../images/tabbar/basket.png"></image>
+            <image src="{{imageUrl}}/tabbar/basket.png"></image>
             购物车
             <view class='badge badge-1' wx:if="{{totalCartNum>0}}">{{totalCartNum}}</view>
         </view>
         <view class="btn icon" bindtap='toConcatPage'>
-            <image src="../../../../images/tabbar/message.png"></image>
+            <image src="{{imageUrl}}/tabbar/message.png"></image>
             联系客服
             <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>
         </view>

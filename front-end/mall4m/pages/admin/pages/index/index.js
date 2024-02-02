@@ -1,4 +1,5 @@
-const types = ['default', 'primary', 'warn']
+const types = ['default', 'primary', 'warn'];
+const app = getApp();
 const pageObject = {
     data: {
         orderNumber: '',
@@ -12,6 +13,7 @@ const pageObject = {
         showReasonSel: false, //是否显示更多原因
         reasonArr: ["原因1", "原因2", "原因2", "原因2", "原因2", "原因2", "原因2", "原因2", "原因3", "原因4"],
         selectedReason: -1,
+        imageUrl:app.globalData.imageUrl,
     },
 
     hideDialog() {

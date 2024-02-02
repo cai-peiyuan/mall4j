@@ -57,6 +57,7 @@ Page({
         observerBasicInfo: null,
         observerDetailInfo: null,
         observerCommentsInfo: null,
+        imageUrl:app.globalData.imageUrl,
     },
 
     /**
