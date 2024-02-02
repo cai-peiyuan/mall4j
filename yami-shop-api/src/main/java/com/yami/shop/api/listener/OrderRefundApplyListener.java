@@ -25,7 +25,7 @@ import java.util.Date;
  *
  * @author cai
  */
-@Component()
+@Component
 @AllArgsConstructor
 @Slf4j
 public class OrderRefundApplyListener {
@@ -56,7 +56,7 @@ public class OrderRefundApplyListener {
      */
     @EventListener(OrderRefundApplyEvent.class)
     @Order(SubmitOrderOrder.DEFAULT)
-    public void defaultSubmitOrderListener(OrderRefundApplyEvent event) {
+    public void orderRefundApplyEvent(OrderRefundApplyEvent event) {
         Date now = new Date();
         String userId = SecurityUtils.getUser().getUserId();
         com.yami.shop.bean.model.Order order = event.getOrder();

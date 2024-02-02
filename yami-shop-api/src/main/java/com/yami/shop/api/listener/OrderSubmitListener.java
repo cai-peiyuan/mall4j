@@ -34,7 +34,7 @@ import java.util.*;
  *
  * @author LGH
  */
-@Component("defaultSubmitOrderListener")
+@Component
 @AllArgsConstructor
 public class OrderSubmitListener {
 
@@ -63,7 +63,7 @@ public class OrderSubmitListener {
      */
     @EventListener(OrderSubmitEvent.class)
     @Order(SubmitOrderOrder.DEFAULT)
-    public void defaultSubmitOrderListener(OrderSubmitEvent event) {
+    public void orderSubmitEvent(OrderSubmitEvent event) {
         Date now = new Date();
 
         String userId = SecurityUtils.getUser().getUserId();
