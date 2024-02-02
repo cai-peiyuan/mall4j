@@ -19,6 +19,7 @@
         <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount"/>
         <result column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
         <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
+        <result column="dvy_arrive_time" jdbcType="TIMESTAMP" property="dvyArriveTime"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
@@ -86,6 +87,7 @@
         <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
         <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
         <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+        <result column="dvy_arrive_time" jdbcType="TIMESTAMP" property="dvyArriveTime"/>
         <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount"/>
         <result column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
         <result column="product_nums" jdbcType="INTEGER" property="productNums"/>
@@ -130,6 +132,7 @@
         <result column="dvy_type" jdbcType="VARCHAR" property="dvyType"/>
         <result column="dvy_id" jdbcType="BIGINT" property="dvyId"/>
         <result column="dvy_flow_id" jdbcType="VARCHAR" property="dvyFlowId"/>
+        <result column="dvy_arrive_time" jdbcType="TIMESTAMP" property="dvyArriveTime"/>
         <result column="freight_amount" jdbcType="DECIMAL" property="freightAmount"/>
         <result column="addr_order_id" jdbcType="BIGINT" property="addrOrderId"/>
         <result column="product_nums" jdbcType="INTEGER" property="productNums"/>

@@ -1,24 +1,36 @@
 const types = ['default', 'primary', 'warn']
 const pageObject = {
     data: {
+        orderNumber: '',
         defaultSize: 'default',
         primarySize: 'default',
         warnSize: 'default',
         disabled: false,
         plain: false,
         loading: false,
-        showOrderDialog:false,//是否显示订单管理弹框
-        showReasonSel:false,//是否显示更多原因
-        reasonArr:["原因1","原因2","原因2","原因2","原因2","原因2","原因2","原因2","原因3","原因4"],
-        selectedReason:-1,
+        showOrderDialog: false, //是否显示订单管理弹框
+        showReasonSel: false, //是否显示更多原因
+        reasonArr: ["原因1", "原因2", "原因2", "原因2", "原因2", "原因2", "原因2", "原因2", "原因3", "原因4"],
+        selectedReason: -1,
     },
-    taggleShowOrderDialog(){
-        this.setData({showOrderDialog:!this.data.showOrderDialog});
+
+    hideDialog() {
+        this.setData({
+            showOrderDialog: false
+        })
     },
-    showReasonSel(){
-        this.setData({showReasonSel:!this.data.showReasonSel});
+
+    taggleShowOrderDialog() {
+        this.setData({
+            showOrderDialog: !this.data.showOrderDialog
+        });
     },
-    selectReason(e){
+    showReasonSel() {
+        this.setData({
+            showReasonSel: !this.data.showReasonSel
+        });
+    },
+    selectReason(e) {
         this.setData({
             selectedReason: e.target.dataset.value
         });
@@ -77,7 +89,7 @@ const pageObject = {
         console.log(orderNumber)
         // 订单发货
         wx.navigateTo({
-            url: '/pages/admin/pages/order-delivery/order-delivery?orderNum=1751226703902019584'
+            url: '/pages/admin/pages/order-delivery/order-delivery?orderNum=1753239988402786304'
         })
     },
     /**
@@ -95,7 +107,7 @@ const pageObject = {
                     const orderNumber = res.result;
                     //打开订单管理页面 订单发货
                     wx.navigateTo({
-                        url: '/pages/admin/pages/order-detail/order-detail?orderNum=' + orderNumber
+                        url: '/pages/admin/pages/order-delivery/order-delivery?orderNum=' + orderNumber
                     })
                 }
             }

@@ -1,20 +1,17 @@
-
-
 package com.yami.shop.api.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.yami.shop.bean.app.dto.*;
+import com.yami.shop.bean.app.dto.MyOrderDto;
+import com.yami.shop.bean.app.dto.OrderCountData;
+import com.yami.shop.bean.app.dto.OrderShopDto;
 import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
-import com.yami.shop.bean.model.ShopDetail;
-import com.yami.shop.bean.model.UserAddrOrder;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
-import com.yami.shop.common.util.Arith;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.security.api.util.SecurityUtils;
 import com.yami.shop.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,8 +68,11 @@ public class MyOrderController {
     @GetMapping("/orderDetail/{orderNumber}")
     @Operation(summary = "订单详情信息", description = "根据订单号获取订单详情信息")
     public ServerResponseEntity<Object> orderDetailV2(@PathVariable(value = "orderNumber") String orderNumber) {
-        String userId = SecurityUtils.getUser().getUserId();
-        JSONObject orderInfo = myOrderService.getMyOrderByOrderNumberV2(userId, orderNumber);
+        YamiUser user = SecurityUtils.getUser();
+        if (user.getIsStaff() == 0) {
+            throw new YamiShopBindException("你没有权限操作该订单");
+        }
+        JSONObject orderInfo = myOrderService.getMyOrderByOrderNumberV2(user.getUserId(), orderNumber);
         return ServerResponseEntity.success(orderInfo);
     }
 
@@ -82,9 +82,7 @@ public class MyOrderController {
      */
     @GetMapping("/myOrder")
     @Operation(summary = "订单列表信息", description = "根据订单状态获取订单列表信息，状态为0时获取所有订单")
-    @Parameters({
-            @Parameter(name = "status", description = "订单状态 1:待付款 2:待发货 3:待收货 4:待评价 5:成功 6:失败")
-    })
+    @Parameters({@Parameter(name = "status", description = "订单状态 1:待付款 2:待发货 3:待收货 4:待评价 5:成功 6:失败")})
     public ServerResponseEntity<IPage<MyOrderDto>> myOrder(@RequestParam(value = "status") Integer status, PageParam<MyOrderDto> page) {
         String userId = SecurityUtils.getUser().getUserId();
         IPage<MyOrderDto> myOrderDtoIpage = myOrderService.pageMyOrderByUserIdAndStatus(page, userId, status);
@@ -118,7 +116,8 @@ public class MyOrderController {
         }
         return ServerResponseEntity.success();
     }
-/**
+
+    /**
      * 取消订单
      */
     @PutMapping("/cancel/{orderNumber}")

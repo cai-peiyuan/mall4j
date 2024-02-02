@@ -2,13 +2,13 @@
     <view class="btnArea flex">
         <view class="btnItem columnFlex" bindtap="taggleShowOrderDialog">
             <view class="imgArea">
-                <image src="/images/admin/setOrder.png" mode="widthFix" class="btnImg"/>
+                <image src="/images/admin/setOrder.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 订单管理
             </view>
         </view>
-        <view class="btnItem columnFlex">
+        <view class="btnItem columnFlex" wx:if="{{false}}">
             <view class="imgArea">
                 <image src="/images/admin/setRefund.png" mode="widthFix" class="btnImg" />
             </view>
@@ -16,45 +16,66 @@
                 退款管理
             </view>
         </view>
-        <view class="btnItem columnFlex">
+        <view class="btnItem columnFlex" wx:if="{{false}}">
             <view class="imgArea">
-                <image src="/images/admin/setDelivery.png" mode="widthFix" class="btnImg"/>
+                <image src="/images/admin/setDelivery.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 物流管理
             </view>
         </view>
-        <view class="btnItem columnFlex">
+        <view class="btnItem columnFlex" wx:if="{{false}}">
             <view class="imgArea">
-                <image src="/images/admin/setOrder.png" mode="widthFix" class="btnImg"/>
+                <image src="/images/admin/setOrder.png" mode="widthFix" class="btnImg" />
             </view>
             <view>
                 订单管理
             </view>
         </view>
         <view class="btnItem columnFlex">
-            
+
         </view>
     </view>
+
     <view wx:if="{{showOrderDialog}}" class="mask" >
+        <view class="orderDialog">
+        <view bindtap="hideDialog">关闭</view>
+            <view class="flex" style="margin-top: 5vw;">
+                <label class="labelName">输入订单号码</label>
+                <view style="position: relative;">
+                    <input placeholder='' type='text' maxlength='15' value="{{orderNumber}}" ></input>
+                </view>
+            </view>
+            <view class="aroundFlex" style="position: absolute; left:0; bottom:5vw; width:100vw; height: 20vw;">
+                <view bindtap="viewOrder" class="btnCancel centerFlex" style="background:#999; width:35vw; text-align: center;color:#fff; height: 10vw; border-radius: 5vw;">
+                    号码进入
+                </view>
+                <view bindtap="viewOrderByQRCode" class="btnSure centerFlex" style="background:#f38d08; width:35vw; text-align: center;color:#fff; height: 10vw; border-radius: 5vw;">
+                    扫码进入
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view wx:if="{{demo}}" class="mask">
         <view class="orderDialog">
             <view class="flex">
                 <label class="labelName">原因</label>
                 <view style="position: relative;">
-                   <view bindtap="showReasonSel" style="border:solid 1px #eee; line-height: 40px; padding-left:3vw; font-size: 14px; width:60vw; height: 40px;border-radius: 2vw; margin-left: 3vw;">
-                    {{selectedReason==-1?'请选择':selectedReason}}
-                   </view>
-                   <view wx:if="{{showReasonSel}}" style="height: 30vw; width:60vw; overflow: auto; position: absolute; left:3vw; top:40px; border:solid 1px #eee; border-radius: 2vw;">
-                       <view bindtap="selectReason" data-value="{{item}}" wx:for="{{reasonArr}}" wx:key="item"  style="height: 30px; line-height: 30px; padding-left: 3vw; font-size: 14px;">
-                           {{item}}
-                       </view>
-                   </view>
+                    <view bindtap="showReasonSel" style="border:solid 1px #eee; line-height: 40px; padding-left:3vw; font-size: 14px; width:60vw; height: 40px;border-radius: 2vw; margin-left: 3vw;">
+                        {{selectedReason==-1?'请选择':selectedReason}}
+                    </view>
+                    <view wx:if="{{showReasonSel}}" style="height: 30vw; width:60vw; overflow: auto; position: absolute; left:3vw; top:40px; border:solid 1px #eee; border-radius: 2vw;">
+                        <view bindtap="selectReason" data-value="{{item}}" wx:for="{{reasonArr}}" wx:key="item" style="height: 30px; line-height: 30px; padding-left: 3vw; font-size: 14px;">
+                            {{item}}
+                        </view>
+                    </view>
                 </view>
             </view>
             <view class="flex" style="margin-top: 5vw;">
                 <label class="labelName">原因</label>
                 <view style="position: relative;">
-                
+
                 </view>
             </view>
             <view class="aroundFlex" style="position: absolute; left:0; bottom:5vw; width:100vw; height: 20vw;">
@@ -67,7 +88,7 @@
             </view>
         </view>
     </view>
-  <!-- <view class="btn-area" id="buttonContainer">
+    <!-- <view class="btn-area" id="buttonContainer">
     <button type="primary" bindtap="viewOrderByQRCode">扫码管理订单</button>
     <button type="primary" bindtap="viewOrder">测试进入某个订单</button>
     <button type="primary" loading="true">测试进入</button>

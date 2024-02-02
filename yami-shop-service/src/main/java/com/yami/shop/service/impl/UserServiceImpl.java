@@ -176,6 +176,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setOpenId(openId);
             user.setAppId(appId);
             user.setSessionKey(session_key);
+            user.setIsStaff(0);
             save(user);
         } else {
             //如果当前的sessionKey更新的话 更新到数据库中

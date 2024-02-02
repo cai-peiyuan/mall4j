@@ -41,6 +41,12 @@ public class UserInfoInTokenBO {
      */
     private Integer isAdmin;
 
+
+    /**
+     * 是否为工作人员
+     */
+    private Integer isStaff;
+
     /**
      * 业务用户编号
      */

@@ -142,10 +142,10 @@
 
     <!-- 底部栏 -->
     <view class='order-detail-footer' wx:if="{{status==5||status==6 || true}}">
-      <text class='dele-order' bindtap="orderRefund">订单退款</text>
+      <text class='dele-order' bindtap="orderRefund" wx:if="{{order.refundSts == 0}}">订单退款</text>
       <view class='footer-box'>
-        <text class='apply-service' bindtap="orderDelivery">订单发货</text>
-        <text class='buy-again' bingdtap="orderArrived">订单送达</text>
+        <text class='apply-service' bindtap="orderDelivery" wx:if="{{order.dvyFlowId == ''}}">订单发货</text>
+        <text class='buy-again' bingdtap="orderArrived" wx:if="{{order.status == ''}}">订单送达</text>
       </view>
     </view>
 

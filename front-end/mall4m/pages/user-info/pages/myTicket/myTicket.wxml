@@ -5,7 +5,7 @@
         <view class="tabItem {{activeTab==1?'active':''}}" bindtap="switchTab" data-index="{{1}}">不可用</view>
     </view>
     <view class="couponList" style="padding:3vw;">
-        <view class="couponItem" wx:if="{{activeTab==0}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+        <view class="couponItem" wx:if="{{activeTab==0 && false}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
             <view class="couponName">
                 {{index}}满200减30券
             </view>
@@ -20,9 +20,8 @@
             <view class="gettingDate">
                 领取日期：2023年1月1日
             </view>
-
         </view>
-        <view class="couponItem couponItemDisable" wx:if="{{activeTab==1}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+        <view class="couponItem couponItemDisable" wx:if="{{activeTab==1 && false}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
             <view class="couponName">
                 {{index}}满200减30券
             </view>
@@ -39,7 +38,7 @@
             <view class="gettingDate">
                 领取日期：2023年1月1日
             </view>
-            <image class="outDateImg" src="/images/icon/outDate.png" mode="widthFix" style="width:70px"/>
+            <image class="outDateImg" src="/images/icon/outDate.png" mode="widthFix" style="width:70px" />
         </view>
     </view>
 </view>

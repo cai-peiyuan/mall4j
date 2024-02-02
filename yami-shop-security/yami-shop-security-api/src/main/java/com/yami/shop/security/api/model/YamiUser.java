@@ -28,4 +28,8 @@ public class YamiUser {
      * 店铺Id
      */
     private Long shopId;
+    /**
+     * 是否为工作人员
+     */
+    private Integer isStaff;
 }

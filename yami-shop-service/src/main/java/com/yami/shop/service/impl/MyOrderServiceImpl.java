@@ -4,6 +4,7 @@ package com.yami.shop.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,10 +12,7 @@ import com.yami.shop.bean.app.dto.MyOrderDto;
 import com.yami.shop.bean.app.dto.OrderItemDto;
 import com.yami.shop.bean.app.dto.OrderShopDto;
 import com.yami.shop.bean.app.dto.UserAddrDto;
-import com.yami.shop.bean.model.Order;
-import com.yami.shop.bean.model.OrderItem;
-import com.yami.shop.bean.model.ShopDetail;
-import com.yami.shop.bean.model.UserAddrOrder;
+import com.yami.shop.bean.model.*;
 import com.yami.shop.common.util.Arith;
 import com.yami.shop.common.util.PageAdapter;
 import com.yami.shop.dao.OrderMapper;
@@ -41,6 +39,9 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     private ShopDetailService shopDetailService;
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private DeliveryOrderService deliveryOrderService;
 
     @Override
     public IPage<MyOrderDto> pageMyOrderByUserIdAndStatus(Page<MyOrderDto> page, String userId, Integer status) {
@@ -111,8 +112,11 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     @Override
     public JSONObject getMyOrderByOrderNumberV2(String userId, String orderNumber) {
         JSONObject object = new JSONObject();
+        Order orderByOrderNumber = orderService.getOrderByOrderNumber(orderNumber);
+        DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, orderByOrderNumber.getDvyFlowId()));
         object.put("orderShop", getMyOrderByOrderNumber(userId, orderNumber));
-        object.put("order", orderService.getOrderByOrderNumber(orderNumber));
+        object.put("order", orderByOrderNumber);
+        object.put("deliveryOrder", deliveryOrder);
         return object;
     }
 

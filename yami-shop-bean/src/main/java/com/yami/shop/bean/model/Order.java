@@ -106,6 +106,13 @@ public class Order implements Serializable {
     private Integer productNums;
 
     /**
+     * 订单送达时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date dvyArriveTime;
+
+
+    /**
      * 订购时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

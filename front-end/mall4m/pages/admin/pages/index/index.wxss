@@ -1,37 +1,48 @@
-.btnArea{
-    flex-wrap: wrap; 
+.btnArea {
+    flex-wrap: wrap;
     box-sizing: border-box;
 }
-.btnItem{
-    width:25vw; 
-    height: 25vw; 
+
+.btnItem {
+    width: 25vw;
+    height: 25vw;
     box-sizing: border-box;
     font-size: 14px;
 }
-.imgArea{
-    width:12vw;
-    height: 12vw; 
+
+.imgArea {
+    width: 12vw;
+    height: 12vw;
     /* border:solid 1px red;  */
     margin-bottom: 2vw;
 }
-.btnImg{width:12vw;}
-.mask{
-    position:absolute; 
-    top:0; 
-    left:0; 
-    width:100vw; 
-    height:100vh; 
-    background:rgba(0,0,0,.6)
+
+.btnImg {
+    width: 12vw;
 }
-.orderDialog{
-    padding:10vw 0 5vw;
-    width:100vw; 
-    height:50vh;
+
+.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, .6)
+}
+
+.orderDialog {
+    padding: 10vw 0 5vw;
+    width: 100vw;
+    height: 50vh;
     background-color: #Fff;
     border-radius: 3vw 3vw 0 0;
-    position:absolute;
-    bottom:0; 
-    left:0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     box-sizing: border-box;
 }
-.labelName{width:20vw; text-align: right;}
+
+.labelName {
+    width: 36vw;
+    text-align: right;
+}

@@ -1,6 +1,9 @@
 <!--pages/user-info/pages/myTicket/myTicket.wxml-->
 <view class="container">
     <view class="couponList" style="padding:3vw;">
+        暂无领券活动
+    </view>
+    <view class="couponList" style="padding:3vw;" wx:if="{{false}}">
         <view class="couponItem" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
             <view class="couponName">
                 {{index}}满200减30券
@@ -18,7 +21,7 @@
             </view>
         </view>
         <view class="couponItem couponed" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
-            <image src="/images/icon/conponed.png" mode="widthFix" class="conponedImg"/>
+            <image src="/images/icon/conponed.png" mode="widthFix" class="conponedImg" />
             <view class="couponName">
                 {{index}}满200减30券
             </view>

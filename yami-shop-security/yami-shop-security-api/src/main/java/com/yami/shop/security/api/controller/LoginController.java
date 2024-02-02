@@ -120,6 +120,8 @@ public class LoginController {
             userInfoInTokenBO.setSysType(SysTypeEnum.ORDINARY.value());
             userInfoInTokenBO.setIsAdmin(0);
             userInfoInTokenBO.setEnabled(true);
+            //是否为工作人员标志
+            userInfoInTokenBO.setIsStaff(user.getIsStaff());
             return ServerResponseEntity.success(tokenStore.storeAndGetVo(userInfoInTokenBO));
         }else{
             return ServerResponseEntity.showFailMsg("微信小程序用户登录失败，请检查AppId设置情况");
