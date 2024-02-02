@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author LGH
  */
-@Component("defaultShopCartListener")
+@Component
 public class ShopCartListener {
 
     /**
