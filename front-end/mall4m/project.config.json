@@ -29,14 +29,15 @@
         "packNpmRelationList": [],
         "minifyWXSS": true,
         "disableUseStrict": false,
-        "ignoreUploadUnusedFiles": true,
+        "ignoreUploadUnusedFiles": false,
         "minifyWXML": true,
         "babelSetting": {
             "ignore": [],
             "disablePlugins": [],
             "outputPath": ""
         },
-        "condition": false
+        "condition": false,
+        "ignoreDevUnusedFiles": false
     },
     "compileType": "miniprogram",
     "libVersion": "2.23.2",
