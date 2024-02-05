@@ -19,9 +19,145 @@ Page({
     reduceAmount: '',
     shopId: '',
     prodid: '',
-    order: {}
+    order: {},
+    userBalance: {},
+    popupShowPayType: false,
+    payType: 1
   },
 
+  /**
+   * 显示支付方式
+   */
+  showPayTypePopup: function () {
+    this.setData({
+      popupShowPayType: true
+    });
+  },
+
+  /**
+   * 关闭支付方式
+   */
+  closePopupPayType: function () {
+    this.setData({
+      popupShowPayType: false
+    });
+  },
+
+
+
+  /**
+   * 提交订单
+   */
+  toPay: function () {
+    if (this.data.payType == 0 && this.data.userBalance.balance < this.data.actualTotal) {
+      wx.showToast({
+        title: '账户余额不足',
+        icon: "none"
+      });
+      return;
+    }
+    if (this.data.payType == 1) {
+      // 发起微信支付，传入平台订单编号
+      this.calWeixinPay(this.data.orderNumber);
+    } else if (this.data.payType == 0) {
+      // 发起普通，传入平台订单编号
+      this.callNormalPay(this.data.orderNumber);
+    }
+  },
+
+
+
+  /**
+   * 唤起微信支付
+   * 通过后端接口，换取支付参数
+   */
+  calWeixinPay: function (orderNumbers) {
+    wx.showLoading({
+      mask: true
+    });
+    var params = {
+      url: "/p/order/weChatPay",
+      method: "POST",
+      data: {
+        payType: this.data.payType,
+        orderNumbers: orderNumbers
+      },
+      callBack: function (res) {
+        wx.hideLoading();
+        wx.requestPayment({
+          timeStamp: res.timeStamp,
+          nonceStr: res.nonceStr,
+          package: res.packageStr,
+          signType: "RSA",
+          paySign: res.sign,
+          success: e => {
+            console.log("wx.requestPayment支付成功", e);
+            wx.showToast({
+              title: "微信支付成功",
+              icon: "none"
+            })
+            this.loadOrderDetail(this.data.orderNumber)
+          },
+          fail: err => {
+            console.log("wx.requestPayment支付失败", err);
+            wx.showToast({
+              title: "微信支付失败" + err,
+              icon: "none"
+            })
+            this.loadOrderDetail(this.data.orderNumber)
+          }
+        })
+      }
+    };
+    http.request(params);
+  },
+
+  /**
+   * 使用余额支付订单
+   */
+  callNormalPay: function (orderNumbers) {
+    wx.showLoading({
+      mask: true
+    });
+    var params = {
+      url: "/p/order/normalPay",
+      method: "POST",
+      data: {
+        payType: this.data.payType,
+        orderNumbers: orderNumbers
+      },
+      callBack: function (res) {
+        console.log("余额支付结果", res);
+        wx.hideLoading();
+        if (res.success) {
+          console.log("余额支付成功", res);
+          wx.showToast({
+            title: "余额支付成功",
+            icon: "none"
+          })
+          this.loadOrderDetail(this.data.orderNumber)
+        } else {
+          console.log("余额支付失败", res);
+          wx.showToast({
+            title: "余额支付失败" + res,
+            icon: "none"
+          })
+          this.loadOrderDetail(this.data.orderNumber)
+        }
+      }
+    };
+    http.request(params);
+  },
+
+  /**
+   * 切换支付方式
+   * @param {*} e 
+   */
+  changePayType: function (e) {
+    this.setData({
+      payType: e.currentTarget.dataset.sts
+    });
+  },
   //跳转商品详情页
   toProdPage: function (e) {
     var prodid = e.currentTarget.dataset.prodid;
@@ -75,6 +211,43 @@ Page({
     this.loadOrderDetail(options.orderNum);
   },
 
+
+
+  /**
+   * 取消订单
+   */
+  onCancelOrder: function (e) {
+    var ordernum = e.currentTarget.dataset.ordernum;
+    var ths = this;
+    wx.showModal({
+      title: '',
+      content: '要取消此订单？',
+      confirmColor: "#3e62ad",
+      cancelColor: "#3e62ad",
+      cancelText: '否',
+      confirmText: '是',
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({
+            mask: true
+          });
+          var params = {
+            url: "/p/myOrder/cancel/" + ordernum,
+            method: "PUT",
+            data: {},
+            callBack: function (res) {
+              //console.log(res);
+              ths.loadOrderDetail(ordernum);
+              wx.hideLoading();
+            }
+          };
+          http.request(params);
+        } else if (res.cancel) {
+          //console.log('用户点击取消')
+        }
+      }
+    })
+  },
   /**
    * 加载订单数据
    */
@@ -83,28 +256,31 @@ Page({
     wx.showLoading();
     //加载订单详情
     var params = {
-      url: "/p/myOrder/orderDetail/"+orderNum,
+      url: "/p/myOrder/orderDetail/" + orderNum,
       method: "GET",
-      data: {
-        
-      },
+      data: {},
       callBack: function (data) {
-        let res = data.orderShop;
+        let orderShop = data.orderShop;
         let order = data.order;
+        let userBalance = data.userBalance;
         ths.setData({
           orderNumber: orderNum,
-          actualTotal: res.actualTotal,
-          userAddrDto: res.userAddrDto,
-          remarks: res.remarks,
-          orderItemDtos: res.orderItemDtos,
-          createTime: res.createTime,
-          status: res.status,
-          productTotalAmount: res.orderItemDtos[0].productTotalAmount,
-          transfee: res.transfee,
-          reduceAmount: res.reduceAmount,
-          actualTotal: res.actualTotal,
-          shopId: res.shopId,
-          order: order
+          actualTotal: orderShop.actualTotal,
+          userAddrDto: orderShop.userAddrDto,
+          remarks: orderShop.remarks,
+          orderItemDtos: orderShop.orderItemDtos,
+          createTime: orderShop.createTime,
+          status: orderShop.status,
+          productTotalAmount: orderShop.orderItemDtos[0].productTotalAmount,
+          transfee: orderShop.transfee,
+          reduceAmount: orderShop.reduceAmount,
+          actualTotal: orderShop.actualTotal,
+          shopId: orderShop.shopId,
+          order: order,
+          userBalance: userBalance || {
+            balance: 0,
+            carNumber: ''
+          }
         });
         wx.hideLoading();
       }
@@ -117,7 +293,7 @@ Page({
    * 删除订单
    * @param {*} e 
    */
-  deleteOrder: function(e){
+  deleteOrder: function (e) {
     var ordernum = e.currentTarget.dataset.ordernum;
     var ths = this
     wx.showModal({
@@ -131,7 +307,7 @@ Page({
             url: "/p/myOrder/" + ordernum,
             method: "DELETE",
             data: {},
-            callBack: function(res) {
+            callBack: function (res) {
               wx.hideLoading();
               wx.navigateBack({
                 delta: 1

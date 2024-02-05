@@ -43,5 +43,5 @@ public interface MyOrderService extends IService<Order> {
 	 * @author peiyuan.cai
 	 * @date 2024/1/24 17:16 星期三
 	 */
-	JSONObject getMyOrderByOrderNumberV2(String userId, String orderNumber);
+	JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber);
 }

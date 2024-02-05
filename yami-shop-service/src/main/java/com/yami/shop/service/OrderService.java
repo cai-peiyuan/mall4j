@@ -74,6 +74,7 @@ public interface OrderService extends IService<Order> {
 
     /**
      * 订单申请退款
+     * 取消订单申请
      * @param orders
      */
     void refundApplyOrders(List<Order> orders);
@@ -142,5 +143,12 @@ public interface OrderService extends IService<Order> {
      */
     void refundOrder(Order order, OrderRefundParam refundForm);
 
+    /**
+     * 订单送达
+     * @param order
+     * @param deliveryArriveParam
+     * @author peiyuan.cai@mapabc.com
+     * @date 2024/2/5 17:31 星期一
+     */
     void orderArrive(Order order, DeliveryArriveParam deliveryArriveParam);
 }

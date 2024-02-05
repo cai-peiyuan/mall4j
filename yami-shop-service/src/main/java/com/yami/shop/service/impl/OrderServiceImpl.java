@@ -21,6 +21,7 @@ import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.ShopCartOrderMergerDto;
 import com.yami.shop.bean.app.dto.UserInfoDto;
 import com.yami.shop.bean.enums.OrderStatus;
+import com.yami.shop.bean.enums.PayType;
 import com.yami.shop.bean.event.*;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.bean.param.DeliveryArriveParam;
@@ -254,13 +255,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public void refundApplyOrders(List<Order> orders) {
         Date now = new Date();
         for (Order order : orders) {
-            if (!Objects.equals(order.getStatus(), OrderStatus.PADYED.value())) {
+            if (order.getStatus() != OrderStatus.PADYED.value()) {
                 throw new YamiShopBindException("订单" + order.getOrderNumber() + "状态不正确，无法申请退款");
             }
+
+            if (order.getIsPayed() != 1) {
+                throw new YamiShopBindException("订单" + order.getOrderNumber() + "没有付款，无法申请退款");
+            }
             /**
-             * 订单已支付并且是微信支付
+             * 订单已支付并且是微信支付 或者 余额支付
              */
-            if (order.getIsPayed() == 1 && order.getPayType() == 1) {
+            if (order.getPayType() == PayType.WECHATPAY.value() || order.getPayType() == PayType.BALANCE.value()) {
                 OrderSettlement settlement = orderSettlementService.getOne(new LambdaQueryWrapper<OrderSettlement>().eq(OrderSettlement::getOrderNumber, order.getOrderNumber()));
 
                 /**
@@ -312,6 +317,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                  * 广播订单退款事件
                  */
                 eventPublisher.publishEvent(new OrderRefundApplyEvent(order));
+            } else if (order.getPayType() == PayType.BALANCE.value()) {
+                /**
+                 * 订单已支付并且是余额支付
+                 */
+
             }
         }
 
@@ -516,10 +526,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) || order.getStatus() < OrderStatus.PADYED.value()) {
             throw new YamiShopBindException("订单" + order.getOrderNumber() + " 状态不正确，没有付款，无法申请退款");
         }
+        if (order.getIsPayed() != 1) {
+            throw new YamiShopBindException("订单  " + order.getOrderNumber() + " 没有付款，无法申请退款");
+        }
         /**
-         * 订单已支付并且是微信支付
+         * 订单已支付并且是微信支付 或者余额支付
          */
-        if (order.getIsPayed() == 1 && order.getPayType() == 1) {
+        if ( order.getPayType() == PayType.WECHATPAY.value() || order.getPayType() == PayType.BALANCE.value()) {
             OrderSettlement settlement = orderSettlementService.getOne(new LambdaQueryWrapper<OrderSettlement>().eq(OrderSettlement::getOrderNumber, order.getOrderNumber()));
 
             /**
@@ -576,7 +589,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
              * 商家操作 直接同意退款
              */
             orderRefundService.refundAccept(orderRefund);
-
         }
 
         /**
@@ -632,7 +644,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 deliveryOrderRoute.setOrderNumber(order.getOrderNumber());
                 deliveryOrderRoute.setExpressNumber(deliveryArriveParam.getDvyFlowId());
                 deliveryOrderRoute.setAddOrderId(order.getAddrOrderId());
-                deliveryOrderRoute.setInfo(" 商品订单 " + "" + deliveryArriveParam.getRemark() + " 派送员 " + deliveryUser.getUserName() + " 联系电话" + deliveryUser.getUserPhone() +" 已送达");
+                deliveryOrderRoute.setInfo(" 商品订单 " + "" + deliveryArriveParam.getRemark() + " 派送员 " + deliveryUser.getUserName() + " 联系电话" + deliveryUser.getUserPhone() + " 已送达");
                 //写入物流订单路由
                 deliveryOrderRouteService.save(deliveryOrderRoute);
             }

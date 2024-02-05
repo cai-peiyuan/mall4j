@@ -72,7 +72,7 @@ public class MyOrderController {
         if (user.getIsStaff() == 0) {
             throw new YamiShopBindException("你没有权限操作该订单");
         }
-        JSONObject orderInfo = myOrderService.getMyOrderByOrderNumberV2(user.getUserId(), orderNumber);
+        JSONObject orderInfo = myOrderService.getMyOrderDetailByOrderNumberV2(user.getUserId(), orderNumber);
         return ServerResponseEntity.success(orderInfo);
     }
 
@@ -101,12 +101,18 @@ public class MyOrderController {
         if (!Objects.equals(order.getUserId(), userId)) {
             throw new YamiShopBindException("你没有权限操作该订单");
         }
-        if (!Objects.equals(order.getStatus(), OrderStatus.PADYED.value())) {
+
+        if (order.getStatus() != OrderStatus.PADYED.value()) {
             throw new YamiShopBindException("订单状态不正确，无法申请退款");
         }
+
+        if (order.getIsPayed() != 1) {
+            throw new YamiShopBindException("订单没有付款，无法申请退款");
+        }
+
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(orderNumber);
         order.setOrderItems(orderItems);
-        // 取消订单
+        // 取消订单申请
         orderService.refundApplyOrders(Collections.singletonList(order));
 
         // 清除缓存

@@ -131,7 +131,6 @@ public class PayServiceImpl implements PayService {
             throw new YamiShopBindException("用户余额" + userBalance.getBalance() + " 不足以支付本订单" + payAmount);
         }
 
-
         UserBalance userBalanceUpdate = new UserBalance();
         userBalanceUpdate.setUserId(userId);
         userBalanceUpdate.setUpdateTime(now);
@@ -140,6 +139,11 @@ public class PayServiceImpl implements PayService {
         userBalanceUpdate.setBalance(newBalance);
 
         boolean updateUserBalance = userBalanceService.updateById(userBalanceUpdate);
+
+        if (!updateUserBalance) {
+            throw new YamiShopBindException("用户余额扣款失败");
+        }
+
         StringBuilder result = new StringBuilder();
         result.append("更新用户最新余额 ").append(" userId = ").append(userBalanceUpdate.getUserId()).append(" 最新余额 ").append(newBalance).append(" 更新结果 ").append(updateUserBalance).append("\n");
         log.debug(result.toString());
@@ -156,9 +160,11 @@ public class PayServiceImpl implements PayService {
         userBalanceDetail.setUseBalance(Arith.sub(0, payAmount));
 
         boolean saveUserBalanceDetail = userBalanceDetailService.save(userBalanceDetail);
+        if (!saveUserBalanceDetail) {
+            throw new YamiShopBindException("用户余额明细记录失败");
+        }
         result.append("添加用户余额变化明细 ").append(" 结果 ").append(saveUserBalanceDetail).append("\n");
         log.debug(result.toString());
-
 
         // 修改订单信息
         for (String orderNumber : orderNumbers) {
@@ -173,12 +179,18 @@ public class PayServiceImpl implements PayService {
             orderSettlement.setIsClearing(1);
             //更新订单结算信息
             int update = orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
+            if (update < 1) {
+                throw new YamiShopBindException("订单结算信息更新失败" + update);
+            }
             result.append("更新订单结算信息 ").append(" orderNumber = ").append(orderNumber).append(" 更新结果 ").append(update).append("\n");
             // Order order = orderMapper.getOrderByOrderNumber(orderNumber);
         }
 
         // 将订单改为已支付状态
         int update = orderMapper.updateByToPaySuccess(Arrays.asList(orderNumbers), PayType.BALANCE.value());
+        if (update < 1) {
+            throw new YamiShopBindException("更新订单状态失败 " + update);
+        }
         result.append("更新订单信息 ").append(" orderNumbers = ").append(Json.toJsonString(orderNumbers)).append(" 更新结果 ").append(update).append("\n");
 
         // 支付成功通知事件 和监听此事件执行进一步的数据操作  如打印小票、发送通知等
@@ -277,8 +289,7 @@ public class PayServiceImpl implements PayService {
                     //微信支付编号
                     .eq(transactionId != null, OrderRefund::getBizPayNo, transactionId)
                     //申请退款时 传入的内部退款订单编号
-                    .eq(outTradeNo != null, OrderRefund::getOrderPayNo, outTradeNo)
-            );
+                    .eq(outTradeNo != null, OrderRefund::getOrderPayNo, outTradeNo));
             log.debug("购物订单退款查询结果 {}", Json.toJsonString(orderRefund));
             if (orderRefund != null) {
                 OrderRefund update = new OrderRefund();
@@ -299,8 +310,7 @@ public class PayServiceImpl implements PayService {
                     //微信支付编号
                     .eq(transactionId != null, WxPayRefund::getTransactionId, transactionId)
                     //申请退款时 传入的内部退款订单编号
-                    .eq(outTradeNo != null, WxPayRefund::getOutTradeNo, outTradeNo)
-            );
+                    .eq(outTradeNo != null, WxPayRefund::getOutTradeNo, outTradeNo));
             log.debug("微信支付平台退款订单查询结果 {}", Json.toJsonString(wxPayRefund));
 
             if (wxPayRefund != null) {
@@ -557,44 +567,56 @@ public class PayServiceImpl implements PayService {
      */
     @Override
     public WechatPaySign createWeChatPrePayOrder(String userId, Long shopId, PayParam payParam) {
-
-        String[] orderNumbers = payParam.getOrderNumbers().split(StrUtil.COMMA);
-
-        List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
-
-        Double actualTotal = 0D;
-        StringBuilder prodName = new StringBuilder();
-
-        for (Order order : orders) {
-            actualTotal = Arith.add(actualTotal, order.getActualTotal());
-            prodName.append(order.getProdName()).append(StrUtil.COMMA);
-        }
-        PrepayRequest request = new PrepayRequest();
-        Amount amount = new Amount();
-        amount.setTotal(Arith.toAmount(actualTotal));
-        request.setAmount(amount);
-        request.setAppid(WeChatPayUtil.appId);
-        request.setMchid(WeChatPayUtil.merchantId);
-        request.setDescription(prodName.substring(0, Math.min(100, prodName.length() - 1)));
-        request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
-        //支付订单中使用新的id、？？？？ 因为orderNumber可能是有多个？合并付款的情况？
-        String outTradeNo = String.valueOf(snowflake.nextId());
-        request.setOutTradeNo(outTradeNo);
-        Payer payer = new Payer();
-        payer.setOpenid(userId);
-        request.setPayer(payer);
-        //通过返回的消息通知中attach字段判断支付订单类型
-        request.setAttach(ORDER_TYPE_GOODS);
-        PrepayWithRequestPaymentResponse response = WeChatPayUtil.jsapiServiceExtension.prepayWithRequestPayment(request);
-
         WechatPaySign wechatPaySign = new WechatPaySign();
-        wechatPaySign.setSign(response.getPaySign());
-        wechatPaySign.setNonceStr(response.getNonceStr());
-        wechatPaySign.setTimeStamp(response.getTimeStamp());
-        wechatPaySign.setPackageStr(response.getPackageVal());
-        wechatPaySign.setPrepayId(response.getPackageVal());
-        //保存预支付订单到数据库
-        WxPayPrepay wxPayPrepay = wxPayPrepayService.saveWxPayPrepayGoods(payParam, request, response);
+
+        //已经创建过支付订单 并且查询到了支付订单
+        WxPayPrepay wxPayPrepayInDb = wxPayPrepayService.getOne(new LambdaQueryWrapper<WxPayPrepay>().eq(WxPayPrepay::getOrderNumbers, payParam.getOrderNumbers()));
+        if (wxPayPrepayInDb != null) {
+            wechatPaySign.setSign(wxPayPrepayInDb.getPrepaySign());
+            wechatPaySign.setNonceStr(wxPayPrepayInDb.getPrepayNonce());
+            wechatPaySign.setTimeStamp(wxPayPrepayInDb.getPrepayTimestamp());
+            wechatPaySign.setPackageStr(wxPayPrepayInDb.getPrepayPackage());
+            wechatPaySign.setPrepayId(wxPayPrepayInDb.getPrepayPackage());
+        } else {
+            // 没有创建过支付订单  向腾讯下单
+            String[] orderNumbers = payParam.getOrderNumbers().split(StrUtil.COMMA);
+
+            List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
+
+            Double actualTotal = 0D;
+            StringBuilder prodName = new StringBuilder();
+
+            for (Order order : orders) {
+                actualTotal = Arith.add(actualTotal, order.getActualTotal());
+                prodName.append(order.getProdName()).append(StrUtil.COMMA);
+            }
+            PrepayRequest request = new PrepayRequest();
+            Amount amount = new Amount();
+            amount.setTotal(Arith.toAmount(actualTotal));
+            request.setAmount(amount);
+            request.setAppid(WeChatPayUtil.appId);
+            request.setMchid(WeChatPayUtil.merchantId);
+            request.setDescription(prodName.substring(0, Math.min(100, prodName.length() - 1)));
+            request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
+            //支付订单中使用新的id、？？？？ 因为orderNumber可能是有多个？合并付款的情况？
+            String outTradeNo = String.valueOf(snowflake.nextId());
+            request.setOutTradeNo(outTradeNo);
+            Payer payer = new Payer();
+            payer.setOpenid(userId);
+            request.setPayer(payer);
+            //通过返回的消息通知中attach字段判断支付订单类型
+            request.setAttach(ORDER_TYPE_GOODS);
+            PrepayWithRequestPaymentResponse response = WeChatPayUtil.jsapiServiceExtension.prepayWithRequestPayment(request);
+
+            wechatPaySign.setSign(response.getPaySign());
+            wechatPaySign.setNonceStr(response.getNonceStr());
+            wechatPaySign.setTimeStamp(response.getTimeStamp());
+            wechatPaySign.setPackageStr(response.getPackageVal());
+            wechatPaySign.setPrepayId(response.getPackageVal());
+            //保存预支付订单到数据库
+            WxPayPrepay wxPayPrepay = wxPayPrepayService.saveWxPayPrepayGoods(payParam, request, response);
+        }
+
         return wechatPaySign;
     }
 
@@ -683,40 +705,44 @@ public class PayServiceImpl implements PayService {
         amount.setTotal(Arith.toAmount(orderRefund.getOrderAmount()).longValue());
         amount.setCurrency("CNY");
         request.setAmount(amount);
-        // 调用接口
-        Refund refund = WeChatPayUtil.refundService.create(request);
+        try {
+            // 调用接口
+            Refund refund = WeChatPayUtil.refundService.create(request);
 
-        /**
-         * 保存退款订单信息
-         */
-        wxPayRefund.setAppId(WeChatPayUtil.appId);
-        wxPayRefund.setMchId(WeChatPayUtil.merchantId);
-        wxPayRefund.setNotifyUrl(request.getNotifyUrl());
-        wxPayRefund.setCreateTime(now);
-        wxPayRefund.setReason(orderRefund.getBuyerMsg());
-        wxPayRefund.setTransactionId(request.getTransactionId());
-        wxPayRefund.setOutTradeNo(request.getOutTradeNo());
-        wxPayRefund.setOutRefundNo(request.getOutRefundNo());
-        wxPayRefund.setAppId(WeChatPayUtil.appId);
-        wxPayRefund.setTotalAmount(amount.getTotal());
-        wxPayRefund.setRefundAmount(amount.getRefund());
-        wxPayRefund.setGoodsDetail(Json.toJsonString(request.getGoodsDetail()));
-        wxPayRefund.setFromAmount(Json.toJsonString(amount.getFrom()));
-        wxPayRefund.setCurrency(amount.getCurrency());
+            /**
+             * 保存退款订单信息
+             */
+            wxPayRefund.setAppId(WeChatPayUtil.appId);
+            wxPayRefund.setMchId(WeChatPayUtil.merchantId);
+            wxPayRefund.setNotifyUrl(request.getNotifyUrl());
+            wxPayRefund.setCreateTime(now);
+            wxPayRefund.setReason(orderRefund.getBuyerMsg());
+            wxPayRefund.setTransactionId(request.getTransactionId());
+            wxPayRefund.setOutTradeNo(request.getOutTradeNo());
+            wxPayRefund.setOutRefundNo(request.getOutRefundNo());
+            wxPayRefund.setAppId(WeChatPayUtil.appId);
+            wxPayRefund.setTotalAmount(amount.getTotal());
+            wxPayRefund.setRefundAmount(amount.getRefund());
+            wxPayRefund.setGoodsDetail(Json.toJsonString(request.getGoodsDetail()));
+            wxPayRefund.setFromAmount(Json.toJsonString(amount.getFrom()));
+            wxPayRefund.setCurrency(amount.getCurrency());
 
-        /**
-         * 退款接口响应结果
-         */
-        wxPayRefund.setRefundId(refund.getRefundId());
-        wxPayRefund.setRefundCreateTime(refund.getCreateTime());
-        wxPayRefund.setSuccessTime(refund.getSuccessTime());
-        wxPayRefund.setRefundCreateTime(refund.getCreateTime());
-        wxPayRefund.setPromotionDetail(Json.toJsonString(refund.getPromotionDetail()));
-        wxPayRefund.setResultAmount(Json.toJsonString(refund.getAmount()));
-        wxPayRefund.setChannel(refund.getChannel().name());
-        wxPayRefund.setStatus(refund.getStatus().name());
-        //保存退款订单到数据库
-        int save = wxPayRefundMapper.insert(wxPayRefund);
+            /**
+             * 退款接口响应结果
+             */
+            wxPayRefund.setRefundId(refund.getRefundId());
+            wxPayRefund.setRefundCreateTime(refund.getCreateTime());
+            wxPayRefund.setSuccessTime(refund.getSuccessTime());
+            wxPayRefund.setRefundCreateTime(refund.getCreateTime());
+            wxPayRefund.setPromotionDetail(Json.toJsonString(refund.getPromotionDetail()));
+            wxPayRefund.setResultAmount(Json.toJsonString(refund.getAmount()));
+            wxPayRefund.setChannel(refund.getChannel().name());
+            wxPayRefund.setStatus(refund.getStatus().name());
+            //保存退款订单到数据库
+            int save = wxPayRefundMapper.insert(wxPayRefund);
+        } catch (Exception e) {
+            throw new YamiShopBindException("退款操作失败 " + e.getLocalizedMessage());
+        }
 
         return wxPayRefund;
     }

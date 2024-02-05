@@ -111,6 +111,7 @@ public class WxPayPrepayServiceImpl extends ServiceImpl<WxPayPrepayMapper, WxPay
             wxPayPrepay.setPrepayNonce(response.getNonceStr());
             wxPayPrepay.setPrepayPackage(response.getPackageVal());
             wxPayPrepay.setPrepaySignType(response.getSignType());
+            wxPayPrepay.setPrepaySign(response.getPaySign());
 
             wxPayPrepay.setCreateTime(new Date());
             wxPayPrepay.setOrderType(request.getAttach());

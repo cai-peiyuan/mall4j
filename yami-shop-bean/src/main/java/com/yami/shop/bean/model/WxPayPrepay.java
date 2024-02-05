@@ -66,6 +66,11 @@ public class WxPayPrepay implements Serializable {
 
     private String prepaySignType;
 
+    /**
+     * 支付签名
+     */
+    private String prepaySign;
+
     private String appPayResult;
 
     private String notifyResult;
@@ -85,6 +90,7 @@ public class WxPayPrepay implements Serializable {
     private String successTime;
 
     private String promotionDetail;
+
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;

@@ -43,6 +43,9 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     @Autowired
     private DeliveryOrderService deliveryOrderService;
 
+    @Autowired
+    private UserBalanceService userBalanceService;
+
     @Override
     public IPage<MyOrderDto> pageMyOrderByUserIdAndStatus(Page<MyOrderDto> page, String userId, Integer status) {
         page.setRecords(orderMapper.listMyOrderByUserIdAndStatus(new PageAdapter(page), userId, status));
@@ -110,13 +113,14 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
      * @date 2024/1/24 17:16 星期三
      */
     @Override
-    public JSONObject getMyOrderByOrderNumberV2(String userId, String orderNumber) {
+    public JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber) {
         JSONObject object = new JSONObject();
         Order orderByOrderNumber = orderService.getOrderByOrderNumber(orderNumber);
         DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, orderByOrderNumber.getDvyFlowId()));
         object.put("orderShop", getMyOrderByOrderNumber(userId, orderNumber));
         object.put("order", orderByOrderNumber);
         object.put("deliveryOrder", deliveryOrder);
+        object.put("userBalance", userBalanceService.getUserBalanceByUserId(userId));
         return object;
     }
 

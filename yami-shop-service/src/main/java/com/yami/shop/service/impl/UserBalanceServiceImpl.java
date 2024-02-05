@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户余额
@@ -38,6 +39,7 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UserBalance getUserBalanceByUserId(String userId) {
         UserBalance userBalance = userBalanceMapper.selectById(userId);
         if(userBalance == null){

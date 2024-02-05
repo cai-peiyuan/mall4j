@@ -44,8 +44,8 @@
                   <view class='prod-info-cont'>{{prod.skuName}}</view>
                   <view class='price-nums'>
                     <text class='prodprice'><text class='symbol'>￥</text>
-                    <text class='big-num'>{{wxs.parsePrice(prod.price)[0]}}</text>
-                    <text class='small-num'>.{{wxs.parsePrice(prod.price)[1]}}</text></text>
+                      <text class='big-num'>{{wxs.parsePrice(prod.price)[0]}}</text>
+                      <text class='small-num'>.{{wxs.parsePrice(prod.price)[1]}}</text></text>
                     <text class="prodcount">x{{prod.prodCount}}</text>
                   </view>
                 </view>
@@ -86,12 +86,7 @@
           </view>
         </view>
       </view>
-
-
-
     </block>
-
-
   </view>
 </view>
 <!-- end 订单列表 -->
