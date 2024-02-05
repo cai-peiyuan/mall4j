@@ -96,6 +96,7 @@ Page({
               title: "微信支付成功",
               icon: "none"
             })
+            this.closePopupPayType();
             this.loadOrderDetail(this.data.orderNumber)
           },
           fail: err => {
@@ -104,6 +105,7 @@ Page({
               title: "微信支付失败" + err,
               icon: "none"
             })
+            this.closePopupPayType();
             this.loadOrderDetail(this.data.orderNumber)
           }
         })
@@ -135,6 +137,7 @@ Page({
             title: "余额支付成功",
             icon: "none"
           })
+          this.closePopupPayType();
           this.loadOrderDetail(this.data.orderNumber)
         } else {
           console.log("余额支付失败", res);
@@ -142,6 +145,7 @@ Page({
             title: "余额支付失败" + res,
             icon: "none"
           })
+          this.closePopupPayType();
           this.loadOrderDetail(this.data.orderNumber)
         }
       }
@@ -163,6 +167,39 @@ Page({
     var prodid = e.currentTarget.dataset.prodid;
     wx.navigateTo({
       url: '/pages/prods/pages/prod/prod?prodid=' + prodid,
+    })
+  },
+
+
+
+  /**
+   * 申请退款
+   */
+  onRefund: function (e) {
+    console.log('申请退款', e)
+    var ordernum = e.currentTarget.dataset.ordernum;
+    var ths = this;
+    wx.showModal({
+      title: '',
+      content: '尚未发货的订单支持无理由退款，是否申请退款？',
+      confirmColor: "#eba524",
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({
+            mask: true
+          });
+          var params = {
+            url: "/p/myOrder/refundApply/" + e.currentTarget.dataset.ordernum,
+            method: "PUT",
+            data: {},
+            callBack: function (res) {
+              ths.loadOrderDetail(ths.data.orderNumber)
+              wx.hideLoading();
+            }
+          };
+          http.request(params);
+        } else if (res.cancel) {}
+      }
     })
   },
 

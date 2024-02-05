@@ -8,7 +8,7 @@ function getPayTypeName(payTypeCode) {
   } else if (payTypeCode == 2) {
     return '支付宝';
   } else if (payTypeCode == 0) {
-    return '手动支付';
+    return '余额支付';
   } else {
     return '未知支付' + payTypeCode;
   }

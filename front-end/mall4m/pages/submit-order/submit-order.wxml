@@ -253,8 +253,8 @@
             <view class='item-txt price'>
               结后余额：
               <text class='symbol'>￥</text>
-              <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
-              <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+              <text class='big-num'>{{wxs.parsePrice(userBalance.balance - actualTotal)[0]}}</text>
+              <text class='small-num'>.{{wxs.parsePrice(userBalance.balance - actualTotal)[1]}}</text>
             </view>
           </view>
         </view>

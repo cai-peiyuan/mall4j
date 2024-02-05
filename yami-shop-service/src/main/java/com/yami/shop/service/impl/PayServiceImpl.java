@@ -107,7 +107,9 @@ public class PayServiceImpl implements PayService {
             orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
 
             Order order = orderMapper.getOrderByOrderNumber(orderNumber);
-
+            if (order.getIsPayed() == 1) {
+                throw new YamiShopBindException("订单" + orderNumber + " 已支付 请勿重复支付" );
+            }
             //商品名称拼接
             prodName.append(order.getProdName()).append(StrUtil.COMMA);
         }
