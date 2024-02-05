@@ -45,8 +45,8 @@ public class OrderPayListener {
         log.debug("配置是否自动打印订单小票 {}", print_order_auto);
         for (String orderNumber : orderNumbers) {
             log.debug("购物订单已支付 订单编号 {} ", orderNumber);
-            Order orderByOrderNumber = orderService.getOrderByOrderNumber(orderNumber);
-            String printOrder = orderService.printOrder(orderByOrderNumber);
+            Order order = orderService.getOrderByOrderNumber(orderNumber);
+            String printOrder = orderService.printOrder(order);
             log.debug("购物订单编号 {} 打印结果返回 {}", orderNumber, printOrder);
         }
     }

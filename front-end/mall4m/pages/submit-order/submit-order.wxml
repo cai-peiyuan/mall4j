@@ -46,6 +46,7 @@
           </view>
         </view>
       </block>
+
       <!-- <view class='item-cont' bindtap='toOrderDetailPage' data-ordernum="{{item.primaryOrderNo}}">
         <view class='prod-pic'>
           <image src='{{imageUrl}}/prod/pic09.jpg'></image>
@@ -88,7 +89,6 @@
           <input value='{{remarks}}' placeholder='给卖家留言' bindinput="onRemarksInput"></input>
         </view>
       </view>
-
     </view>
 
     <view class='order-msg'>
@@ -127,8 +127,19 @@
         </view>
       </view>
     </view>
-  </view>
 
+    <view class='order-msg' wx:if="{{false}}">
+      <view class='msg-item'>
+        <view class='item coupon' bindtap='showPayTypePopup'>
+          <text class='item-tit'>支付方式：</text>
+          <text class='item-txt' wx:if="{{payType == 1}}">微信支付</text>
+          <text class='item-txt' wx:if="{{payType == 0}}">余额支付</text>
+          <text class='coupon-btn'>{{wxs.toPrice(actualTotal)}}</text>
+          <text class='arrow'></text>
+        </view>
+      </view>
+    </view>
+  </view>
 
   <!-- 底部栏 -->
   <view class='submit-order-footer' style="height: 50px;">
@@ -142,7 +153,7 @@
         </view>
       </view>
     </view>
-    <view class='footer-box' bindtap='toPay'>
+    <view class='footer-box' bindtap='choosePayType'>
       提交订单
     </view>
   </view>
@@ -170,6 +181,91 @@
     </view>
     <view class="coupon-ok" wx:if="{{couponSts==1}}">
       <text bindtap='choosedCoupon'>确定</text>
+    </view>
+  </view>
+</view>
+
+
+
+<!-- 选择支付方式弹窗 -->
+<view class="popup-hide" wx:if="{{popupShowPayType}}">
+  <view class="popup-box popup-box-pay">
+    <view class="popup-tit">
+      <text>支付方式</text>
+      <text class="close" bindtap='closePopupPayType'></text>
+    </view>
+    <view class="coupon-tabs">
+      <view class="coupon-tab {{payType==1?'on':''}}" bindtap='changePayType' data-sts='1'>微信支付</view>
+      <view class="coupon-tab {{payType==0?'on':''}}" bindtap='changePayType' data-sts='0'>余额支付</view>
+    </view>
+    <view class='popup-cnt'>
+
+      <!-- 微信支付结算 -->
+      <view class='order-msg' wx:if="{{payType==1}}">
+        <view class='msg-item'>
+          <view class='item'>
+            <view class='item-tit'>订单金额：</view>
+            <view class='item-txt price'>
+              <text class='symbol'>￥</text>
+              <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
+              <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+            </view>
+          </view>
+          <view class='item payment'>
+            <view class='item-txt price'>
+              支付金额：
+              <text class='symbol'>￥</text>
+              <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
+              <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 余额支付结算 -->
+      <view class='order-msg' wx:if="{{payType==0}}">
+        <view class='msg-item'>
+          <view class='item'>
+            <view class='item-tit'>会员卡号：</view>
+            <view class='item-txt price'>
+              <text class='big-num'>{{userBalance.cardNumber}}</text>
+            </view>
+          </view>
+
+          <view class='item'>
+            <view class='item-tit'>账户余额：</view>
+            <view class='item-txt price'>
+              <text class='symbol'>￥</text>
+              <text class='big-num'>{{wxs.parsePrice(userBalance.balance)[0]}}</text>
+              <text class='small-num'>.{{wxs.parsePrice(userBalance.balance)[1]}}</text>
+            </view>
+          </view>
+
+          <view class='item'>
+            <view class='item-tit'>本单消费：</view>
+            <view class='item-txt price'>
+              <text class='symbol'>￥</text>
+              <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
+              <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+            </view>
+          </view>
+          <view class='item payment'>
+            <view class='item-txt price'>
+              结后余额：
+              <text class='symbol'>￥</text>
+              <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
+              <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+    <view class="coupon-ok" wx:if="{{payType==1}}">
+      <text bindtap='toPay'>微信支付{{wxs.toPrice(actualTotal)}}</text>
+    </view>
+    <view class="coupon-ok {{userBalance.balance < actualTotal?'disabled':''}}" wx:if="{{payType==0}}">
+      <text bindtap='toPay'>{{userBalance.balance < actualTotal?'余额不足':'余额支付'}}{{wxs.toPrice(actualTotal)}}</text>
     </view>
   </view>
 </view>

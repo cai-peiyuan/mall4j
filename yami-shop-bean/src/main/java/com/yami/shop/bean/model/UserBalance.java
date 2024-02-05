@@ -13,6 +13,7 @@ import java.util.Date;
 
 /**
  * 用户余额表
+ *
  * @author c'p'y
  */
 @Data

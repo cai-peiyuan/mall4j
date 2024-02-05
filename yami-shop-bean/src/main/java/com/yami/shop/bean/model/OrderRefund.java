@@ -201,6 +201,10 @@ public class OrderRefund implements Serializable {
      * 商家备注
      */
     private String refundMsg;
+    /**
+     * 退款原因
+     */
+    private String refundReason;
 
     /**
      * 订单列表

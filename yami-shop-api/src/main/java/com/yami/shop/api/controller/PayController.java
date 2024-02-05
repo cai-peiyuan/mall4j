@@ -4,7 +4,6 @@ package com.yami.shop.api.controller;
 
 import com.qq.wechat.pay.config.WechatPaySign;
 import com.yami.shop.bean.app.param.PayParam;
-import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.bean.pay.PayInfoDto;
 import com.yami.shop.security.api.model.YamiUser;
 import com.yami.shop.security.api.util.SecurityUtils;
@@ -12,7 +11,6 @@ import com.yami.shop.service.PayService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import com.yami.shop.common.response.ServerResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,10 +31,11 @@ public class PayController {
     /**
      * 小程序平台订单支付接口
      * 小程序下单后获取前端支付参数
+     * 微信支付接口
      */
-    @PostMapping("/pay")
+    @PostMapping("/weChatPay")
     @Operation(summary = "根据订单号进行支付" , description = "根据订单号进行支付")
-    public ServerResponseEntity<WechatPaySign> pay(@RequestBody PayParam payParam) {
+    public ServerResponseEntity<WechatPaySign> weChatPay(@RequestBody PayParam payParam) {
         YamiUser user = SecurityUtils.getUser();
         String userId = user.getUserId();
         // 生成支付订单和支付参数
@@ -59,15 +58,15 @@ public class PayController {
      */
     @PostMapping("/normalPay")
     @Operation(summary = "根据订单号进行支付" , description = "根据订单号进行支付")
-    public ServerResponseEntity<Boolean> normalPay(@RequestBody PayParam payParam) {
+    public ServerResponseEntity<PayInfoDto> normalPay(@RequestBody PayParam payParam) {
 
         YamiUser user = SecurityUtils.getUser();
         String userId = user.getUserId();
-        PayInfoDto pay = payService.pay(userId, payParam);
+        PayInfoDto pay = payService.normalPay(userId, payParam);
 
         // 根据内部订单号更新order settlement
-        payService.paySuccess(pay.getPayNo(), "");
+        // payService.paySuccess(pay.getPayNo(), "");
 
-        return ServerResponseEntity.success(true);
+        return ServerResponseEntity.success(pay);
     }
 }

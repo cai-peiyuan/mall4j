@@ -25,7 +25,7 @@ public interface PayService {
      * @param payParam
      * @return
      */
-    PayInfoDto pay(String userId, PayParam payParam);
+    PayInfoDto normalPay(String userId, PayParam payParam);
 
     /**
      * 支付成功

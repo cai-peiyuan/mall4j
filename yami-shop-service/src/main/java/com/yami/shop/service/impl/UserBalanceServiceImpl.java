@@ -42,9 +42,12 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
         UserBalance userBalance = userBalanceMapper.selectById(userId);
         if(userBalance == null){
             log.warn("用户余额数据不存在 userId = {}", userId);
-            userBalance = getUserBalance(userId, "");
+            userBalance = getUserBalanceAddIfNotExists(userId, "");
         }
 
+        /**
+         * 如果余额表中没有手机号，则从用户表中更新手机号为会员卡号
+         */
         if (StrUtil.isBlank(userBalance.getCardNumber())) {
             User user = userMapper.selectById(userId);
             String userMobile = user.getUserMobile();
@@ -58,13 +61,13 @@ public class UserBalanceServiceImpl extends ServiceImpl<UserBalanceMapper, UserB
 
     /**
      * 根据用户id获取用户余额信息
-     *
+     * 如果不存在则新添加一个余额数据
      * @param userId
      * @param userMobile
      * @return
      */
     @Override
-    public UserBalance getUserBalance(String userId, String userMobile) {
+    public UserBalance getUserBalanceAddIfNotExists(String userId, String userMobile) {
         UserBalance userBalance = userBalanceMapper.selectById(userId);
         if (userBalance == null) {
             userBalance = new UserBalance();

@@ -220,7 +220,7 @@ page {
   word-break: break-all;
 }
 
-.prod-item  .total-num {
+.prod-item .total-num {
   text-align: right;
   padding: 20rpx 30rpx;
   font-size: 28rpx;
@@ -231,7 +231,7 @@ page {
   bottom: 0;
 }
 
-.prod-item  .price-nums .prodcount {
+.prod-item .price-nums .prodcount {
   position: absolute;
   bottom: 5rpx;
   right: 0;
@@ -305,7 +305,7 @@ page {
   flex: 1;
 }
 
-.order-msg .msg-item .item  .coupon-btn {
+.order-msg .msg-item .item .coupon-btn {
   display: block;
   margin: 0 30rpx;
   line-height: 28rpx;
@@ -500,4 +500,22 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
   background: transparent;
   transform: translate(-50%, -50%) scale(1);
   -webkit-transform: translate(-50%, -50%) scale(1);
+}
+
+.popup-box-pay {
+  height: 48% !important;
+}
+
+.disabled text {
+  border-radius: 20px;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  width: 450rpx;
+  padding: 7px;
+  background: -o-linear-gradient(right, #aaa, #aaa);
+  background: linear-gradient(right, #aaa, #aaa);
+  background: -webkit-linear-gradient(right, #aaa, #aaa);
+  color: #fff;
+  box-shadow: -1px 3px 3px #aaa;
 }

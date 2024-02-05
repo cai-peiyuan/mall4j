@@ -555,6 +555,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderRefund.setSellerMsg(refundForm.getSellerMsg());
             orderRefund.setApplyType(refundForm.getApplyType());
             orderRefund.setRefundMsg(refundForm.getRefundMsg());
+            orderRefund.setRefundReason(refundForm.getRefundReason());
             orderRefundService.save(orderRefund);
 
             /**

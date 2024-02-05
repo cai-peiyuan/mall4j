@@ -93,7 +93,7 @@ public class UserController {
 
         //获取用户余额
         //获取用户积分
-        UserBalance userBalance = userBalanceService.getUserBalance(userId, userDto.getUserMobile());
+        UserBalance userBalance = userBalanceService.getUserBalanceAddIfNotExists(userId, userDto.getUserMobile());
         result.put("userBalance", userBalance);
 
         //获取用户优惠券数量

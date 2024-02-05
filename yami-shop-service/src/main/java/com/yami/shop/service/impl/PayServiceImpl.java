@@ -90,7 +90,8 @@ public class PayServiceImpl implements PayService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public PayInfoDto pay(String userId, PayParam payParam) {
+    public PayInfoDto normalPay(String userId, PayParam payParam) {
+        Date now = new Date();
         // 不同的订单号的产品名称
         StringBuilder prodName = new StringBuilder();
         // 支付单号
@@ -106,6 +107,8 @@ public class PayServiceImpl implements PayService {
             orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
 
             Order order = orderMapper.getOrderByOrderNumber(orderNumber);
+
+            //商品名称拼接
             prodName.append(order.getProdName()).append(StrUtil.COMMA);
         }
         // 除了ordernumber不一样，其他都一样
@@ -116,12 +119,80 @@ public class PayServiceImpl implements PayService {
             payAmount = Arith.add(payAmount, orderSettlement.getPayAmount());
         }
 
+        //商品名称拼接
         prodName.substring(0, Math.min(100, prodName.length() - 1));
+
+        /**
+         * 余额支付扣款
+         */
+        // 3、更新用户充值余额值
+        UserBalance userBalance = userBalanceService.getUserBalanceByUserId(userId);
+        if (userBalance.getBalance() < payAmount) {
+            throw new YamiShopBindException("用户余额" + userBalance.getBalance() + " 不足以支付本订单" + payAmount);
+        }
+
+
+        UserBalance userBalanceUpdate = new UserBalance();
+        userBalanceUpdate.setUserId(userId);
+        userBalanceUpdate.setUpdateTime(now);
+        //设置最新余额
+        double newBalance = Arith.sub(userBalance.getBalance(), payAmount);
+        userBalanceUpdate.setBalance(newBalance);
+
+        boolean updateUserBalance = userBalanceService.updateById(userBalanceUpdate);
+        StringBuilder result = new StringBuilder();
+        result.append("更新用户最新余额 ").append(" userId = ").append(userBalanceUpdate.getUserId()).append(" 最新余额 ").append(newBalance).append(" 更新结果 ").append(updateUserBalance).append("\n");
+        log.debug(result.toString());
+
+        // 4、添加用户余额变化明细
+        UserBalanceDetail userBalanceDetail = new UserBalanceDetail();
+        userBalanceDetail.setUserId(userId);
+        userBalanceDetail.setDetailType("1");
+        userBalanceDetail.setNewBalance(newBalance);
+        userBalanceDetail.setDescription("在线消费 " + NumberUtil.decimalFormat("#.##", payAmount) + " 最新余额 " + newBalance);
+        userBalanceDetail.setOrderNumber(payNo);
+        userBalanceDetail.setUseTime(now);
+        // 消费是负数 充值是正数
+        userBalanceDetail.setUseBalance(Arith.sub(0, payAmount));
+
+        boolean saveUserBalanceDetail = userBalanceDetailService.save(userBalanceDetail);
+        result.append("添加用户余额变化明细 ").append(" 结果 ").append(saveUserBalanceDetail).append("\n");
+        log.debug(result.toString());
+
+
+        // 修改订单信息
+        for (String orderNumber : orderNumbers) {
+            OrderSettlement orderSettlement = new OrderSettlement();
+            orderSettlement.setPayNo(payNo);
+            orderSettlement.setBizPayNo(payNo);
+            orderSettlement.setPayType(PayType.BALANCE.value());
+            orderSettlement.setUserId(userId);
+            orderSettlement.setOrderNumber(orderNumber);
+            orderSettlement.setPayStatus(1);
+            orderSettlement.setClearingTime(now);
+            orderSettlement.setIsClearing(1);
+            //更新订单结算信息
+            int update = orderSettlementMapper.updateByOrderNumberAndUserId(orderSettlement);
+            result.append("更新订单结算信息 ").append(" orderNumber = ").append(orderNumber).append(" 更新结果 ").append(update).append("\n");
+            // Order order = orderMapper.getOrderByOrderNumber(orderNumber);
+        }
+
+        // 将订单改为已支付状态
+        int update = orderMapper.updateByToPaySuccess(Arrays.asList(orderNumbers), PayType.BALANCE.value());
+        result.append("更新订单信息 ").append(" orderNumbers = ").append(Json.toJsonString(orderNumbers)).append(" 更新结果 ").append(update).append("\n");
+
+        // 支付成功通知事件 和监听此事件执行进一步的数据操作  如打印小票、发送通知等
+        // List<Order> orders = Arrays.asList(orderNumbers).stream().map(orderNumber -> orderMapper.getOrderByOrderNumber(orderNumber)).collect(Collectors.toList());
+        OrderPaySuccessEvent orderPaySuccessEvent = new OrderPaySuccessEvent();
+        orderPaySuccessEvent.setOrderNumbers(Arrays.asList(orderNumbers));
+        eventPublisher.publishEvent(orderPaySuccessEvent);
+
 
         PayInfoDto payInfoDto = new PayInfoDto();
         payInfoDto.setBody(prodName.toString());
         payInfoDto.setPayAmount(payAmount);
         payInfoDto.setPayNo(payNo);
+        payInfoDto.setSuccess(true);
         return payInfoDto;
     }
 
@@ -265,7 +336,7 @@ public class PayServiceImpl implements PayService {
                     update.setFinallyTime(now);
                     update.setUpdateTime(now);
                     update.setStatus(6);
-                    update.setRemarks("买家备注："+ order.getRemarks() + " 商家备注：订单退款已到账 退款交易单号" + orderRefund.getRefundId());
+                    update.setRemarks("买家备注：" + order.getRemarks() + " 商家备注：订单退款已到账 退款交易单号" + orderRefund.getRefundId());
                     int updateOrder = orderMapper.updateById(update);
                     result.append("已更新购物订单信息 ").append(" orderNumber = ").append(orderRefund.getOrderNumber()).append(" 更新结果 ").append(updateOrder).append("\n");
                 } else {
@@ -588,12 +659,12 @@ public class PayServiceImpl implements PayService {
         //【商户退款单号】 商户系统内部的退款单号，商户系统内部唯一，只能是数字、大小写字母_-|*@ ，同一退款单号多次请求只退一笔。
         request.setOutRefundNo(orderRefund.getOutRefundNo());
         //【退款原因】 若商户传入，会在下发给用户的退款消息中体现退款原因
-        request.setReason(orderRefund.getBuyerMsg());
+        request.setReason(orderRefund.getRefundReason());
         if (StrUtil.isBlank(request.getReason())) {
-            request.setReason(orderRefund.getRefundMsg());
+            request.setReason(orderRefund.getRefundReason());
         }
         if (StrUtil.isBlank(request.getReason())) {
-            request.setReason(orderRefund.getSellerMsg());
+            request.setReason(orderRefund.getRefundReason());
         }
         //【退款结果回调url】 异步接收微信支付退款结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。 如果参数中传了notify_url，则商户平台上配置的回调地址将不会生效，优先回调当前传的这个地址。
         request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_REFUND);

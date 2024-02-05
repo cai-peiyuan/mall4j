@@ -11,6 +11,7 @@ import com.yami.shop.bean.app.param.SubmitOrderParam;
 import com.yami.shop.bean.event.OrderConfirmEvent;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.UserAddr;
+import com.yami.shop.bean.model.UserBalance;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.Arith;
@@ -40,6 +41,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserBalanceService userBalanceService;
     @Autowired
     private SkuService skuService;
     @Autowired
@@ -63,6 +67,7 @@ public class OrderController {
 
         // 订单的地址信息
         UserAddr userAddr = userAddrService.getUserAddrByUserId(orderParam.getAddrId(), userId);
+        // 放入地址模型对象
         UserAddrDto userAddrDto = BeanUtil.copyProperties(userAddr, UserAddrDto.class);
 
         // 组装获取用户提交的购物车商品项
@@ -83,10 +88,15 @@ public class OrderController {
         // 所有店铺的订单信息
         List<ShopCartOrderDto> shopCartOrders = new ArrayList<>();
 
+        //实际支付金额
         double actualTotal = 0.0;
+        //订单总额
         double total = 0.0;
+        //订单总数量
         int totalCount = 0;
+        //订单优惠
         double orderReduce = 0.0;
+
         for (ShopCartDto shopCart : shopCarts) {
             // 每个店铺的订单信息
             ShopCartOrderDto shopCartOrder = new ShopCartOrderDto();
@@ -119,6 +129,9 @@ public class OrderController {
         shopCartOrderMergerDto.setOrderReduce(orderReduce);
 
         shopCartOrderMergerDto = orderService.putConfirmOrderCache(userId, shopCartOrderMergerDto);
+
+        UserBalance userBalanceByUserId = userBalanceService.getUserBalanceByUserId(userId);
+        shopCartOrderMergerDto.setUserBalance(userBalanceByUserId);
 
         return ServerResponseEntity.success(shopCartOrderMergerDto);
     }

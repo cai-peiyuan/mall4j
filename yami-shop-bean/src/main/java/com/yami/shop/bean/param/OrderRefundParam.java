@@ -23,6 +23,8 @@ public class OrderRefundParam {
 
     private String sellerMsg;
 
+    private String refundReason;
+
     @Schema(description = "申请类型(1:仅退款 2退款退货)")
     private Integer applyType;
 

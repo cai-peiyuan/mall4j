@@ -111,5 +111,6 @@
     "requiredPrivateInfos": [
         "chooseAddress"
     ],
+    "lazyCodeLoading": "requiredComponents",
     "sitemapLocation": "sitemap.json"
 }

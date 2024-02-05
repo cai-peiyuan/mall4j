@@ -8,6 +8,8 @@ package com.yami.shop.bean.enums;
 public enum PayType {
 
 	/** 微信支付*/
+	BALANCE(0,"余额支付"),
+	/** 微信支付*/
 	WECHATPAY(1,"微信支付"),
 
 	/** "支付宝*/

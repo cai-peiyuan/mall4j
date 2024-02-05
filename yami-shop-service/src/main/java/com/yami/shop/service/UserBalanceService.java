@@ -26,5 +26,5 @@ public interface UserBalanceService extends IService<UserBalance> {
      * @param userMobile
      * @return
      */
-    UserBalance getUserBalance(String userId, String userMobile);
+    UserBalance getUserBalanceAddIfNotExists(String userId, String userMobile);
 }

@@ -25,4 +25,9 @@ public class PayInfoDto {
      * 付款金额
      */
     private Double payAmount;
+
+    /**
+     * 付款金额
+     */
+    private boolean success;
 }

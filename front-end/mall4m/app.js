@@ -25,7 +25,7 @@ App({
     http.getToken();
     wx.getSetting({
       success(res) {
-        if(config.debug){
+        if (config.debug) {
           console.log('wx.getSetting', res);
         }
         // if (!res.authSetting['scope.userInfo']) {
@@ -43,6 +43,6 @@ App({
     isLanding: true,
     // 购物车商品数量
     totalCartCount: 0,
-    imageUrl:config.imageDomain
+    imageUrl: config.imageDomain
   }
 })

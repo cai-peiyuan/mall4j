@@ -20,7 +20,7 @@ Page({
     closeEye: false,
     wxUserInfo: {},
     userBalance: {},
-    imageUrl:app.globalData.imageUrl,
+    imageUrl: app.globalData.imageUrl,
   },
 
   /**

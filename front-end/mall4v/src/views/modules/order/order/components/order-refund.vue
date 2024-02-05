@@ -28,9 +28,9 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="退款原因" prop="sellerMsg">
+      <el-form-item label="退款原因" prop="refundReason">
         <el-select
-            v-model="refundDataForm.sellerMsg"
+            v-model="refundDataForm.refundReason"
             placeholder="请选择"
         >
           <el-option
@@ -83,6 +83,7 @@ const refundDataForm = reactive({
   refundOptions: [],
   orderNumber: 0,
   sellerMsg: '',
+  refundReason: '',
   refundMsg: ''
 })
 

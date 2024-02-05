@@ -25,6 +25,6 @@ public class PayParam {
      * 支付方式
      */
     @NotNull(message = "支付方式不能为空")
-    @Schema(description = "支付方式 (1:微信支付 2:支付宝)")
+    @Schema(description = "支付方式 (1:微信支付 2:支付宝 0:余额支付)")
     private Integer payType;
 }

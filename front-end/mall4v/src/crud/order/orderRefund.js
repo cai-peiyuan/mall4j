@@ -169,7 +169,7 @@ export const tableOption = {
     },
     {
       label: '申请原因',
-      prop: 'buyerMsg',
+      prop: 'refundReason',
       sortable: true
     },
     {
