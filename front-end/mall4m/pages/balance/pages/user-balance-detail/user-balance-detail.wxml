@@ -1,7 +1,7 @@
 <view class='container'>
 
     <!-- 不显示余额 只显示余额明细 -->
-    <view class="pageHead" wx:if="{{false}}">
+    <view class="pageHead" wx:if="{{false}}" wx:key="{{id}}">
         <view class="cardHead">
             <view class="cardNo">
                 <view class="cardNoLeft"> No.1000000000</view>
@@ -17,7 +17,7 @@
     </view>
 
     <view class="consumeList">
-        <view class="consumeItem" wx:for="{{userBalanceDetail}}">
+        <view class="consumeItem" wx:for="{{userBalanceDetail}}" wx:key="id">
             <view>
                 <view >{{item.useBalance>0?'+'+wxs.toPrice(item.useBalance): wxs.toPrice(item.useBalance)}}</view>
                 <view >余额{{wxs.toPrice(item.newBalance)}}</view>
