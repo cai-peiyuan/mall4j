@@ -8,6 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    loading: false,
     list: [],
     current: 1,
     pages: 0,
@@ -36,6 +37,13 @@ Page({
    */
   loadOrderData: function (sts, current) {
     var ths = this;
+    if (ths.data.loading == true) {
+      return;
+    }
+    ths.setData({
+      loading: true
+    });
+
     wx.showLoading();
     //加载订单列表
     var params = {
@@ -58,7 +66,8 @@ Page({
         ths.setData({
           list: list,
           pages: res.pages,
-          current: res.current
+          current: res.current,
+          loading: false
         });
         wx.hideLoading();
       }
@@ -88,7 +97,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    // this.loadOrderData(this.data.sts, 1);
+    //用于在订单详情页返回到此页面时刷新数据使用
+    this.loadOrderData(this.data.sts, 1);
   },
 
   /**
@@ -109,7 +119,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.loadOrderData(this.data.sts, 1);
   },
 
   /**
@@ -224,7 +234,7 @@ Page({
   },
 
 
-  
+
   /**
    * 显示支付方式
    */
@@ -251,7 +261,7 @@ Page({
       popupShowPayType: false
     });
   },
-  
+
   /**
    * 微信付款
    */

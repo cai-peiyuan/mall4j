@@ -92,7 +92,10 @@ Page({
 
         this.setData({
           orderItems: orderItems,
-          userBalance: res.userBalance||{balance:0,cardNumber:''},
+          userBalance: res.userBalance || {
+            balance: 0,
+            cardNumber: ''
+          },
           actualTotal: res.actualTotal,
           total: res.total,
           totalCount: res.totalCount,
@@ -218,12 +221,14 @@ Page({
           paySign: res.sign,
           success: e => {
             console.log("wx.requestPayment支付成功", e);
+            this.closePopupPayType();
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
           },
           fail: err => {
             console.log("wx.requestPayment支付失败", err);
+            this.closePopupPayType();
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
@@ -253,11 +258,13 @@ Page({
         wx.hideLoading();
         if (res.success) {
           console.log("余额支付成功", res);
+          this.closePopupPayType();
           wx.navigateTo({
             url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
           })
         } else {
           console.log("余额支付失败", res);
+          this.closePopupPayType();
           wx.navigateTo({
             url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
           })

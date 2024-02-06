@@ -19,7 +19,7 @@
     <view class="consumeList">
         <view class="consumeItem" wx:for="{{userBalanceDetail}}" wx:key="id">
             <view>
-                <view >{{item.useBalance>0?'+'+wxs.toPrice(item.useBalance): wxs.toPrice(item.useBalance)}}</view>
+                <view class=" {{item.useBalance>0?'red':'green'}}">{{item.useBalance>0?'+'+wxs.toPrice(item.useBalance): wxs.toPrice(item.useBalance)}}</view>
                 <view >余额{{wxs.toPrice(item.newBalance)}}</view>
             </view>
             {{item.useBalance>0?'充值':'消费'}}

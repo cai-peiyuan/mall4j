@@ -207,4 +207,9 @@ public class Order implements Serializable {
      * 是否向腾讯发送发货标记
      */
     private Integer shipTowx;
+
+    /**
+     * 是否已评论 0未评论 1已评论
+     */
+    private Integer orderComm;
 }
