@@ -10,9 +10,14 @@
     "type": "git",
     "url": "https://gitee.com/gz-yami/mall4m.git"
   },
-  "author": "",
+  "author": "cai",
   "license": "ISC",
   "dependencies": {
-    "crypto-js": "^4.1.1"
+    "crypto-js": "^4.1.1",
+    "@vant/weapp": "^1.10.23",
+    "dayjs": "^1.11.6",
+    "mp-html": "^2.3.1",
+    "wxa-plugin-canvas": "^1.1.12",
+    "wxbarcode": "^1.0.2"
   }
 }

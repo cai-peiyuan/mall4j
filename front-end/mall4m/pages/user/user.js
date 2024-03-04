@@ -116,7 +116,7 @@ Page({
   },
 
   /**
-   * 从小程序接口获取用户详细信息 
+   * 从小程序接口获取用户详细信息
    * 加载个人页面的信息
    */
   loadUserInfo() {
@@ -154,7 +154,7 @@ Page({
 
   /**
    * 更新用户输入的用户名
-   * @param {} e 
+   * @param {} e
    */
   setInputValue: function (e) {
     console.log("写入：", e.detail.value);
@@ -282,7 +282,7 @@ Page({
 
   /**
    * 加密手机号
-   * @param {} theMobile 
+   * @param {} theMobile
    */
   desensitiveMobile: function (theMobile) {
     console.log('加密手机号', theMobile);
@@ -319,7 +319,7 @@ Page({
 
   /**
    * 同步用户输入的昵称
-   * @param {} e 
+   * @param {} e
    */
   syncInputValue(e) {
     console.log("输入：", e.detail.value);
@@ -331,7 +331,7 @@ Page({
 
   /**
    * 跳转订单列表页面
-   * @param {} e 
+   * @param {} e
    */
   toOrderListPage: function (e) {
     var sts = e.currentTarget.dataset.sts;
@@ -342,7 +342,7 @@ Page({
 
   /**
    * 跳转余额页面
-   * @param {} e 
+   * @param {} e
    */
   toUserBalancePage: function (e) {
     console.log(1234);
@@ -387,7 +387,7 @@ Page({
 
   /**
    * 获取用户的手机号
-   * @param {} e 
+   * @param {} e
    */
   getPhoneNumber: function (e) {
     var that = this;
@@ -408,9 +408,7 @@ Page({
           http.getToken();
           //that.loadUserInfo();
           setTimeout(() => {
-            wx.navigateTo({
-              url: '/pages/user/user?sts=1',
-            })
+            that.onLoad();
           }, 1000)
         }
       };

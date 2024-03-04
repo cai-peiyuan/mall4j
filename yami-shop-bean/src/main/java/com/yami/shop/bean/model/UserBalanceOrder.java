@@ -22,6 +22,7 @@ import java.util.List;
 @Data
 @TableName("tz_user_balance_order")
 public class UserBalanceOrder implements Serializable {
+
     private static final long serialVersionUID = 6222259729062826852L;
     /**
      * 订单ID
@@ -131,5 +132,8 @@ public class UserBalanceOrder implements Serializable {
      * 优惠总额
      */
     private Double reduceAmount;
+
+    @TableField(exist = false)
+    private User user;
 
 }

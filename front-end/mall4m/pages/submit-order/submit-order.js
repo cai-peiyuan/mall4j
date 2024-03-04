@@ -1,7 +1,10 @@
 // pages/submit-order/submit-order.js
 const app = getApp();
 var http = require("../../utils/http.js");
+var myBehavior = require('../../utils/my-behavior.js')
+
 Page({
+  behaviors: [myBehavior],
 
   /**
    * 页面的初始数据
@@ -42,6 +45,15 @@ Page({
     this.setData({
       orderEntry: options.orderEntry,
     });
+    let userInfo = this.getLoginedUserInfo();
+    let userMobile = this.data.userMobile;
+    console.log('userMobile', userMobile)
+    if (userMobile == null) {
+      //{errMsg: "navigateTo:fail can not navigateTo a tabbar page"}errMsg: "navigateTo:fail can not navigateTo a tabbar page"__proto__: Object
+      wx.switchTab({
+        url: '/pages/user/user?sts=1',
+      })
+    }
   },
 
   //加载订单数据
@@ -66,11 +78,9 @@ Page({
       callBack: res => {
         wx.hideLoading();
         let orderItems = [];
-
         res.shopCartOrders[0].shopCartItemDiscounts.forEach(itemDiscount => {
           orderItems = orderItems.concat(itemDiscount.shopCartItems)
         })
-
         if (res.shopCartOrders[0].coupons) {
           let canUseCoupons = []
           let unCanUseCoupons = []
@@ -89,7 +99,6 @@ Page({
             }
           })
         }
-
         this.setData({
           orderItems: orderItems,
           userBalance: res.userBalance || {
@@ -339,7 +348,7 @@ Page({
 
   /**
    * 切换支付方式
-   * @param {*} e 
+   * @param {*} e
    */
   changePayType: function (e) {
     this.setData({

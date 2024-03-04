@@ -11,13 +11,8 @@
           <input type="nickname" style="color:#fff; text-align: left;" placeholder-style="color:#fff" class='userinfo-name' placeholder="点击获取微信昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
         </view>
         <view wx:if="{{userMobile != null}}">
-          <view class='userinfo-name' wx:if="{{userMobile != null && closeEye == true}}" style="padding-right: 7vw; justify-content: flex-start;">
-            <text bindtap='toBindingPhone'>{{(userMobile+'2')}}</text>
-            <image src="{{imageUrl}}/icon/eye-close.png" mode="widthFix" style="width:3vw;margin-left: 2vw;" bindtap="changeEye" />
-          </view>
-          <view class='userinfo-name' wx:if="{{userMobile != null &&closeEye == false}}" style="padding-right: 7vw; justify-content: flex-start">
-            <text bindtap='toBindingPhone'>{{userMobile+'2'}}</text>
-            <image src="{{imageUrl}}/icon/eye-open.png" mode="widthFix" style="width:3vw;margin-left: 2vw" bindtap="changeEye" />
+          <view class='userinfo-name' wx:if="{{userMobile != null}}" style="padding-right: 7vw; justify-content: flex-start;">
+            <text bindtap='toBindingPhone'>{{(userMobile)}}</text>
           </view>
         </view>
       </view>
@@ -25,13 +20,13 @@
 
     <!-- 积分和余额 -->
     <view>
-      <view wx:if="{{userMobile==null}}">
+      <view wx:if="{{userMobile==null || userMobile == ''}}">
         <view class='binding-phone' style="color: #fff;">
           <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="getphone-btn"></button>
-          <text class='show-tip'>请先注册会员</text>
+          <text class='show-tip'>请绑定手机号成为会员</text>
         </view>
       </view>
-      <view wx:if="{{userMobile!=null}}">
+      <view wx:if="{{userMobile!=null && userMobile!=''}}">
         <view style="display: flex; justify-content: space-around;color:#fff; margin-top: 20rpx;">
           <view class='userinfo-name' bindtap='toUserBalancePage' style="flex-direction: column;">
             <view>
@@ -84,14 +79,14 @@
   </view> -->
 
   <!-- 不显示 -->
-  <view class='binding-phone' wx:if="{{ false && userMobile == null || userMobile == ''}}">
+  <view class='binding-phone' wx:if="{{ false }}">
     <text class='show-tip'>绑定手机号，</text>
     <text class='gotobinding' bindtap='toBindingPhone'>去绑定</text>
   </view>
 
   <!-- end 用户信息 -->
 
-  <view class='list-cont'>
+  <view class='list-cont' wx:if="{{userMobile!=null && userMobile!=''}}">
     <!-- 订单状态 -->
     <view class='total-order'>
       <view class='order-tit'>

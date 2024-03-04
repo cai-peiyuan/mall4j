@@ -1,13 +1,9 @@
 <!--pages/category/category.wxml-->
-
 <view class="container">
-
-
 <!-- 头部搜索区 -->
-
   <view class='search-bar'>
     <view class='search-box' bindtap='toSearchPage'>
-      <image src='../../images/icon/search.png' class='search-img'></image>
+      <image src='{{imageUrl}}/search.png' class='search-img'></image>
       <text class='sear-input'>搜索您想要的商品</text>
     </view>
   </view>

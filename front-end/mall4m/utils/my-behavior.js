@@ -10,7 +10,7 @@ module.exports = Behavior({
     theme: wx.getSystemInfoSync().theme,
   },
   methods: {
-    getLoginedUserInfo: function () {
+    async getLoginedUserInfo() {
       this.data.sharedText === 'This is a piece of data shared between pages.';
       let userInfoInToken = wx.getStorageSync('userInfoInToken');
       console.log('userInfoInToken -> ', userInfoInToken);
@@ -22,6 +22,16 @@ module.exports = Behavior({
         });
       }
       return userInfoInToken;
-    }
+    },
+
+    /**
+     * 跳转余额页面
+     * @param {} e
+     */
+    toUserBalancePage: function (e) {
+      wx.navigateTo({
+        url: '/pages/balance/pages/user-balance/user-balance',
+      })
+    },
   }
 })

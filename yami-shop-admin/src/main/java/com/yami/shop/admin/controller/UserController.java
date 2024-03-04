@@ -35,6 +35,7 @@ public class UserController {
     public ServerResponseEntity<IPage<User>> page(User user,PageParam<User> page) {
         IPage<User> userPage = userService.page(page, new LambdaQueryWrapper<User>()
                 .like(StrUtil.isNotBlank(user.getNickName()), User::getNickName, user.getNickName())
+                .like(StrUtil.isNotBlank(user.getUserMobile()), User::getUserMobile, user.getUserMobile())
                 .eq(user.getStatus() != null, User::getStatus, user.getStatus()));
         for (User userResult : userPage.getRecords()) {
             userResult.setNickName(userResult.getNickName() == null ? "" : userResult.getNickName());

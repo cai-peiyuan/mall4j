@@ -18,8 +18,6 @@ public class UserAddrOrder implements Serializable {
      * ID
      */
     @TableId
-
-
     private Long addrOrderId;
 
     /**

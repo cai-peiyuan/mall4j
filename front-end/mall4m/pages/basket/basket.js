@@ -2,6 +2,7 @@
 var http = require("../../utils/http.js");
 // var config = require("../../utils/config.js");
 const Big = require("../../utils/big.min.js");
+const app = getApp()
 
 Page({
 
@@ -14,7 +15,8 @@ Page({
     finalMoney: 0,
     totalMoney: 0,
     subtractMoney: 0,
-    allChecked: false
+    allChecked: false,
+    imageUrl:app.globalData.imageUrl,
   },
 
   /**

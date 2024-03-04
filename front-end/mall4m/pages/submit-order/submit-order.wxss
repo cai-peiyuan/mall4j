@@ -503,7 +503,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
 }
 
 .popup-box-pay {
-  height: 48% !important;
+  height: 50% !important;
 }
 
 .disabled text {

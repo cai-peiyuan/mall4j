@@ -2,6 +2,7 @@
 
 var http = require("../../utils/http.js");
 var config = require("../../utils/config.js");
+const app = getApp()
 
 Page({
 
@@ -13,7 +14,8 @@ Page({
     categoryList:[],
     productList: [],
     categoryImg: '',
-    prodid:''
+    prodid:'',
+    imageUrl:app.globalData.imageUrl,
   },
 
   /**

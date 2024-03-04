@@ -7,6 +7,7 @@ import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.service.UserBalanceOrderService;
+import com.yami.shop.service.UserService;
 import com.yami.shop.service.WxShipInfoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
+ * 后台管理接口
  * 充值订单查询
- *
  * @author lgh
  */
 @RestController
@@ -25,6 +26,9 @@ public class UserBalanceOrderController {
 
     @Autowired
     private UserBalanceOrderService userBalanceOrderService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private WxShipInfoService wxShipInfoService;
@@ -37,8 +41,14 @@ public class UserBalanceOrderController {
     public ServerResponseEntity<IPage<UserBalanceOrder>> page(UserBalanceOrder balanceOrder, PageParam<UserBalanceOrder> page) {
         IPage<UserBalanceOrder> brands = userBalanceOrderService.page(page,
                 new LambdaQueryWrapper<UserBalanceOrder>()
+                        .like(StrUtil.isNotBlank(balanceOrder.getUserId()), UserBalanceOrder::getUserId, balanceOrder.getUserId())
                         .like(StrUtil.isNotBlank(balanceOrder.getOrderNumber()), UserBalanceOrder::getOrderNumber, balanceOrder.getOrderNumber())
                         .orderByDesc(UserBalanceOrder::getCreateTime));
+
+        brands.getRecords().forEach(record -> {
+            record.setUser(userService.getUserByUserId(record.getUserId()));
+        });
+
         return ServerResponseEntity.success(brands);
     }
 

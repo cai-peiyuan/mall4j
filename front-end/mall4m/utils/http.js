@@ -120,6 +120,7 @@ const wxLogin = function (wxLoginCode) {
         wx.setStorageSync('token', result.accessToken);
         wx.setStorageSync('refreshToken', result.refreshToken);
         wx.setStorageSync('userInfoInToken', result.userInfoInToken);
+        getApp().globalData.apiUserInfoMap = result.userInfoInToken;
         //把token存入缓存，请求接口数据时要用
         //没有获取到用户昵称，说明服务器没有保存用户的昵称，也就是用户授权的信息并没有传到服务器
         if (!result.userInfoInToken.nickName) {
@@ -128,6 +129,8 @@ const wxLogin = function (wxLoginCode) {
           //   nickName: '微信用户'
           // });
         }
+
+        
       }
       var globalData = getApp().globalData;
       globalData.isLanding = false;
