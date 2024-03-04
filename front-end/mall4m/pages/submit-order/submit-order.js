@@ -252,6 +252,7 @@ Page({
    * 使用余额支付订单
    */
   callNormalPay: function (orderNumbers) {
+    let _this = this;
     wx.showLoading({
       mask: true
     });
@@ -267,14 +268,14 @@ Page({
         wx.hideLoading();
         if (res.success) {
           console.log("余额支付成功", res);
-          this.closePopupPayType();
-          wx.navigateTo({
+          _this.closePopupPayType();
+          wx.reLaunch({
             url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
           })
         } else {
           console.log("余额支付失败", res);
-          this.closePopupPayType();
-          wx.navigateTo({
+          _this.closePopupPayType();
+          wx.reLaunch({
             url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
           })
         }
