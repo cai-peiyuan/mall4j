@@ -221,6 +221,7 @@ Page({
         orderNumbers: orderNumbers
       },
       callBack: function (res) {
+        let _this = this;
         wx.hideLoading();
         wx.requestPayment({
           timeStamp: res.timeStamp,
@@ -230,14 +231,14 @@ Page({
           paySign: res.sign,
           success: e => {
             console.log("wx.requestPayment支付成功", e);
-            this.closePopupPayType();
+            _this.closePopupPayType();
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
           },
           fail: err => {
             console.log("wx.requestPayment支付失败", err);
-            this.closePopupPayType();
+            _this.closePopupPayType();
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
