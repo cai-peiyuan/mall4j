@@ -59,7 +59,7 @@ Page({
       }
       http.request(params);
     } else {
-       this.initCityData(this.data.provinceId, this.data.cityId, this.data.areaId);
+      this.initCityData(this.data.provinceId, this.data.cityId, this.data.areaId);
     }
   },
 
@@ -248,7 +248,6 @@ Page({
           areaArray: res
         });
         if (areaId) {
-
           for (var _index in res) {
             if (res[_index].areaId == areaId) {
               ths.setData({
@@ -256,9 +255,7 @@ Page({
               });
             }
           }
-
           index = ths.data.value;
-
           ths.setData({
             province: ths.data.province,
             city: ths.data.city,
@@ -267,7 +264,6 @@ Page({
             cityId: ths.data.cityId,
             areaId: ths.data.areaId
           })
-
         } else {
           ths.setData({
             province: ths.data.provArray[ths.data.value[0]].areaName,
@@ -278,7 +274,6 @@ Page({
             areaId: ths.data.areaArray[ths.data.value[2]].areaId
           })
         }
-
         wx.hideLoading();
       }
     }
@@ -295,11 +290,11 @@ Page({
    * 判断是否支持的地址
    * @param {*} provinceName 
    */
-  containProvince(provinceName){
+  containProvince(provinceName) {
     let support = false;
     for (let index = 0; index < this.data.provArray.length; index++) {
-      const element = array[index];
-      if(element == provinceName){
+      const element = this.data.provArray[index];
+      if (element.areaName == provinceName) {
         support = true;
         break;
       }
@@ -310,11 +305,28 @@ Page({
    * 判断是否支持的地址
    * @param {*} cityName 
    */
-  containCity(cityName){
+  containCity(cityName) {
     let support = false;
     for (let index = 0; index < this.data.cityArray.length; index++) {
-      const element = array[index];
-      if(element == cityName){
+      const element = this.data.cityArray[index];
+      if (element.areaName == cityName) {
+        support = true;
+        break;
+      }
+    }
+    return support;
+  },
+
+
+  /**
+   * 判断是否支持的辖区
+   * @param {*} countyName 
+   */
+  containArea(countyName) {
+    let support = false;
+    for (let index = 0; index < this.data.areaArray.length; index++) {
+      const element = this.data.areaArray[index];
+      if (element.areaName == countyName) {
         support = true;
         break;
       }
@@ -336,8 +348,15 @@ Page({
   chooseAddress() {
     wx.chooseAddress({
       success: (res) => {
+
+        console.log('this.data', this.data);
+        this.setData({
+          receiver: res.userName,
+          mobile: res.telNumber
+        })
+
         //不支持的省份
-        if(!this.containProvince(res.provinceName)){
+        if (!this.containProvince(res.provinceName)) {
           wx.showToast({
             title: '不支持的省份 ' + res.provinceName,
             icon: "none"
@@ -345,9 +364,18 @@ Page({
           return;
         }
         //不支持的省份
-        if(!this.containCity(res.cityName)){
+        if (!this.containCity(res.cityName)) {
           wx.showToast({
             title: '不支持的城市 ' + res.cityName,
+            icon: "none"
+          })
+          return;
+        }
+
+        //不支持的辖区
+        if (!this.containArea(res.countyName)) {
+          wx.showToast({
+            title: '不支持的辖区 ' + res.countyName,
             icon: "none"
           })
           return;

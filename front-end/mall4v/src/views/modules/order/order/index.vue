@@ -5,6 +5,14 @@
       :model="dataForm"
       @keyup.enter="getDataList(page)"
     >
+      <el-form-item label="会员编号:">
+        <el-input
+          v-model="dataForm.userId"
+          placeholder="会员编号"
+          clearable
+        />
+      </el-form-item>
+
       <el-form-item label="订单编号:">
         <el-input
           v-model="dataForm.orderNumber"
@@ -12,6 +20,7 @@
           clearable
         />
       </el-form-item>
+
       <el-form-item label="下单时间:">
         <el-date-picker
           v-model="dateRange"
@@ -37,6 +46,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-user"
+          @click="selectUser()"
+        >
+          选择用户
+        </el-button>
         <el-button
           type="primary"
           icon="el-icon-search"
@@ -197,24 +214,24 @@
 
                   <view v-if="order.status === 6" style="color: #cc0000">
                     <span
-                        v-if="order.closeType === 1"
-                        type="danger"
-                      >(超时未支付)</span>
+                      v-if="order.closeType === 1"
+                      type="danger"
+                    >(超时未支付)</span>
                     <span
-                        v-else-if="order.closeType === 2"
-                        type="danger"
+                      v-else-if="order.closeType === 2"
+                      type="danger"
                     >(退款关闭)</span>
                     <span
-                        v-else-if="order.closeType === 4"
-                        type="danger"
+                      v-else-if="order.closeType === 4"
+                      type="danger"
                     >(买家取消)</span>
                     <span
-                        v-else-if="order.closeType === 15"
-                        type="danger"
+                      v-else-if="order.closeType === 15"
+                      type="danger"
                     >(已通过货到付款交易)</span>
                     <span
-                        v-else
-                    >{{order.closeType}}</span>
+                      v-else
+                    >{{ order.closeType }}</span>
                   </view>
                 </div>
               </el-col>
@@ -252,7 +269,9 @@
                   <div>
                     <span>{{ order.userAddrOrder.receiver }}</span>
                     <span>{{ order.userAddrOrder.mobile }}</span>
-                    <span>{{ order.userAddrOrder.province }}{{ order.userAddrOrder.city }}{{ order.userAddrOrder.area }}{{ order.userAddrOrder.addr }}</span>
+                    <span>{{ order.userAddrOrder.province }}{{ order.userAddrOrder.city }}{{
+                        order.userAddrOrder.area
+                      }}{{ order.userAddrOrder.addr }}</span>
                     <span v-if="order.dvyId != null" style="font-size: 12px; font-weight: bold; color: #cc0000">
                       <span>已发货物流单号：</span>
                       <span>{{ order.dvyFlowId }}</span>
@@ -307,7 +326,8 @@
                       type="primary"
                       link
                       @click="printOrder(order.orderNumber)"
-                    >已打印次数：{{ order.printTimes }}</el-button>
+                    >已打印次数：{{ order.printTimes }}
+                    </el-button>
                     <br>
                     <el-button
                       v-if="isAuth('order:order:print') && order.printTimes == 0"
@@ -375,6 +395,14 @@
       ref="orderArriveRef"
       @refresh-data-list="getDataList"
     />
+
+    <!-- 会员选择弹窗-->
+    <users-select
+      v-if="usersSelectVisible"
+      ref="usersSelectRef"
+      :is-single="true"
+      @refresh-select-users="selectUsersCallback"
+    />
   </div>
 </template>
 
@@ -384,8 +412,9 @@ import RefundAdd from './components/order-refund.vue'
 import OrderArrive from './components/order-arrive.vue'
 import AddOrUpdate from './components/order-info.vue'
 import ConsignmentInfo from './components/consignment-info.vue'
-import { isAuth } from '@/utils'
-import { ElMessage } from 'element-plus'
+import {isAuth} from '@/utils'
+import {ElMessage} from 'element-plus'
+
 const resourcesUrl = import.meta.env.VITE_APP_RESOURCES_URL
 const dataForm = ref({})
 const dateRange = ref([])
@@ -393,28 +422,17 @@ const devyVisible = ref(false)
 const refundVisible = ref(false)
 const arriveVisible = ref(false)
 const options = [{
-  value: 1,
-  label: '待付款'
-},
-{
-  value: 2,
-  label: '待发货'
-},
-{
-  value: 3,
-  label: '待收货'
-},
-{
-  value: 4,
-  label: '待评价'
-},
-{
-  value: 5,
-  label: '成功'
-},
-{
-  value: 6,
-  label: '订单关闭'
+  value: 1, label: '待付款'
+}, {
+  value: 2, label: '待发货'
+}, {
+  value: 3, label: '待收货'
+}, {
+  value: 4, label: '待评价'
+}, {
+  value: 5, label: '成功'
+}, {
+  value: 6, label: '订单关闭'
 }]
 const dataList = ref([])
 const page = reactive({
@@ -428,6 +446,12 @@ onMounted(() => {
 const devyAddRef = ref(null)
 const orderRefundRef = ref(null)
 const orderArriveRef = ref(null)
+
+const usersSelectVisible = ref(false)
+const usersSelectRef = ref(null)
+const searchParam = reactive({
+  userId: '', // 用户编号
+})
 
 /**
  * 发货
@@ -456,7 +480,7 @@ const arriveOrder = (order) => {
  * 显示退款选项对话框
  * @param order
  */
-const orderRefund = (order) =>{
+const orderRefund = (order) => {
   refundVisible.value = true
   console.log(order, refundVisible)
   nextTick(() => {
@@ -464,29 +488,54 @@ const orderRefund = (order) =>{
     orderRefundRef.value?.init(order)
   })
 }
+
+
+/**
+ * 选择指定用户
+ */
+const selectUsersCallback = (users) => {
+  console.log('选中的用户信息', users)
+  if (users.length > 0) {
+    dataForm.value.userId = users[0].userId
+  } else {
+    dataForm.value.userId = ''
+  }
+  getDataList(page);
+}
+
+/**
+ * 打开选择用户
+ */
+const selectUser = () => {
+  usersSelectVisible.value = true
+  console.log(usersSelectRef)
+  nextTick(() => {
+    if (dataForm.value.userId && dataForm.value.userId == '') {
+      usersSelectRef.value?.init([])
+    } else {
+      usersSelectRef.value?.init([{userId: dataForm.value.userId}])
+    }
+  })
+}
+
+
 /**
  * 获取数据列表
  */
 const getDataList = (pageParam, params, done) => {
   pageParam = (pageParam === undefined ? page : pageParam)
   http({
-    url: http.adornUrl('/order/order/page'),
-    method: 'get',
-    params: http.adornParams(
-      Object.assign(
-        {
-          current: pageParam == null ? page.currentPage : pageParam.currentPage,
-          size: pageParam == null ? page.pageSize : pageParam.pageSize,
-          orderNumber: dataForm.value.orderNumber,
-          status: dataForm.value.status,
-          startTime: dateRange.value === null ? null : dateRange.value[0], // 开始时间
-          endTime: dateRange.value === null ? null : dateRange.value[1] // 结束时间
-        },
-        params
-      ), false
-    )
+    url: http.adornUrl('/order/order/page'), method: 'get', params: http.adornParams(Object.assign({
+      current: pageParam == null ? page.currentPage : pageParam.currentPage,
+      size: pageParam == null ? page.pageSize : pageParam.pageSize,
+      userId: dataForm.value.userId,
+      orderNumber: dataForm.value.orderNumber,
+      status: dataForm.value.status,
+      startTime: dateRange.value === null ? null : dateRange.value[0], // 开始时间
+      endTime: dateRange.value === null ? null : dateRange.value[1] // 结束时间
+    }, params), false)
   })
-    .then(({ data }) => {
+    .then(({data}) => {
       dataList.value = data.records
       page.total = data.total
       if (done) done()
@@ -537,30 +586,22 @@ const onAddOrUpdate = (val) => {
 const printOrder = (orderNumber) => {
   // 请求打印订单接口
   http({
-    url: http.adornUrl(`/order/order/printOrder/${orderNumber}`),
-    method: 'get',
-    params: http.adornParams()
-  }).then(({ data }) => {
+    url: http.adornUrl(`/order/order/printOrder/${orderNumber}`), method: 'get', params: http.adornParams()
+  }).then(({data}) => {
     console.log(data)
     if (!data) {
       ElMessage({
-        message: '打印失败，打印接口返回数据为' + data,
-        type: 'error',
-        duration: 1.5 * 1000
+        message: '打印失败，打印接口返回数据为' + data, type: 'error', duration: 1.5 * 1000
       })
       return
     }
     if (data.error === 0) {
       ElMessage({
-        message: '打印成功' || data.error_description,
-        type: 'success',
-        duration: 1.5 * 1000
+        message: '打印成功' || data.error_description, type: 'success', duration: 1.5 * 1000
       })
     } else {
       ElMessage({
-        message: '打印失败' || data.error_description,
-        type: 'error',
-        duration: 1.5 * 1000
+        message: '打印失败' || data.error_description, type: 'error', duration: 1.5 * 1000
       })
     }
   })
@@ -576,19 +617,16 @@ const showConsignmentInfo = () => {
 }
 const getWaitingConsignmentExcel = (consignmentInfo) => {
   http({
-    url: http.adornUrl('/order/order/waitingConsignmentExcel'),
-    method: 'get',
-    params: http.adornParams({
+    url: http.adornUrl('/order/order/waitingConsignmentExcel'), method: 'get', params: http.adornParams({
       consignmentName: consignmentInfo.consignmentName,
       consignmentMobile: consignmentInfo.consignmentMobile,
       consignmentAddr: consignmentInfo.consignmentAddr,
       startTime: dateRange.value === null ? null : dateRange.value[0], // 开始时间
       endTime: dateRange.value === null ? null : dateRange.value[1] // 结束时间
-    }),
-    responseType: 'blob' // 解决文件下载乱码问题
+    }), responseType: 'blob' // 解决文件下载乱码问题
   })
-    .then(({ data }) => {
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' })
+    .then(({data}) => {
+      const blob = new Blob([data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'})
       const fileName = '待发货信息整理.xls'
       const elink = document.createElement('a')
       if ('download' in elink) { // 非IE下载
@@ -607,16 +645,13 @@ const getWaitingConsignmentExcel = (consignmentInfo) => {
 
 const getSoldExcel = () => {
   http({
-    url: http.adornUrl('/order/order/soldExcel'),
-    method: 'get',
-    params: http.adornParams({
+    url: http.adornUrl('/order/order/soldExcel'), method: 'get', params: http.adornParams({
       startTime: dateRange.value === null ? null : dateRange.value[0], // 开始时间
       endTime: dateRange.value === null ? null : dateRange.value[1] // 结束时间
-    }),
-    responseType: 'blob' // 解决文件下载乱码问题
+    }), responseType: 'blob' // 解决文件下载乱码问题
   })
-    .then(({ data }) => {
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' })
+    .then(({data}) => {
+      const blob = new Blob([data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'})
       const fileName = '销售信息整理.xls'
       const elink = document.createElement('a')
       if ('download' in elink) { // 非IE下载
@@ -782,6 +817,7 @@ const getSoldExcel = () => {
     color: #999;
   }
 }
+
 .content .el-col {
   text-align: center;
 }

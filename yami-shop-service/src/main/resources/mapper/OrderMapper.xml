@@ -244,6 +244,9 @@
         (
         SELECT * FROM tz_order
         <where>
+            <if test="orderParam.userId != null and orderParam.userId != ''">
+                and user_id = #{orderParam.userId}
+            </if>
             <if test="orderParam.orderNumber != null and orderParam.orderNumber != ''">
                 and order_number = #{orderParam.orderNumber}
             </if>

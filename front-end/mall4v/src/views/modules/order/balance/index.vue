@@ -9,7 +9,7 @@
           v-if="true"
           type="primary"
           icon="el-icon-plus"
-          @click="addUser()"
+          @click="selectUser()"
         >
           选择用户
         </el-button>
@@ -97,12 +97,12 @@
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdateRef" @refresh-data-list="getDataList"/>
 
-    <!-- 商品选择弹窗-->
+    <!-- 会员选择弹窗-->
     <users-select
       v-if="usersSelectVisible"
       ref="usersSelectRef"
       :is-single="true"
-      @refresh-select-users="selectUsers"
+      @refresh-select-users="selectUsersCallback"
     />
 
   </div>
@@ -140,7 +140,7 @@ const picSrcList = ref([])
 /**
  * 选择指定用户
  */
-const selectUsers = (users) => {
+const selectUsersCallback = (users) => {
   console.log('选中的用户信息', users)
   console.log('表格对象crudRef', crudRef)
   if (users.length > 0) {
@@ -154,14 +154,14 @@ const selectUsers = (users) => {
 /**
  * 打开选择用户
  */
-const addUser = () => {
+const selectUser = () => {
   usersSelectVisible.value = true
   console.log(usersSelectRef)
   nextTick(() => {
     if (searchParam.userId == '') {
       usersSelectRef.value?.init([])
     } else {
-      usersSelectRef.value?.init([searchParam.userId])
+      usersSelectRef.value?.init([{userId: searchParam.userId}])
     }
   })
 }
