@@ -1,44 +1,40 @@
 <!--pages/user-info/pages/myTicket/myTicket.wxml-->
 <view class="container">
     <view class="tabItems spaceBetweenFlex" style="display: flex; justify-content: space-around;">
-        <view class="tabItem {{activeTab==0?'active':''}}" bindtap="switchTab" data-index="{{0}}">可用</view>
-        <view class="tabItem {{activeTab==1?'active':''}}" bindtap="switchTab" data-index="{{1}}">不可用</view>
+        <view class="tabItem {{activeTab==0?'active':''}}" bindtap="switchTab" data-index="{{0}}">可领</view>
+        <view class="tabItem {{activeTab==1?'active':''}}" bindtap="switchTab" data-index="{{1}}">已领</view>
+        <view class="tabItem {{activeTab==2?'active':''}}" bindtap="switchTab" data-index="{{2}}">失效</view>
     </view>
-    <view class="couponList" style="padding:3vw;">
-        <view class="couponItem" wx:if="{{activeTab==0 && false}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
-            <view class="couponName">
-                {{index}}满200减30券
-            </view>
-            <view class="couponRange">
-                使用范围：XXXXXXXXX
-            </view>
-            <view class="availDate">
-                有效期：2020年03月03日 至 2024年1月1日
-            </view>
-            <view class="seperateLine">
-            </view>
-            <view class="gettingDate">
-                领取日期：2023年1月1日
+    <view class="couponList" style="padding:3vw;background-color: #eee; height: calc(100vh - 40px);">
+        <view class="couponItem spaceBetweenFlex" wx:if="{{activeTab==0}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+            <image style="width: 150rpx; height: 135rpx;" src="{{imageUrl}}/icon/coupon.png" mode=""/>
+            <view>
+                <view class="couponName"><span class="ticketType">代金券</span>测试比例优惠券</view>
+                <view style="color: #999; text-align: right; margin-top: 3vw;">
+                    满 <span class="couponDigital">100</span> - <span class="couponDigital" style="font-size: 20px; color: rgb(250, 196, 78);">5<span style="font-size: 14px;">%</span></span>
+                </view>
+                <view class="btnCoupon">立即领取</view>
             </view>
         </view>
-        <view class="couponItem couponItemDisable" wx:if="{{activeTab==1 && false}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
-            <view class="couponName">
-                {{index}}满200减30券
+        <view class="couponItem spaceBetweenFlex" wx:if="{{activeTab==1}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+            <image style="width: 150rpx; height: 135rpx;" src="{{imageUrl}}/icon/coupon.png" mode=""/>
+            <view>
+                <view class="couponName"><span class="ticketType">代金券</span>测试比例优惠券</view>
+                <view style="color: #999; text-align: right; margin-top: 3vw;">
+                    满 <span class="couponDigital">100</span> - <span class="couponDigital" style="font-size: 20px; color: rgb(250, 196, 78);">5<span style="font-size: 14px;">%</span></span>
+                </view>
+                <view class="btnCoupon">去使用</view>
             </view>
-            <view class="couponRange">
-                使用范围：XXXXXXXXX
-                使用范围：XXXXXXXXX
-                使用范围：XXXXXXXXX
+        </view>
+        <view class="couponItem spaceBetweenFlex" wx:if="{{activeTab==2}}" wx:for="{{2}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+            <image style="width: 150rpx; height: 135rpx;" src="{{imageUrl}}/icon/coupon-out.png" mode=""/>
+            <view>
+                <view class="couponName"><span class="ticketType" style="background-color: #999;">代金券</span>测试比例优惠券</view>
+                <view style="color: #999; text-align: right; margin-top: 3vw;">
+                    满 <span class="couponDigital">100</span> - <span class="couponDigital" style="font-size: 20px; color: #999;">5<span style="font-size: 14px;">%</span></span>
+                </view>
+                <view class="btnCoupon">过期/失效</view>
             </view>
-            <view class="availDate">
-                有效期：2020年03月03日 至 2024年1月1日
-            </view>
-            <view class="seperateLine">
-            </view>
-            <view class="gettingDate">
-                领取日期：2023年1月1日
-            </view>
-            <image class="outDateImg" src="/images/icon/outDate.png" mode="widthFix" style="width:70px" />
         </view>
     </view>
 </view>

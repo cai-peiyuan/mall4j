@@ -1,4 +1,5 @@
 // pages/user-info/pages/myTicket/myTicket.js
+const app = getApp();
 Page({
 
     /**
@@ -6,6 +7,7 @@ Page({
      */
     data: {
         activeTab:0,
+        imageUrl: app.globalData.imageUrl,
     },
 
     /**

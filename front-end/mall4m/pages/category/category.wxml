@@ -36,8 +36,14 @@
             <view class='prod-text-right'>
               <view class='prod-text more'>{{item.prodName}}</view>
               <view class='cate-prod-info'>{{item.brief}}</view>
-              <view class='prod-price more' style="color:#f0901a">
-                <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text> 
+              <view class="cate-prod-soldNum" wx:if="{{item.totalSales}}" style="color: #999;font-size: 22rpx;">已售:{{item.totalSales}}</view>
+              <view class='prod-price more spaceBetweenFlex' style="color:#f0901a; padding-right: 3vw;">
+                <view>
+                    <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text> 
+                </view>
+                <view style="padding-top: 1vw;"> 
+                    <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
+                </view>
               </view>
             </view>
           </view>
@@ -48,6 +54,65 @@
     </scroll-view>
     <!-- 右侧内容end -->
     <!-- </block> -->
+     <!-- 规格弹窗 -->
+     <view class="pup-sku" wx:if="{{skuShow}}">
+        <view class="pup-sku-main">
+            <view class='pup-sku-header'>
+                <image class="pup-sku-img" src="{{defaultSku.pic?defaultSku.pic:pic}}"></image>
+                <view class="pup-sku-price" wx-if="{{findSku}}">
+                    ￥
+                    <text class="pup-sku-price-int">{{wxs.parsePrice(defaultSku.price)[0]}}</text> .{{wxs.parsePrice(defaultSku.price)[1]}}
+                </view>
+                <view class="pup-sku-singal-price" wx-if="{{findSku}}">
+                    ￥
+                    {{wxs.toPrice(defaultSku.oriPrice)}}
+                </view>
+                <view class="pup-sku-price" wx-if="{{!findSku}}">无货</view>
+                <view class='pup-sku-prop'>
+                    <text>已选</text> {{selectedProp.length>0?selectedProp+'，':selectedProp}}{{prodNum}}件
+                </view>
+                <view class='pup-sku-prop'>
+                    <text>库存</text> {{defaultSku.stocks}}
+                </view>
+                <view class='close' bindtap='closePopup'></view>
+            </view>
+            <view class='pup-sku-body'>
+                <!-- 规格选项 -->
+                <view class="pup-sku-area">
+                    <block wx:for="{{skuGroup}}" wx:for-index="key" wx:for-item="value" wx:key='*this'>
+                        <view class='sku-kind'>{{key}}</view>
+                        <view class='sku-choose'>
+                            <block wx:for="{{value}}" wx:key='*this'>
+                                <text class="sku-choose-item {{wxs.array_contain(selectedProp,item)?'active':''}} {{['dashed',''][wxs.props_contain(allProperties,selectedPropObj,key,item,propKeys)]}}" bindtap='toChooseItem' data-key="{{key}}" data-val="{{item}}">{{item}}</text>
+                            </block>
+                        </view>
+                    </block>
+                </view>
+                <!-- 选择数量+-的按钮  -->
+                <view class="pup-sku-count">
+                    <view class="num-wrap">
+                        <view class="minus" bindtap='onCountMinus'>
+                            <text class="row"></text>
+                        </view>
+                        <view class="text-wrap">
+                            <input type="number" value="{{prodNum}}" disabled />
+                        </view>
+                        <view class="plus" bindtap='onCountPlus'>
+                            <text class="row"></text>
+                            <text class="col"></text>
+                        </view>
+                    </view>
+                    <view class="count-name">数量</view>
+                </view>
+            </view>
+            <!-- 加入购物车和立即购买按钮 -->
+            <view class='pup-sku-footer {{findSku?"":"gray"}}'>
+                <view class="btn cart" bindtap='addToCart'>加入购物车</view>
+                <!-- <view class="btn buy" bindtap='buyNow'>立即购买</view> -->
+            </view>
+        </view>
+    </view>
+    <!-- 规格弹窗end -->
   </view>
 
 </view>

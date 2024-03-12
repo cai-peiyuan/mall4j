@@ -16,6 +16,8 @@ Page({
     categoryImg: '',
     prodid:'',
     imageUrl:app.globalData.imageUrl,
+    totalCartNum: 0,//购物车总数量
+    prodNum: 1,//购买产品数量
   },
 
   /**
@@ -41,7 +43,50 @@ Page({
     };
     http.request(params);
   },
-
+  addToCart: function (item) {
+    if (item.defaultSku.stocks < 1) {
+        wx.showToast({
+            title: "商品库存不足",
+            icon: "none"
+        });
+        return;
+    }
+    if (!item.findSku) {
+        return;
+    }
+    var ths = this;
+    wx.showLoading({
+        mask: true
+    });
+    var params = {
+        url: "/p/shopCart/changeItem",
+        method: "POST",
+        data: {
+            basketId: 0,
+            count: item.prodNum,
+            prodId: item.prodId,
+            shopId: item.shopId,
+            skuId: item.defaultSku.skuId
+        },
+        callBack: function (res) {
+            //console.log(res);
+            ths.setData({
+                totalCartNum: ths.data.totalCartNum + ths.data.prodNum
+            });
+            wx.hideLoading();
+            wx.showToast({
+                title: "加入购物车成功",
+                icon: "none",
+                complete: () => {
+                    ths.setData({
+                        skuShow: false
+                    });
+                }
+            })
+        }
+    };
+    http.request(params);
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -53,9 +98,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-   
-
-
+    this.setData({
+        totalCartNum: app.globalData.totalCartCount
+    });
   },
 
   /**

@@ -18,14 +18,17 @@
 
     <view class="consumeList">
         <view class="consumeItem" wx:for="{{userBalanceDetail}}" wx:key="id">
-            <view>
-                <view class=" {{item.useBalance>0?'red':'green'}}">{{item.useBalance>0?'+'+wxs.toPrice(item.useBalance): wxs.toPrice(item.useBalance)}}</view>
-                <view >余额{{wxs.toPrice(item.newBalance)}}</view>
+            <view style="color: #000; font-weight: bold; font-size: 16px;line-height: 30px;">
+                {{item.useBalance>0?'充值':'消费'}}
+                <view class="consumeDate" style="font-weight:normal; font-size: 12px;">{{item.useTime}}</view>
             </view>
-            {{item.useBalance>0?'充值':'消费'}}
-            <view>
+            <!-- <view>
                 <view class="consumeDate">{{item.description}}</view>
-                <view class="consumeDate">{{item.useTime}}</view>
+                
+            </view> -->
+            <view style="line-height: 30px;">
+                <view style="text-align: right; font-size: 18px;" class=" {{item.useBalance>0?'red':'green'}}">{{item.useBalance>0?'+'+wxs.toPrice(item.useBalance): wxs.toPrice(item.useBalance)}}</view>
+                <view style="font-size: 14px;">余额:  ¥ <span style="font-family: 'Times New Roman', Times, serif;">{{wxs.toPrice(item.newBalance)}}</span></view>
             </view>
         </view>
     </view>
