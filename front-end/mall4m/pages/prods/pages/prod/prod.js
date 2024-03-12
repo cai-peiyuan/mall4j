@@ -54,6 +54,7 @@ Page({
         evaluate: -1,
         isCollection: false,
         left: "11.5%",
+        toView:"part1",
         observerBasicInfo: null,
         observerDetailInfo: null,
         observerCommentsInfo: null,
@@ -71,8 +72,25 @@ Page({
         this.observerDetailInfo = wx.createIntersectionObserver(this);
         this.observerCommentsInfo = wx.createIntersectionObserver(this);
         // 11.5 45 78.5
-        //监听商品基本信息
+        
         let that = this;
+       
+        //监听商品详情
+        // this.observerDetailInfo.relativeTo(".scroll-view").observe(".detailInfo", (res) => {
+        //     console.log(res);
+        //     if (res.intersectionRatio > 0) {
+        //         console.log("进入详情");
+        //         this.setData({
+        //             left: "45%"
+        //         });
+        //     } else {
+        //         console.log("离开详情");
+        //         that.setData({
+        //             left: "11.5%"
+        //         })
+        //     }
+        // });
+        //监听商品基本信息
         this.observerBasicInfo.relativeTo(".scroll-view").observe(".basicInfo", (res) => {
             if (res.intersectionRatio > 0) {
                 console.log("进入轮播");
@@ -81,20 +99,8 @@ Page({
                 })
             } else {
                 console.log("离开轮播");
-            }
-        });
-        //监听商品详情
-        this.observerDetailInfo.relativeTo(".scroll-view").observe(".detailInfo", (res) => {
-            console.log(res);
-            if (res.intersectionRatio > 0) {
-                console.log("进入详情");
-                this.setData({
-                    left: "45%"
-                });
-            } else {
-                console.log("离开详情");
                 that.setData({
-                    left: "11.5%"
+                    left: "45%"
                 })
             }
         });
@@ -167,15 +173,18 @@ Page({
     toTarget(val) {
         if (val.target.dataset.val == 1) {
             this.setData({
-                left: "11.5%"
+                left: "11.5%",
+                toView:"part1"
             });
         } else if (val.target.dataset.val == 2) {
             this.setData({
-                left: "45%"
+                left: "45%",
+                toView:"part2"
             })
         } else if (val.target.dataset.val == 3) {
             this.setData({
-                left: "78.5%"
+                left: "78.5%",
+                toView:"part3"
             })
         }
         console.log("left", this.data.left);
