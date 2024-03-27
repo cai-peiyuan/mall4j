@@ -130,8 +130,8 @@ public class OrderController {
 
         shopCartOrderMergerDto = orderService.putConfirmOrderCache(userId, shopCartOrderMergerDto);
 
-        UserBalance userBalanceByUserId = userBalanceService.getUserBalanceByUserId(userId);
-        shopCartOrderMergerDto.setUserBalance(userBalanceByUserId);
+        UserBalance userBalance = userBalanceService.getUserBalanceByUserId(userId);
+        shopCartOrderMergerDto.setUserBalance(userBalance);
 
         return ServerResponseEntity.success(shopCartOrderMergerDto);
     }

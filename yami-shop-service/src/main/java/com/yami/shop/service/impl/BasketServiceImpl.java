@@ -152,8 +152,16 @@ public class BasketServiceImpl extends ServiceImpl<BasketMapper, Basket> impleme
         return shopCartDtos;
     }
 
+
+    /**
+     * 组装获取用户提交的购物车商品项
+     * @param basketId 购物车id
+     * @param orderItem 提交订单时携带的商品信息
+     * @param userId 当前用户的用户id
+     * @return 所有的商品购物项
+     */
     @Override
-    public List<ShopCartItemDto> getShopCartItemsByOrderItems(List<Long> basketId, OrderItemParam orderItem,String userId) {
+    public List<ShopCartItemDto> getShopCartItemsByOrderItems(List<Long> basketId, OrderItemParam orderItem, String userId) {
         if (orderItem == null && CollectionUtil.isEmpty(basketId)) {
             return Collections.emptyList();
         }

@@ -10,7 +10,7 @@ module.exports = Behavior({
     theme: wx.getSystemInfoSync().theme,
   },
   methods: {
-    async getLoginedUserInfo() {
+    getLoginedUserInfo() {
       this.data.sharedText === 'This is a piece of data shared between pages.';
       let userInfoInToken = wx.getStorageSync('userInfoInToken');
       console.log('userInfoInToken -> ', userInfoInToken);
