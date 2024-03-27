@@ -175,6 +175,7 @@ Page({
     };
     http.request(params);
   },
+
   toTarget(val) {
     if (val.target.dataset.val == 1) {
       this.setData({
@@ -194,7 +195,9 @@ Page({
     }
     console.log("left", this.data.left);
   },
-  // 获取商品信息
+  /**
+   * 获取商品信息
+   */
   getProdInfo() {
     wx.showLoading();
     var params = {
@@ -222,7 +225,8 @@ Page({
           brief: res.brief,
           // skuId: res.skuId
           skuList: res.skuList,
-          pic: res.pic
+          pic: res.pic,
+          transport: res.transport
         });
         // 获取优惠券
         //this.getCouponList();
@@ -234,6 +238,10 @@ Page({
     };
     http.request(params);
   },
+
+  /**
+   * 获取商品评论信息
+   */
   getProdCommData() {
     http.request({
       url: "/prodComm/prodCommData",
@@ -258,24 +266,6 @@ Page({
   getMoreCommPage(e) {
     this.getProdCommPage();
   },
-  // 获取分页获取评论
-  getProdCommPage(e) {
-    if (e) {
-      if (e.currentTarget.dataset.evaluate === this.data.evaluate) {
-        return;
-      }
-      this.setData({
-        prodCommPage: {
-          current: 0,
-          pages: 0,
-          records: []
-        },
-        littleCommPage: [],
-        evaluate: -1,
-        isCollection: false
-      });
-    }
-  },
   /**
    * app分享功能
    * @param {*} option 
@@ -292,48 +282,10 @@ Page({
       path: path
     }
   },
-  /**
-   * 获取是否关注信息
-   */
-  getCollection() {
-    wx.showLoading();
-    var params = {
-      url: "/p/user/collection/isCollection",
-      method: "GET",
-      data: {
-        prodId: this.data.prodId
-      },
-      callBack: (res) => {
-        this.setData({
-          isCollection: res
-        })
-        wx.hideLoading();
-      }
-    };
-    http.request(params);
-  },
-
-  /**
-   * 添加或者取消收藏商品 
-   */
-  addOrCannelCollection() {
-    wx.showLoading();
-
-    var params = {
-      url: "/p/user/collection/addOrCancel",
-      method: "POST",
-      data: this.data.prodId,
-      callBack: (res) => {
-        this.setData({
-          isCollection: !this.data.isCollection
-        })
-        wx.hideLoading();
-      }
-    };
-    http.request(params);
-  },
+  
 
   // 获取商品信息
+  /**
   getProdInfo() {
     wx.showLoading();
     var params = {
@@ -370,30 +322,8 @@ Page({
     };
     http.request(params);
   },
-  getProdCommData() {
-    http.request({
-      url: "/prodComm/prodCommData",
-      method: "GET",
-      data: {
-        prodId: this.data.prodId,
-      },
-      callBack: (res) => {
-        this.setData({
-          prodCommData: res
-        })
-      }
-    })
-  },
-  // 获取部分评论
-  getLittleProdComm() {
-    if (this.data.prodCommPage.records.length) {
-      return;
-    }
-    this.getProdCommPage();
-  },
-  getMoreCommPage(e) {
-    this.getProdCommPage();
-  },
+   */
+
   // 获取分页获取评论
   getProdCommPage(e) {
     if (e) {
@@ -442,6 +372,10 @@ Page({
       }
     })
   },
+
+  /**
+   * 获取优惠券
+   */
   getCouponList() {
     http.request({
       url: "/coupon/listByProdId",

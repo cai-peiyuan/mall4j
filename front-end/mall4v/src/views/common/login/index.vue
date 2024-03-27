@@ -4,7 +4,7 @@
       <div class="top">
         <div class="logo">
           <img
-            src="~@/assets/img/login-logo-island-selected.png"
+            src="~@/assets/img/login-logo-island-selected-v2.png"
             alt=""
           >
         </div>

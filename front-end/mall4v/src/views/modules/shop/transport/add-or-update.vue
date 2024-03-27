@@ -3,7 +3,7 @@
     v-model="visible"
     :title="!dataForm.transportId ? '新增' : '修改'"
     :close-on-click-modal="false"
-    width="1400px"
+    width="1000px"
     class="transport-dialog"
   >
     <el-form
