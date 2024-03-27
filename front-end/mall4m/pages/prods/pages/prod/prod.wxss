@@ -89,6 +89,15 @@ swiper image {
     margin-top: 6rpx;
 }
 
+
+.transport-p {
+    background: #fff;
+    line-height: 40rpx;
+    color: #999;
+    font-size: 24rpx;
+    margin-top: 6rpx;
+}
+
 .prod-price {
     font-size: 30rpx;
     height: 100rpx;

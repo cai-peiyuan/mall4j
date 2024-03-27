@@ -13,12 +13,12 @@ Page({
   data: {
     shopId: 1,
     picDomain: config.picDomain,
-    indicatorDots: true,
+    indicatorDots: true, //显示轮播点
     indicatorColor: '#f2f2f2',
     indicatorActiveColor: '#eba524',
-    autoplay: true,
-    interval: 3000,
-    duration: 1000,
+    autoplay: true, //自动开启轮播
+    interval: 9000, //轮播间隔时间
+    duration: 2000, //动画持续时长
     prodNum: 1,
     totalCartNum: 0,
     pic: "",
@@ -39,7 +39,7 @@ Page({
     commentShow: false,
     couponList: [],
     skuList: [],
-    transport: {},
+    transport: {}, //商品运费设置
     skuGroup: {},
     findSku: true,
     defaultSku: undefined,
@@ -54,8 +54,8 @@ Page({
       records: []
     },
     littleCommPage: [],
-    evaluate: -1,
-    isCollection: false,
+    evaluate: -1, //评价类型
+    isCollection: false, //是否收藏了商品
     left: "11.5%",
     toView: "part1",
     observerBasicInfo: null,

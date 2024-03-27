@@ -1,5 +1,3 @@
-
-
 package com.yami.shop.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+
 /**
  * @author lanhai
  */
@@ -33,29 +32,45 @@ public class TransportManagerServiceImpl implements TransportManagerService {
 
     /**
      * 根据订单信息和用户选择的地址信息计算运费
+     *
      * @param productItem
      * @param userAddr
      * @return
      */
     @Override
     public Double calculateTransfee(ProductItemDto productItem, UserAddr userAddr) {
+        // 商品信息
         Product product = productService.getProductByProdId(productItem.getProdId());
         // 用户所在城市id
         Long cityId = userAddr.getCityId();
+        Long areaId = userAddr.getAreaId();
 
+        /**
+         * product.getDeliveryMode()
+         * hasUserPickUp 用户自提
+         * hasShopDelivery 商家配送
+         * {"hasUserPickUp": false, "hasShopDelivery": true}
+         */
         Product.DeliveryModeVO deliveryModeVO = Json.parseObject(product.getDeliveryMode(), Product.DeliveryModeVO.class);
 
         // 没有店铺配送的方式
         if (!deliveryModeVO.getHasShopDelivery()) {
             return 0.0;
         }
+
+        /**
+         * 运费模板编号
+         * deliveryTemplateId : 58
+         */
         if (product.getDeliveryTemplateId() == null) {
             return 0.0;
         }
 
         //找出该产品的运费项
         Transport transport = transportService.getTransportAndAllItems(product.getDeliveryTemplateId());
-        //商家把运费模板删除
+        /**
+         * 运费模板不存在的情况 可能是 商家把运费模板删除
+         */
         if (transport == null) {
             return 0.0;
         }
@@ -65,7 +80,6 @@ public class TransportManagerServiceImpl implements TransportManagerService {
         // 用于计算运费的件数
         Double piece = getPiece(productItem, transport, sku);
 
-
         //如果有包邮的条件
         if (transport.getHasFreeCondition() == 1) {
             // 获取所有的包邮条件
@@ -73,14 +87,18 @@ public class TransportManagerServiceImpl implements TransportManagerService {
             for (TransfeeFree transfeeFree : transfeeFrees) {
                 List<Area> freeCityList = transfeeFree.getFreeCityList();
                 for (Area freeCity : freeCityList) {
-                    if (!Objects.equals(freeCity.getAreaId(), cityId)) {
+                    /**
+                     * 城市或者县区 都不包邮的情况下继续循环
+                     */
+                    if (!Objects.equals(freeCity.getAreaId(), cityId) && !Objects.equals(freeCity.getAreaId(), areaId)) {
                         continue;
                     }
-                    //包邮方式 （0 满x件/重量/体积包邮 1满金额包邮 2满x件/重量/体积且满金额包邮）
-                    boolean isFree = (transfeeFree.getFreeType() == 0 && piece >= transfeeFree.getPiece()) ||
-                            (transfeeFree.getFreeType() == 1 && productItem.getProductTotalAmount() >= transfeeFree.getAmount()) ||
-                            (transfeeFree.getFreeType() == 2 && piece >= transfeeFree.getPiece() && productItem.getProductTotalAmount() >= transfeeFree.getAmount());
+                    /**
+                     * 包邮方式 （0 满x件/重量/体积包邮 1满金额包邮 2满x件/重量/体积且满金额包邮）
+                     */
+                    boolean isFree = (transfeeFree.getFreeType() == 0 && piece >= transfeeFree.getPiece()) || (transfeeFree.getFreeType() == 1 && productItem.getProductTotalAmount() >= transfeeFree.getAmount()) || (transfeeFree.getFreeType() == 2 && piece >= transfeeFree.getPiece() && productItem.getProductTotalAmount() >= transfeeFree.getAmount());
                     if (isFree) {
+                        //满足包邮条件
                         return 0.0;
                     }
                 }
@@ -97,7 +115,7 @@ public class TransportManagerServiceImpl implements TransportManagerService {
             }
             // 如果在运费模板中的城市找到该商品的运费，则将该商品由默认运费设置为该城市的运费
             for (Area area : dbTransfee.getCityList()) {
-                if (area.getAreaId().equals(cityId)) {
+                if (area.getAreaId().equals(cityId) || area.getAreaId().equals(areaId)) {
                     transfee = dbTransfee;
                     break;
                 }
@@ -128,6 +146,15 @@ public class TransportManagerServiceImpl implements TransportManagerService {
         return fee;
     }
 
+    /**
+     * 获取商品数量
+     * 件数、重量、体积
+     *
+     * @param productItem
+     * @param transport
+     * @param sku
+     * @return
+     */
     private Double getPiece(ProductItemDto productItem, Transport transport, Sku sku) {
         Double piece = 0.0;
 

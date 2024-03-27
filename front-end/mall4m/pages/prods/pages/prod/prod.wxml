@@ -24,13 +24,18 @@
             <!-- <block wx:for="{{imgs}}" wx:key=''> -->
             <view class='prod-info'>
                 <view class="tit-wrap spaceBetweenFlex" style="height: 10vw;">
+                    <!-- 商品名称 -->
                     <view class="prod-tit">{{prodName}}</view>
+
+                    <!-- 商品收藏和分享按钮 -->
                     <view class="col">
+
                         <view style="position: absolute;left: 0px;" bindtap='addOrCannelCollection'>
                             <image wx-if="{{!isCollection}}" src="{{imageUrl}}/icon/prod-col.png"></image>
                             <image wx-if="{{isCollection}}" src="{{imageUrl}}/icon/prod-col-red.png"></image>
                             收藏
                         </view>
+
                         <view style="position: absolute;right: 0px;">
                             <button class="share-icon" open-type="share">
                                 <image src='{{imageUrl}}/icon/share.png'></image>
@@ -38,14 +43,42 @@
                             </button>
                         </view>
                     </view>
+                    <!-- 商品收藏和分享按钮结束 -->
                 </view>
+                <!-- 商品简介 brief -->
                 <view class="sales-p">{{brief}}</view>
+
+                <!--运费显示内容说明-->
+                <view>
+                    <!-- 商品运费说明 -->
+                    <view class="transport-p">
+                        {{transport.hasFreeCondition===1?'满额免配送费':''}}
+                    </view>
+                    <!-- 运费说明 -->
+                    <view class="transport-p" wx:for="{{transport.transfees}}" wx:key="transfee.transfeeId" wx:for-index="idx" wx:for-item="transfee">
+                        <text wx:for="{{transfee.cityList}}" wx:key="city.areaId" wx:for-index="idx1" wx:for-item="city">{{city.areaName+ '  '}}</text>
+                        <text>{{transfee.firstPiece+' 件起售 首件配送费 ' + transfee.firstFee + ' 元 每增加 '+ transfee.continuousPiece + ' 件增加配送费 '+ transfee.continuousFee + ' 元'}}</text>
+                    </view>
+
+                    <!-- 包邮条件显示 -->
+                    <view class="transport-p" wx:if="{{transport.hasFreeCondition === 1}}" wx:for="{{transport.transfeeFrees}}" wx:key="transfeeFree.transportId" wx:for-index="idx" wx:for-item="transfeeFree">
+                        <text wx:for="{{transfeeFree.freeCityList}}" wx:key="freeCity.areaId" wx:for-index="idx1" wx:for-item="freeCity">{{freeCity.areaName+ '  '}}</text>
+
+                        <text wx:if="{{transfeeFree.freeType === 1}}">{{'满 '+transfeeFree.amount + ' 元 免配送费'}}</text>
+                        <text wx:if="{{transfeeFree.freeType === 0}}">{{'满 '+transfeeFree.piece + ' 件 免配送费'}}</text>
+                    </view>
+                </view>
+
+                <!-- 商品价格 -->
                 <view class="prod-price">
                     <text class="price">￥<text class="price-num">{{wxs.parsePrice(defaultSku.price)[0]}}</text>.{{wxs.parsePrice(defaultSku.price)[1]}}</text>
                     <text class="ori-price">￥{{wxs.toPrice(defaultSku.oriPrice)}}</text>
-                    <text class="stocks">库存{{defaultSku.stocks}}</text>
-                    <text class="sales">已售{{'100+'}}</text>
+                    <text class="stocks">库存 {{defaultSku.stocks}}</text>
+                    <text class="sales">已售 {{'100+'}}</text>
                 </view>
+
+
+
             </view>
         </view>
         <!-- </block> -->
@@ -182,7 +215,7 @@
                 <view class='close' bindtap='closePopup'></view>
             </view>
             <view class='pup-sku-body'>
-                
+
                 <!-- 规格选项 -->
                 <view class="pup-sku-area">
                     <block wx:for="{{skuGroup}}" wx:for-index="key" wx:for-item="value" wx:key='*this'>
