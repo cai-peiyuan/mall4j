@@ -3,6 +3,7 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yami.shop.bean.app.dto.UserAddrDto;
 import com.yami.shop.bean.model.UserAddr;
 
 /**
@@ -37,5 +38,13 @@ public interface UserAddrService extends IService<UserAddr> {
 	 * @return
 	 */
     UserAddr getUserAddrByUserId(Long addrId, String userId);
+
+
+	/**
+	 * 判断用户选择的收货地址是否支持配送
+	 * @param userAddr
+	 * @return
+	 */
+	boolean validUserAddr(UserAddrDto userAddr);
 }
 

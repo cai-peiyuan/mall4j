@@ -67,6 +67,7 @@ public class OrderController {
 
         // 订单的地址信息
         UserAddr userAddr = userAddrService.getUserAddrByUserId(orderParam.getAddrId(), userId);
+
         // 放入地址模型对象
         UserAddrDto userAddrDto = BeanUtil.copyProperties(userAddr, UserAddrDto.class);
 
@@ -82,6 +83,13 @@ public class OrderController {
 
         // 将要返回给前端的完整的订单信息
         ShopCartOrderMergerDto shopCartOrderMergerDto = new ShopCartOrderMergerDto();
+
+        /**
+         * 设置推荐者的用户编号
+         */
+        if (orderParam.getOrderItem() != null && orderParam.getOrderItem().getFromUserId() != null) {
+            shopCartOrderMergerDto.setFromUserId(orderParam.getOrderItem().getFromUserId());
+        }
 
         shopCartOrderMergerDto.setUserAddr(userAddrDto);
 
@@ -113,6 +121,7 @@ public class OrderController {
             }
             shopCartOrder.setShopCartItemDiscounts(shopCartItemDiscounts);
 
+            //计算订单金额
             applicationContext.publishEvent(new OrderConfirmEvent(shopCartOrder, orderParam, shopAllShopCartItems));
 
             actualTotal = Arith.add(actualTotal, shopCartOrder.getActualTotal());
@@ -130,6 +139,7 @@ public class OrderController {
 
         shopCartOrderMergerDto = orderService.putConfirmOrderCache(userId, shopCartOrderMergerDto);
 
+        //用户账户余额信息
         UserBalance userBalance = userBalanceService.getUserBalanceByUserId(userId);
         shopCartOrderMergerDto.setUserBalance(userBalance);
 
@@ -144,8 +154,13 @@ public class OrderController {
     public ServerResponseEntity<OrderNumbersDto> submitOrders(@Valid @RequestBody SubmitOrderParam submitOrderParam) {
         String userId = SecurityUtils.getUser().getUserId();
         ShopCartOrderMergerDto mergerOrder = orderService.getConfirmOrderCache(userId);
+
         if (mergerOrder == null) {
             throw new YamiShopBindException("订单已过期，请重新下单");
+        }
+
+        if (!userAddrService.validUserAddr(mergerOrder.getUserAddr())) {
+            throw new YamiShopBindException("收货地址不在配送范围，请重新选择收货地址");
         }
 
         List<OrderShopParam> orderShopParams = submitOrderParam.getOrderShopParam();

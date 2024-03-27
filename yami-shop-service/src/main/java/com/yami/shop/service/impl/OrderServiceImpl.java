@@ -189,6 +189,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public void removeConfirmOrderCache(String userId) {
     }
 
+    /**
+     * 生成订单信息
+     * @param userId
+     * @param mergerOrder
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<Order> submit(String userId, ShopCartOrderMergerDto mergerOrder) {

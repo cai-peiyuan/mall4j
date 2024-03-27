@@ -260,7 +260,7 @@ button.memu-btn.memu-item:after {
 .contact-btn {
   display: inline-block;
   position: absolute;
-  width: 50%;
+  width: 100%;
   background: salmon;
   opacity: 0;
 }

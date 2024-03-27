@@ -99,12 +99,10 @@ public class OrderSubmitListener {
         // 删除购物车的商品信息
         if (!basketIds.isEmpty()) {
             basketMapper.deleteShopCartItemsByBasketIds(userId, basketIds);
-
         }
 
         // 更新sku库存
         skuStocksMap.forEach((key, sku) -> {
-
             if (skuMapper.updateStocks(sku) == 0) {
                 skuService.removeSkuCacheBySkuId(key, sku.getProdId());
                 throw new YamiShopBindException("商品：[" + sku.getProdName() + "]库存不足");
@@ -113,7 +111,6 @@ public class OrderSubmitListener {
 
         // 更新商品库存
         prodStocksMap.forEach((prodId, prod) -> {
-
             if (productMapper.updateStocks(prod) == 0) {
                 productService.removeProductCacheByProdId(prodId);
                 throw new YamiShopBindException("商品：[" + prod.getProdName() + "]库存不足");

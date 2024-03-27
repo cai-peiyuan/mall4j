@@ -79,6 +79,6 @@ public class Utils {
                 put(3, "储值余额");
             }
         };
-        return payTypeMap.containsKey(payType) ? payTypeMap.get(payType) : "手动代付";
+        return payTypeMap.containsKey(payType) ? payTypeMap.get(payType) : "余额支付";
     }
 }

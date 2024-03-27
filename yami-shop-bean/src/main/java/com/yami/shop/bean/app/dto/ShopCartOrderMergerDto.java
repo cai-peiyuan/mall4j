@@ -41,4 +41,7 @@ public class ShopCartOrderMergerDto implements Serializable {
 
     @Schema(description = "用户余额信息")
     private UserBalance userBalance;
+
+    @Schema(description = "分享者用户编号" )
+    private String fromUserId;
 }

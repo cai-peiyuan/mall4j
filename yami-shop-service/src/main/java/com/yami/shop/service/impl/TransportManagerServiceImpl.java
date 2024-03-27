@@ -30,6 +30,13 @@ public class TransportManagerServiceImpl implements TransportManagerService {
     @Autowired
     private TransportService transportService;
 
+
+    /**
+     * 根据订单信息和用户选择的地址信息计算运费
+     * @param productItem
+     * @param userAddr
+     * @return
+     */
     @Override
     public Double calculateTransfee(ProductItemDto productItem, UserAddr userAddr) {
         Product product = productService.getProductByProdId(productItem.getProdId());

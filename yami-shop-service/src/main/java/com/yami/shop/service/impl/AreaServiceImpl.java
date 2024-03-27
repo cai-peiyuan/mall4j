@@ -1,5 +1,3 @@
-
-
 package com.yami.shop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,11 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author lgh on 2018/10/26.
@@ -26,6 +20,27 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements Ar
 
     @Autowired
     private AreaMapper areaMapper;
+
+    /**
+     * 获取所有有效的地区并且缓存
+     *
+     * @return
+     */
+    @Override
+    @Cacheable(cacheNames = "area", key = "valids")
+    public List<Area> listValid() {
+        // 只查询有效的地址行政区 status == 1
+        return areaMapper.selectList(new LambdaQueryWrapper<Area>().eq(Area::getStatus, 1));
+    }
+
+    /**
+     * 清除地址缓存
+     */
+    @Override
+    @CacheEvict(cacheNames = "area", key = "valids")
+    public void removeAreaValidCache() {
+
+    }
 
     @Override
     @Cacheable(cacheNames = "area", key = "#pid")

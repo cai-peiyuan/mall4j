@@ -15,6 +15,20 @@ import java.util.Map;
 public interface AreaService extends IService<Area> {
 
     /**
+     * 获取所有有效的地区并且缓存
+     *
+     * @return
+     */
+    List<Area> listValid();
+
+
+    /**
+     * 清除地址缓存
+     *
+     */
+    void removeAreaValidCache();
+
+    /**
      * 通过pid 查找地址接口
      *
      * @param pid 父id

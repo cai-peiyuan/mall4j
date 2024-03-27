@@ -358,7 +358,7 @@ Page({
         //不支持的省份
         if (!this.containProvince(res.provinceName)) {
           wx.showToast({
-            title: '不支持的省份 ' + res.provinceName,
+            title: '商品不支持配送省份 -> ' + res.provinceName,
             icon: "none"
           })
           return;
@@ -366,7 +366,7 @@ Page({
         //不支持的省份
         if (!this.containCity(res.cityName)) {
           wx.showToast({
-            title: '不支持的城市 ' + res.cityName,
+            title: '商品不支持配送城市 -> ' + res.cityName,
             icon: "none"
           })
           return;
@@ -375,7 +375,7 @@ Page({
         //不支持的辖区
         if (!this.containArea(res.countyName)) {
           wx.showToast({
-            title: '不支持的辖区 ' + res.countyName,
+            title: '商品不支持配送辖区 -> ' + res.countyName,
             icon: "none"
           })
           return;

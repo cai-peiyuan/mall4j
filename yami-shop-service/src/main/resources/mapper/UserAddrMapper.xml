@@ -25,7 +25,7 @@
   </update>
   <select id="getDefaultUserAddr" resultType="com.yami.shop.bean.model.UserAddr">
     select addr_id,user_id,receiver,province,city,area,province_id,city_id,area_id,addr,mobile,common_addr
-    from tz_user_addr where user_id = #{userId} and common_addr = 1
+    from tz_user_addr where user_id = #{userId} and common_addr = 1 limit 1
   </select>
 
   <update id="setDefaultUserAddr">

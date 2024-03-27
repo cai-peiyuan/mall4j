@@ -39,13 +39,13 @@ public class OrderSettlement implements Serializable {
 
 
     /**
-     * 支付方式 0 手动代付 1 微信支付 2 支付宝
+     * 支付方式 0 余额支付 1 微信支付 2 支付宝
      */
 
     private Integer payType;
 
     /**
-     * 支付方式 0 手动代付 1 微信支付 2 支付宝
+     * 支付方式 0 余额支付 1 微信支付 2 支付宝
      */
     private String payTypeName;
 
