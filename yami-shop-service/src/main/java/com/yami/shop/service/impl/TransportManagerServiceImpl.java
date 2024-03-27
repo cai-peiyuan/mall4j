@@ -10,6 +10,7 @@ import com.yami.shop.service.ProductService;
 import com.yami.shop.service.SkuService;
 import com.yami.shop.service.TransportManagerService;
 import com.yami.shop.service.TransportService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.Objects;
  * @author lanhai
  */
 @Service
+@Slf4j
 public class TransportManagerServiceImpl implements TransportManagerService {
 
     @Autowired
@@ -45,6 +47,7 @@ public class TransportManagerServiceImpl implements TransportManagerService {
         Long cityId = userAddr.getCityId();
         Long areaId = userAddr.getAreaId();
 
+        log.debug("开始计算订单运费");
         /**
          * product.getDeliveryMode()
          * hasUserPickUp 用户自提

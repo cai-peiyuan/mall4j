@@ -168,10 +168,14 @@
               >
                 <div class="item">
                   <div>
-                    <span v-if="order.payType === 1">微信支付</span>
+                    <span v-if="order.payType === 0">余额支付</span>
+                    <span v-else-if="order.payType === 1">微信支付</span>
                     <span v-else-if="order.payType === 2">支付宝</span>
                     <span v-else-if="order.payType === 3">储值余额</span>
-                    <span v-else>手动代付</span>
+                    <span v-else-if="order.payType == null">未支付</span>
+                    <span v-else>其他支付方式 {{order.payType}}</span>
+
+                    
                     <span v-if="order.isPayed === 1">已支付</span>
                     <span v-if="order.refundSts === 1">退款正在处理</span>
                     <span v-if="order.refundSts === 2">退款已到账</span>
