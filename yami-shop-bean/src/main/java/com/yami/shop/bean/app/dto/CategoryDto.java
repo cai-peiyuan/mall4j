@@ -7,6 +7,8 @@ import com.yami.shop.common.serializer.json.ImgJsonSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author lanhai
  */
@@ -15,6 +17,9 @@ public class CategoryDto {
 
 	@Schema(description = "分类id" ,required=true)
 	private Long categoryId;
+
+	@Schema(description = "子分类" ,required=false)
+	private List<CategoryDto> data;
 
 	@Schema(description = "分类父id" ,required=true)
 	private Long parentId;
