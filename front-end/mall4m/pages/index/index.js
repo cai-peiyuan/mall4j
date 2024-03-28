@@ -275,13 +275,18 @@ Page({
         http.request(params);
     },
 
+    /**
+     * 获取指定分类下的商品信息
+     * @param {} id 
+     * @param {*} index 
+     */
     getTagProd(id, index) {
         var param = {
             url: "/prod/prodListByTagId",
             method: "GET",
             data: {
                 tagId: id,
-                size: 6
+                size: 12
             },
             callBack: (res) => {
                 var taglist = this.data.taglist;
