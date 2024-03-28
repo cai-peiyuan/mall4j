@@ -81,7 +81,7 @@ public class AreaController {
         }
         areaService.save(area);
         //移除缓存
-        areaService.removeAreaValidCache();
+        areaService.removeAreasByStatusCache(1);
         return ServerResponseEntity.success();
     }
 
@@ -103,7 +103,7 @@ public class AreaController {
         areaService.updateById(area);
         areaService.removeAreaCacheByParentId(area.getParentId());
         //移除缓存
-        areaService.removeAreaValidCache();
+        areaService.removeAreasByStatusCache(1);
         return ServerResponseEntity.success();
     }
 
@@ -117,7 +117,7 @@ public class AreaController {
         areaService.removeById(id);
         areaService.removeAreaCacheByParentId(area.getParentId());
         //移除缓存
-        areaService.removeAreaValidCache();
+        areaService.removeAreasByStatusCache(1);
         return ServerResponseEntity.success();
     }
 

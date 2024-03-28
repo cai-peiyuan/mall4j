@@ -19,14 +19,14 @@ public interface AreaService extends IService<Area> {
      *
      * @return
      */
-    List<Area> listValid();
+    List<Area> listAreasByStatus(Integer status);
 
 
     /**
      * 清除地址缓存
      *
      */
-    void removeAreaValidCache();
+    void removeAreasByStatusCache(Integer status);
 
     /**
      * 通过pid 查找地址接口

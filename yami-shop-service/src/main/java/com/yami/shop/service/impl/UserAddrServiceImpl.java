@@ -96,7 +96,7 @@ public class UserAddrServiceImpl extends ServiceImpl<UserAddrMapper, UserAddr> i
      */
     @Override
     public boolean validUserAddr(UserAddrDto userAddr) {
-        List<Area> areas = areaService.listValid();
+        List<Area> areas = areaService.listAreasByStatus(1);
         List<Area> provinceValid = areas.stream().filter(area -> area.getAreaName().equals(userAddr.getProvince())).collect(Collectors.toList());
         List<Area> cityValid = areas.stream().filter(area -> area.getAreaName().equals(userAddr.getCity())).collect(Collectors.toList());
         List<Area> areaValid = areas.stream().filter(area -> area.getAreaName().equals(userAddr.getArea())).collect(Collectors.toList());

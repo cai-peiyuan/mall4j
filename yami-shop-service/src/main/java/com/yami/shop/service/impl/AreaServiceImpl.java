@@ -27,18 +27,18 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements Ar
      * @return
      */
     @Override
-    @Cacheable(cacheNames = "area", key = "valids")
-    public List<Area> listValid() {
+    @Cacheable(cacheNames = "listAreasByStatus", key = "#status")
+    public List<Area> listAreasByStatus(Integer status) {
         // 只查询有效的地址行政区 status == 1
-        return areaMapper.selectList(new LambdaQueryWrapper<Area>().eq(Area::getStatus, 1));
+        return areaMapper.selectList(new LambdaQueryWrapper<Area>().eq(Area::getStatus, status));
     }
 
     /**
      * 清除地址缓存
      */
     @Override
-    @CacheEvict(cacheNames = "area", key = "valids")
-    public void removeAreaValidCache() {
+    @CacheEvict(cacheNames = "listAreasByStatus", key = "valids")
+    public void removeAreasByStatusCache(Integer status) {
 
     }
 
