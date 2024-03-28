@@ -15,6 +15,14 @@
         <view class='menu-item {{selIndex==index?"active":""}} ' data-index="{{index}}" data-id="{{item.categoryId}}" bindtap='onMenuTab'>
           {{item.categoryName}}
         </view>
+        <view wx:if="{{selIndex==index && item.childNode && item.childNode.length > 0}}"  >
+           <view wx:for='{{item.childNode}}' wx:key="item1" wx:for-index="idx" wx:for-item="item1">
+                <view class="childMenu {{(selIndex==index && selChildIndex==idx)?'active':''}}" data-index="{{index}}"  data-childIndex="{{idx}}" data-id="{{item.categoryId}}" data-childid="{{item1.id}}" bindtap='onMenuTab'>
+                    {{item1.name}}
+                </view>
+           </view>
+            
+        </view>
       </block>
     </scroll-view>
     <!-- 左侧菜单end -->
@@ -40,6 +48,12 @@
               <view class='prod-price more spaceBetweenFlex' style="color:#f0901a; padding-right: 3vw;">
                 <view>
                     <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text> 
+                </view>
+                <view class="singal-price">
+                    <text class='symbol'>￥</text><text class='small-num'>{{item.oriPrice}}</text>
+                </view>
+                <view style="font-size: 20rpx; color:#999">
+                    库存:{{item.totalStocks}}
                 </view>
                 <view style="padding-top: 1vw;"> 
                     <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
