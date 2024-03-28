@@ -66,10 +66,10 @@
 
                 </block>
                 <view class="centerFlex" wx:if="{{current >= pages && productList.length>0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
-                    没有更多数据啦~
+                    就上面这些商品了，看看其他分类吧
                 </view>
                 <view class="centerFlex"  wx:if="{{productList.length==0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
-                    产品还未上传～
+                    店家还未上架商品
                 </view>
             </view>
             <!-- </block> -->

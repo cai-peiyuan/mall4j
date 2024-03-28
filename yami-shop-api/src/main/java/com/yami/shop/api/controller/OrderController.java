@@ -90,7 +90,7 @@ public class OrderController {
         if (orderParam.getOrderItem() != null && orderParam.getOrderItem().getFromUserId() != null) {
             shopCartOrderMergerDto.setFromUserId(orderParam.getOrderItem().getFromUserId());
         }
-
+        //设置用户下单收获地址
         shopCartOrderMergerDto.setUserAddr(userAddrDto);
 
         // 所有店铺的订单信息

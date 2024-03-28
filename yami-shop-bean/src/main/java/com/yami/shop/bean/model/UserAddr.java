@@ -96,4 +96,8 @@ public class UserAddr implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    public String getAddress(){
+        return this.province + this.city + this.area + this.addr;
+    }
+
 }

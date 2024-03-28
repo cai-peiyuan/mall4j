@@ -217,7 +217,7 @@ public class PayServiceImpl implements PayService {
      * @param payNo
      * @param bizPayNo
      * @return
-     * @author peiyuan.cai@mapabc.com
+     * @author peiyuan.cai
      * @date 2024/1/26 16:07 星期五
      */
     @Deprecated

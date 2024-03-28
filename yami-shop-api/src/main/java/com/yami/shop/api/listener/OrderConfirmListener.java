@@ -54,35 +54,46 @@ public class OrderConfirmListener {
 
         // 订单的地址信息
         UserAddr userAddr = userAddrService.getUserAddrByUserId(orderParam.getAddrId(), userId);
-
+        //订单总价格
         double total = 0.0;
-
+        //订单不包含运费的总价
+        double totalWithoutTransfee = 0.0;
+        //总商品件数
+        int totalCountWithoutTransfee = 0;
+        //总商品件数
         int totalCount = 0;
-
+        //运费总价
         double transfee = 0.0;
+
+
+        /**
+         * 计算订单不包含运费的总价
+         */
+        for (ShopCartItemDto shopCartItem : event.getShopCartItems()) {
+            //订单不包含运费的总价
+            totalWithoutTransfee = Arith.add(shopCartItem.getProductTotalAmount(), totalWithoutTransfee);
+
+            //订单中各个商品总件数
+            totalCountWithoutTransfee = shopCartItem.getProdCount() + totalCountWithoutTransfee;
+        }
 
         /**
          * 不同的店铺商品计入不同的篮子
          */
         for (ShopCartItemDto shopCartItem : event.getShopCartItems()) {
-            // 获取商品信息
-            Product product = productService.getProductByProdId(shopCartItem.getProdId());
-            // 获取sku信息
-            Sku sku = skuService.getSkuBySkuId(shopCartItem.getSkuId());
-            if (product == null || sku == null) {
-                throw new YamiShopBindException("购物车包含未知的商品");
-            }
-            if (product.getStatus() != 1 || sku.getStatus() != 1) {
-                throw new YamiShopBindException("商品[" + sku.getProdName() + "]已下架");
-            }
 
-            //计算订单总金额
+            //检查商品和规格状态
+            checkProdAndSku(shopCartItem);
+
+            //订单中各个商品总件数
             totalCount = shopCartItem.getProdCount() + totalCount;
+            //计算订单总金额
             total = Arith.add(shopCartItem.getProductTotalAmount(), total);
             // 用户地址如果为空，则表示该用户从未设置过任何地址相关信息
             if (userAddr != null) {
                 // 每个产品的运费相加
-                transfee = Arith.add(transfee, transportManagerService.calculateTransfee(shopCartItem, userAddr));
+                transfee = Arith.add(transfee, transportManagerService.calculateTransfee(shopCartItem, userAddr, totalWithoutTransfee, totalCountWithoutTransfee, transfee));
+                totalWithoutTransfee = Arith.add(transfee, totalWithoutTransfee);
             }
 
             /**
@@ -92,7 +103,31 @@ public class OrderConfirmListener {
             shopCartOrderDto.setActualTotal(Arith.add(total, transfee));
             shopCartOrderDto.setTotal(total);
             shopCartOrderDto.setTotalCount(totalCount);
+
+            /**
+             * 这里的订单运费需要重新计算 如果在同一个店铺下单的多个商品
+             */
             shopCartOrderDto.setTransfee(transfee);
+        }
+    }
+
+    /**
+     * 检查商品和规格状态
+     *
+     * @param shopCartItem
+     * @author peiyuan.cai
+     * @date 2024/3/28 15:45 星期四
+     */
+    private void checkProdAndSku(ShopCartItemDto shopCartItem) {
+        // 获取商品信息
+        Product product = productService.getProductByProdId(shopCartItem.getProdId());
+        // 获取sku信息
+        Sku sku = skuService.getSkuBySkuId(shopCartItem.getSkuId());
+        if (product == null || sku == null) {
+            throw new YamiShopBindException("购物车包含未知的商品 商品编号[" + shopCartItem.getProdId() + "] 规格编号[" + shopCartItem.getSkuId() + "]");
+        }
+        if (product.getStatus() != 1 || sku.getStatus() != 1) {
+            throw new YamiShopBindException("商品[" + sku.getProdName() + "]已下架");
         }
     }
 }

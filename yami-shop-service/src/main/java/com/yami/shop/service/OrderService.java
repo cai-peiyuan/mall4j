@@ -147,7 +147,7 @@ public interface OrderService extends IService<Order> {
      * 订单送达
      * @param order
      * @param deliveryArriveParam
-     * @author peiyuan.cai@mapabc.com
+     * @author peiyuan.cai
      * @date 2024/2/5 17:31 星期一
      */
     void orderArrive(Order order, DeliveryArriveParam deliveryArriveParam);

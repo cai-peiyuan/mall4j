@@ -129,8 +129,6 @@ const wxLogin = function (wxLoginCode) {
           //   nickName: '微信用户'
           // });
         }
-
-        
       }
       var globalData = getApp().globalData;
       globalData.isLanding = false;
@@ -174,7 +172,6 @@ var getToken = function () {
             }
           }
         }, true)
-
       }
     })
   */
@@ -189,7 +186,11 @@ var getToken = function () {
       wxLogin(res.code);
     },
     fail: res => {
-      console.log('wx.login fail', res);
+      console.log('wx.login fail', res, res.errMsg);
+      wx.showToast({
+        title: res.errMsg,
+        icon: "none"
+      });
     },
     complete: res => {
       console.log('wx.login complete', res);

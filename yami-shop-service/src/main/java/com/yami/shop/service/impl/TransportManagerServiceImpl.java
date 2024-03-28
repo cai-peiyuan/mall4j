@@ -35,19 +35,27 @@ public class TransportManagerServiceImpl implements TransportManagerService {
     /**
      * 根据订单信息和用户选择的地址信息计算运费
      *
-     * @param productItem
-     * @param userAddr
+     * @param productItem               订单中某个产品项
+     * @param userAddr                  订单收货地址
+     * @param totalWithoutTransfee      整个订单中不包含运费的总价 用于计算整个订单运费
+     * @param totalCountWithoutTransfee 整个订单中商品总件数 用于计算整个订单运费
+     * @param orderTransfee             整个订单已计算的运费  如果订单运费已经计算过了  就不再次计算运费了。
      * @return
      */
     @Override
-    public Double calculateTransfee(ProductItemDto productItem, UserAddr userAddr) {
+    public Double calculateTransfee(ProductItemDto productItem, UserAddr userAddr, Double totalWithoutTransfee, int totalCountWithoutTransfee, double orderTransfee) {
+
+        //订单商品项目总价
+        Double productTotalAmount = productItem.getProductTotalAmount();
+        Double compareTotalAmount = productTotalAmount.compareTo(totalWithoutTransfee) < 0 ? totalWithoutTransfee : productTotalAmount;
         // 商品信息
         Product product = productService.getProductByProdId(productItem.getProdId());
         // 用户所在城市id
         Long cityId = userAddr.getCityId();
         Long areaId = userAddr.getAreaId();
 
-        log.debug("开始计算订单运费");
+        log.debug("开始计算订单运费 产品编号 {} 名称 {} 收获地址 {} 整个订单不含运费总金额 {} 整个订单总商品数量 {} ", productItem.getProdId(), productItem.getProdName(), userAddr.getAddress(), totalWithoutTransfee, totalCountWithoutTransfee);
+        log.debug("订单项价格 {} 用户计算订单运费的总价 {} ", productTotalAmount, compareTotalAmount);
         /**
          * product.getDeliveryMode()
          * hasUserPickUp 用户自提
@@ -58,6 +66,7 @@ public class TransportManagerServiceImpl implements TransportManagerService {
 
         // 没有店铺配送的方式
         if (!deliveryModeVO.getHasShopDelivery()) {
+            log.debug("没有店铺配送的方式 {} 返回运费 0.0 ", product.getDeliveryMode());
             return 0.0;
         }
 
@@ -66,6 +75,7 @@ public class TransportManagerServiceImpl implements TransportManagerService {
          * deliveryTemplateId : 58
          */
         if (product.getDeliveryTemplateId() == null) {
+            log.debug("商品没有设置运费模板 {} 返回运费 0.0 ", product.getDeliveryTemplateId());
             return 0.0;
         }
 
@@ -75,6 +85,7 @@ public class TransportManagerServiceImpl implements TransportManagerService {
          * 运费模板不存在的情况 可能是 商家把运费模板删除
          */
         if (transport == null) {
+            log.debug("商品运费模板数据为空 模板id {}  可能是商家删除了运费模板  返回运费 0.0 ", product.getDeliveryTemplateId());
             return 0.0;
         }
 
@@ -82,9 +93,13 @@ public class TransportManagerServiceImpl implements TransportManagerService {
 
         // 用于计算运费的件数
         Double piece = getPiece(productItem, transport, sku);
+        Double comparePiece = piece.compareTo(totalCountWithoutTransfee * 1.0) < 0 ? totalCountWithoutTransfee : piece;
+
+        log.debug("订单项计算商品运费件数/重量/体积 {}  整个订单中商品数量 {} ", piece, comparePiece);
 
         //如果有包邮的条件
         if (transport.getHasFreeCondition() == 1) {
+            log.debug("运费模板中设置了包邮条件 开始计算是否满足包邮条件");
             // 获取所有的包邮条件
             List<TransfeeFree> transfeeFrees = transport.getTransfeeFrees();
             for (TransfeeFree transfeeFree : transfeeFrees) {
@@ -99,9 +114,11 @@ public class TransportManagerServiceImpl implements TransportManagerService {
                     /**
                      * 包邮方式 （0 满x件/重量/体积包邮 1满金额包邮 2满x件/重量/体积且满金额包邮）
                      */
-                    boolean isFree = (transfeeFree.getFreeType() == 0 && piece >= transfeeFree.getPiece()) || (transfeeFree.getFreeType() == 1 && productItem.getProductTotalAmount() >= transfeeFree.getAmount()) || (transfeeFree.getFreeType() == 2 && piece >= transfeeFree.getPiece() && productItem.getProductTotalAmount() >= transfeeFree.getAmount());
+                    boolean isFree = (transfeeFree.getFreeType() == 0 && comparePiece >= transfeeFree.getPiece())
+                            || (transfeeFree.getFreeType() == 1 && compareTotalAmount >= transfeeFree.getAmount())
+                            || (transfeeFree.getFreeType() == 2 && comparePiece >= transfeeFree.getPiece() && compareTotalAmount >= transfeeFree.getAmount());
                     if (isFree) {
-                        //满足包邮条件
+                        log.debug("订单包邮类型 {} 包邮件数 {}  包邮金额{} 满足包邮条件 返回运费 0.0 ", transfeeFree.getFreeType(), transfeeFree.getPiece(), transfeeFree.getAmount());
                         return 0.0;
                     }
                 }
@@ -131,20 +148,30 @@ public class TransportManagerServiceImpl implements TransportManagerService {
 
         // 如果无法获取到任何运费相关信息，则返回0运费
         if (transfee == null) {
+            log.debug("如果无法获取到任何运费相关信息 返回运费 0.0 ");
             return 0.0;
         }
 
         // 产品的运费
         Double fee = transfee.getFirstFee();
         // 如果件数大于首件数量，则开始计算超出的运费
-        if (piece > transfee.getFirstPiece()) {
+        log.debug("用户计算运费的件数 {} 首件数量 {}", comparePiece, transfee.getFirstPiece());
+        if (comparePiece > transfee.getFirstPiece()) {
             // 续件数量
             Double prodContinuousPiece = Arith.sub(piece, transfee.getFirstPiece());
+            log.debug("续件数量 {} ", prodContinuousPiece);
             // 续件数量的倍数，向上取整
             Integer mulNumber = (int) Math.ceil(Arith.div(prodContinuousPiece, transfee.getContinuousPiece()));
+            log.debug("续件数量的倍数 {} ", mulNumber);
             // 续件数量运费
             Double continuousFee = Arith.mul(mulNumber, transfee.getContinuousFee());
-            fee = Arith.add(fee, continuousFee);
+            if (orderTransfee > 0 && continuousFee > 0) {
+                //续费在整个订单运费基础上续
+                fee = continuousFee;
+            } else {
+                fee = Arith.add(fee, continuousFee);
+            }
+            log.debug("续件数量运费 {} 总运费 {}", continuousFee, fee);
         }
         return fee;
     }
@@ -160,7 +187,6 @@ public class TransportManagerServiceImpl implements TransportManagerService {
      */
     private Double getPiece(ProductItemDto productItem, Transport transport, Sku sku) {
         Double piece = 0.0;
-
         if (Objects.equals(TransportChargeType.COUNT.value(), transport.getChargeType())) {
             // 按件数计算运费
             piece = Double.valueOf(productItem.getProdCount());

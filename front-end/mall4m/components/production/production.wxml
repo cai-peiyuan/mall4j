@@ -13,7 +13,7 @@
                 <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
                 <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
             </view>
-            <image src="../../images/icon/basket.png" class="basket-img" style="width:50rpx; height:50rpx"/>
+            <image src="{{imageUrl}}/icon/basket.png" class="basket-img" style="width:50rpx; height:50rpx"/>
           </view>
         </view>
       </view>
