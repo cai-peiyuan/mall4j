@@ -108,7 +108,7 @@ public class PayServiceImpl implements PayService {
 
             Order order = orderMapper.getOrderByOrderNumber(orderNumber);
             if (order.getIsPayed() == 1) {
-                throw new YamiShopBindException("订单" + orderNumber + " 已支付 请勿重复支付" );
+                throw new YamiShopBindException("订单" + orderNumber + " 已支付 请勿重复支付");
             }
             //商品名称拼接
             prodName.append(order.getProdName()).append(StrUtil.COMMA);
@@ -587,18 +587,34 @@ public class PayServiceImpl implements PayService {
 
             Double actualTotal = 0D;
             StringBuilder prodName = new StringBuilder();
+            StringBuilder description = new StringBuilder();
 
+            String firstProd = "";
+            int totalProd = 0;
             for (Order order : orders) {
                 actualTotal = Arith.add(actualTotal, order.getActualTotal());
                 prodName.append(order.getProdName()).append(StrUtil.COMMA);
+                totalProd += order.getProdName().split(StrUtil.COMMA).length;
+                firstProd = order.getProdName().split(StrUtil.COMMA)[0];
             }
+            // prodName.substring(0, Math.min(100, prodName.length() - 1));
+
+            if (orders.size() > 1) {
+                description.append(orders.size()).append("个订单");
+            }
+            if (totalProd > 1) {
+                description.append(firstProd).append("等").append(totalProd).append("种商品");
+            } else {
+                description.append(prodName);
+            }
+
             PrepayRequest request = new PrepayRequest();
             Amount amount = new Amount();
             amount.setTotal(Arith.toAmount(actualTotal));
             request.setAmount(amount);
             request.setAppid(WeChatPayUtil.appId);
             request.setMchid(WeChatPayUtil.merchantId);
-            request.setDescription(prodName.substring(0, Math.min(100, prodName.length() - 1)));
+            request.setDescription(description.toString());
             request.setNotifyUrl(WeChatPayUtil.WXPAY_NOTIFY_URL_TRANSACTION);
             //支付订单中使用新的id、？？？？ 因为orderNumber可能是有多个？合并付款的情况？
             String outTradeNo = String.valueOf(snowflake.nextId());

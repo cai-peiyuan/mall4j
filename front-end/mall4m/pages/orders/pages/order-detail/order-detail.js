@@ -1,8 +1,10 @@
 // pages/order-detail/order-detail.js
 
 var http = require('../../../../utils/http.js');
-Page({
+var myBehavior = require('../../../../utils/my-behavior.js')
 
+Page({
+  behaviors: [myBehavior],
   /**
    * 页面的初始数据
    */
@@ -43,8 +45,6 @@ Page({
     });
   },
 
-
-
   /**
    * 提交订单
    */
@@ -72,6 +72,7 @@ Page({
    * 通过后端接口，换取支付参数
    */
   calWeixinPay: function (orderNumbers) {
+    let _this = this;
     wx.showLoading({
       mask: true
     });
@@ -96,17 +97,16 @@ Page({
               title: "微信支付成功",
               icon: "none"
             })
-            this.closePopupPayType();
-            this.loadOrderDetail(this.data.orderNumber)
+            _this.closePopupPayType();
+            _this.loadOrderDetail(_this.data.orderNumber)
           },
           fail: err => {
             console.log("wx.requestPayment支付失败", err);
             wx.showToast({
-              title: "微信支付失败" + err,
+              title: "微信支付失败" + err.errMsg,
               icon: "none"
             })
-            this.closePopupPayType();
-            this.loadOrderDetail(this.data.orderNumber)
+            _this.loadOrderDetail(_this.data.orderNumber)
           }
         })
       }
@@ -118,6 +118,7 @@ Page({
    * 使用余额支付订单
    */
   callNormalPay: function (orderNumbers) {
+    let _this = this;
     wx.showLoading({
       mask: true
     });
@@ -137,16 +138,15 @@ Page({
             title: "余额支付成功",
             icon: "none"
           })
-          this.closePopupPayType();
-          this.loadOrderDetail(this.data.orderNumber)
+          _this.closePopupPayType();
+          _this.loadOrderDetail(_this.data.orderNumber)
         } else {
           console.log("余额支付失败", res);
           wx.showToast({
             title: "余额支付失败" + res,
             icon: "none"
           })
-          this.closePopupPayType();
-          this.loadOrderDetail(this.data.orderNumber)
+          _this.loadOrderDetail(_this.data.orderNumber)
         }
       }
     };

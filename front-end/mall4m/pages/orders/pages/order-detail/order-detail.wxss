@@ -254,6 +254,7 @@ page {
   padding: 2vw 5vw;
   border: 1px solid #e4e4e4;
   margin-right: 3vw;
+  display: none;
 }
 
 .clearfix:after {
@@ -289,6 +290,7 @@ page {
 /* 客服按钮样式 */
 .contact-btn {
   display: inline-block;
+  position: absolute;
   width: 100%;
   background: salmon;
   opacity: 0;

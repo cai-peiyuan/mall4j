@@ -944,6 +944,7 @@ img {
     display: inline-block;
     position: absolute;
     width: 100%;
+    height: 100%;
     background: salmon;
     opacity: 0;
 }

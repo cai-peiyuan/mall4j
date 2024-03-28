@@ -71,7 +71,7 @@
       <template #menu="scope">
         <el-popconfirm v-if="isAuth('order:balance:delivery') && scope.row.isPayed == 1 && scope.row.shipTowx == 0"
                        confirm-button-text="确定" cancel-button-text="取消" :icon="InfoFilled" icon-color="#626AEF"
-                       title="确定发送虚拟发货信息到腾讯公众平台" @confirm="confirmEvent(scope.row.orderNumber)"
+                       title="确定发送虚拟发货信息到腾讯公众平台" @confirm="orderDelivery(scope.row.orderNumber)"
                        @cancel="cancelEvent">
           <template #reference>
             <el-button type="primary" icon="el-icon-edit" @click.stop="orderDelivery(scope.row.orderNumber)">

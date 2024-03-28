@@ -129,18 +129,18 @@
           </view>
         </view>
         <view class='item payment'>
-          
+
           <view class='item-txt price' wx:if="{{order.refundSts == 1}}">
             已申请退款
           </view>
-          
-          
+
+
           <view class='item-txt price' wx:if="{{order.refundSts == 2}}">
             已完成退款：
             <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
             <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
           </view>
-          
+
           <view class='item-txt price'>
             实付款：
             <text class='symbol'>￥</text>
@@ -156,11 +156,12 @@
     <view class='order-detail-footer' wx:if="{{status==5||status==6||true}}">
       <text class='dele-order' wx:if="{{status==6}}" bindtap="deleteOrder" data-ordernum="{{orderNumber}}">删除订单</text>
       <text class='dele-order' wx:if="{{status==1}}" bindtap="onCancelOrder" data-ordernum="{{orderNumber}}">取消订单</text>
+      <button wx:if="{{true}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
       <view class='footer-box'>
-        <text class='apply-service'>
-          <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>联系客服</text>
-          <text class='buy-again' wx:if="{{order.status==1 && order.isPayed == 0}}" bindtap="showPayTypePopup" data-ordernum="{{orderNumber}}">付款</text>
-          <text class='buy-again' wx:if="{{order.status==2 && order.isPayed == 1}}" bindtap="onRefund" data-ordernum="{{orderNumber}}">申请退款</text>
+        <text class='apply-service'><button type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>联系客服
+        </text>
+        <text class='buy-again' wx:if="{{order.status==1 && order.isPayed == 0}}" bindtap="showPayTypePopup" data-ordernum="{{orderNumber}}">付款</text>
+        <text class='buy-again' wx:if="{{order.status==2 && order.isPayed == 1}}" bindtap="onRefund" data-ordernum="{{orderNumber}}">申请退款</text>
       </view>
     </view>
 
@@ -248,6 +249,9 @@
               <text class='symbol'>￥</text>
               <text class='big-num'>{{wxs.parsePrice(userBalance.balance - actualTotal)[0]}}</text>
               <text class='small-num'>.{{wxs.parsePrice(userBalance.balance - actualTotal)[1]}}</text>
+            </view>
+            <view class='item-txt price ' wx:if="{{payType==0 && userBalance.balance < actualTotal}}">
+                <text bindtap='toUserBalancePage'>余额不足去充值</text>
             </view>
           </view>
         </view>
