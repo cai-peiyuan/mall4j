@@ -11,6 +11,7 @@ Page({
      */
     data: {
         selIndex: 0,
+        selNodeId:'',//左侧所选菜单ID
         selChildIndex: null,
         categoryList: [],
         productList: [],
@@ -19,6 +20,9 @@ Page({
         imageUrl: app.globalData.imageUrl,
         totalCartNum: 0, //购物车总数量
         prodNum: 1, //购买产品数量
+        current:1,
+        size:10,
+        pages: 0,
     },
 
     /**
@@ -38,6 +42,7 @@ Page({
                 ths.setData({
                     categoryImg: res[0].pic,
                     categoryList: res,
+                    selNodeId:res[0].categoryId
                 });
                 ths.getSubCategory(res[0].categoryId, null, 0);
                 ths.getProdList(res[0].categoryId);
@@ -130,7 +135,7 @@ Page({
      * 页面上拉触底事件的处理函数
      */
     onReachBottom: function () {
-
+        
     },
 
     /**
@@ -139,13 +144,26 @@ Page({
     onShareAppMessage: function () {
 
     },
-
+    loadMore(){
+        console.log(11111111111111);
+        if (this.data.current < this.data.pages) {
+            this.setData({
+                current: this.data.current + 1
+            })
+            this.getProdList(this.data.selNodeId)
+        }
+    },
     /**
      * 分类点击事件
      */
     onMenuTab: function (e) {
         console.log(e);
-        var id = e.currentTarget.dataset.id; //父菜单ID
+        var id = e.currentTarget.dataset.id; //当前菜单ID
+        if(this.data.selNodeId==id){
+            return;
+        }else{
+            
+        }
         var index = e.currentTarget.dataset.index; //父菜单index
         var childIndex = e.currentTarget.dataset.childindex ?? null; //子菜单Index
         var parentid = e.currentTarget.dataset.parentid; //上级分类ID
@@ -153,14 +171,16 @@ Page({
             //获取二级分类
             this.getSubCategory(id, childIndex, index);
         }
-        //获取点击的分类下的商品列表
-        this.getProdList(id);
         this.setData({
+            current:1,
+            selNodeId:id,
             categoryImg: this.data.categoryList[index].pic,
             selIndex: index,
             selChildIndex: childIndex,
             categoryList: this.data.categoryList
         });
+        //获取点击的分类下的商品列表
+        this.getProdList(id);
         console.log(this.data.selChildIndex);
     },
 
@@ -201,16 +221,26 @@ Page({
      */
     getProdList(categoryId) {
         //加载分类列表
+        var ths = this;
         var params = {
             url: "/prod/pageProd",
             method: "GET",
             data: {
-                categoryId: categoryId
+                categoryId: categoryId,
+                current: ths.data.current,
+                size: ths.data.size
             },
             callBack: (res) => {
                 // console.log(res);
+                let list = []
+                if (res.current == 1) {
+                    list = res.records
+                } else {
+                    list = ths.data.prodList.concat(res.records)
+                }
                 this.setData({
-                    productList: res.records,
+                    productList: list,
+                    pages:res.pages
                 });
             }
         };

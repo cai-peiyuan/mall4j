@@ -30,7 +30,7 @@
         <!-- 左侧菜单end -->
 
         <!-- 右侧内容start -->
-        <scroll-view scroll-y="true" class='rightcontent' scroll-into-view="{{toViewId}}">
+        <scroll-view scroll-y="true" class='rightcontent' scroll-into-view="{{toViewId}}" bindscrolltolower="loadMore">
             <!-- <block wx:for='{{ productList}}' wx:key=''> -->
             <view class='adver-map'>
                 <view class='item-a'>
@@ -65,6 +65,12 @@
                     </view>
 
                 </block>
+                <view class="centerFlex" wx:if="{{current >= pages && productList.length>0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
+                    没有更多数据啦~
+                </view>
+                <view class="centerFlex"  wx:if="{{productList.length==0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
+                    产品还未上传～
+                </view>
             </view>
             <!-- </block> -->
         </scroll-view>
