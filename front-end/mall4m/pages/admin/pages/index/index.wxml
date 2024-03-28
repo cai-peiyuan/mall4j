@@ -39,11 +39,13 @@
 
     <view wx:if="{{showOrderDialog}}" class="mask" >
         <view class="orderDialog">
-        <view bindtap="hideDialog">关闭</view>
-            <view class="flex" style="margin-top: 5vw;">
-                <label class="labelName">输入订单号码</label>
-                <view style="position: relative;">
-                    <input placeholder='' type='text' maxlength='15' value="{{orderNumber}}" ></input>
+        <view bindtap="hideDialog" class="close"></view>
+            <view style="margin-top: 5vw;">
+                <view class="centerFlex" style="margin:7vw 0">
+                    <label class="labelName">输入订单号码</label>
+                </view>
+                <view class="centerFlex">
+                    <input placeholder='' type='text' maxlength='15' value="{{orderNumber}}"  style="border:solid 1px rgb(185, 183, 183); padding:2vw 3vw; border-radius:2vw; width:80vw; text-align: center;"></input>
                 </view>
             </view>
             <view class="aroundFlex" style="position: absolute; left:0; bottom:5vw; width:100vw; height: 20vw;">

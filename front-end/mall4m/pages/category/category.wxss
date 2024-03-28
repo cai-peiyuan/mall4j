@@ -225,3 +225,22 @@ page {
   color: #eba524;
   font-family: arial;
 }
+.singal-price {
+    display: inline;
+    font-size: 20rpx;
+    text-decoration: line-through;
+    color: #777;
+}
+.childMenu{
+    width:100%; 
+    text-align: left; 
+    height: 70rpx; 
+    line-height: 70rpx; 
+    background-color: #fff;
+    padding-left: 30px; 
+    box-sizing: border-box; 
+    font-size: 26rpx;
+    background-color: #fff;
+    
+}
+.childMenu.active{color:#e8a95b}

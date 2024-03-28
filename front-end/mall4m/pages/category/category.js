@@ -11,6 +11,7 @@ Page({
    */
   data: {
     selIndex: 0,
+    selChildIndex:null,
     categoryList:[],
     productList: [],
     categoryImg: '',
@@ -143,14 +144,22 @@ Page({
    */
   onMenuTab: function (e) {
     console.log(e);
-        var id = e.currentTarget.dataset.id;
-    var index = e.currentTarget.dataset.index;
+    var id = e.currentTarget.dataset.id;//父菜单ID
+    var index = e.currentTarget.dataset.index;//父菜单index
+    var childIndex=e.currentTarget.dataset.childindex??null;//子菜单Index
+    var childId=e.currentTarget.dataset.childid;//子菜单ID
     // this.getProdList(id);
+    if(!this.data.categoryList[index].childNode){
+        this.data.categoryList[index].childNode=[{id:'111',name:'蔬菜1蔬菜1'},{id:'222',name:'蔬菜2'},{id:'333',name:'蔬菜3'}];
+    }
     this.getProdList(this.data.categoryList[index].categoryId);
     this.setData({
       categoryImg: this.data.categoryList[index].pic,
-      selIndex: index
+      selIndex: index,
+      selChildIndex:childIndex,
+      categoryList:this.data.categoryList
     });
+    console.log(this.data.selChildIndex);
   },
 
   // 跳转搜索页
