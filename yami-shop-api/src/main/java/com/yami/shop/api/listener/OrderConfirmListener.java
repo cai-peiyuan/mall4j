@@ -92,8 +92,9 @@ public class OrderConfirmListener {
             // 用户地址如果为空，则表示该用户从未设置过任何地址相关信息
             if (userAddr != null) {
                 // 每个产品的运费相加
-                transfee = Arith.add(transfee, transportManagerService.calculateTransfee(shopCartItem, userAddr, totalWithoutTransfee, totalCountWithoutTransfee, transfee));
-                totalWithoutTransfee = Arith.add(transfee, totalWithoutTransfee);
+                Double calculateTransfee = transportManagerService.calculateTransfee(shopCartItem, userAddr, totalWithoutTransfee, totalCountWithoutTransfee, transfee);
+                transfee = Arith.add(transfee, calculateTransfee);
+                totalWithoutTransfee = Arith.add(calculateTransfee, totalWithoutTransfee);
             }
 
             /**
