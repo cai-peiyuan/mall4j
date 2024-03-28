@@ -186,7 +186,7 @@
 
       <view class='memu-item' wx:if="{{wxUserInfo.isStaff == 1}}" bindtap='toAdminPage'>
         <view class="i-name">
-          <image src='{{imageUrl}}/icon/icon-msg.png'></image>
+          <image src='{{imageUrl}}/icon/admin.png' style="border-radius: 8px;"></image>
           <text>管理入口</text>
         </view>
         <view class='arrowhead'></view>
