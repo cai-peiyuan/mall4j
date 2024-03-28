@@ -30,7 +30,7 @@
         <!-- 左侧菜单end -->
 
         <!-- 右侧内容start -->
-        <scroll-view scroll-y="true" class='rightcontent' scroll-into-view="{{toViewId}}" bindscrolltolower="loadMore">
+        <scroll-view scroll-y="true" scroll-top="{{scrollTop}}" class='rightcontent' scroll-into-view="{{toViewId}}" bindscrolltolower="loadMore">
             <!-- <block wx:for='{{ productList}}' wx:key=''> -->
             <view class='adver-map'>
                 <view class='item-a'>

@@ -23,6 +23,7 @@ Page({
         current:1,
         size:10,
         pages: 0,
+        scrollTop:0,
     },
 
     /**
@@ -173,6 +174,7 @@ Page({
         }
         this.setData({
             current:1,
+            scrollTop:0,
             selNodeId:id,
             categoryImg: this.data.categoryList[index].pic,
             selIndex: index,
