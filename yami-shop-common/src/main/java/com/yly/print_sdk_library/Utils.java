@@ -74,11 +74,12 @@ public class Utils {
     public static String getPayType(int payType) {
         Map<Integer, String> payTypeMap = new HashMap() {
             {
+                put(0, "余额支付");
                 put(1, "微信支付");
                 put(2, "支付宝");
                 put(3, "储值余额");
             }
         };
-        return payTypeMap.containsKey(payType) ? payTypeMap.get(payType) : "余额支付";
+        return payTypeMap.containsKey(payType) ? payTypeMap.get(payType) : "其他(payType)";
     }
 }

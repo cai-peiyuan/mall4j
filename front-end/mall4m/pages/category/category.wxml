@@ -1,133 +1,135 @@
 <!--pages/category/category.wxml-->
 <view class="container">
-<!-- 头部搜索区 -->
-  <view class='search-bar'>
-    <view class='search-box' bindtap='toSearchPage'>
-      <image src='{{imageUrl}}/search.png' class='search-img'></image>
-      <text class='sear-input'>搜索您想要的商品</text>
+    <!-- 头部搜索区 -->
+    <view class='search-bar'>
+        <view class='search-box' bindtap='toSearchPage'>
+            <image src='{{imageUrl}}/search.png' class='search-img'></image>
+            <text class='sear-input'>搜索您想要的商品</text>
+        </view>
     </view>
-  </view>
-<!-- 滚动内容区 -->
-  <view class="main">
-    <!-- 左侧菜单start -->
-    <scroll-view scroll-y="true" class='leftmenu'>
-      <block wx:for='{{ categoryList}}' wx:key='item'>
-        <view class='menu-item {{selIndex==index?"active":""}} ' data-index="{{index}}" data-id="{{item.categoryId}}" bindtap='onMenuTab'>
-          {{item.categoryName}}
-        </view>
-        <view wx:if="{{selIndex==index && item.childNode && item.childNode.length > 0}}"  >
-           <view wx:for='{{item.childNode}}' wx:key="item1" wx:for-index="idx" wx:for-item="item1">
-                <view class="childMenu {{(selIndex==index && selChildIndex==idx)?'active':''}}" data-index="{{index}}"  data-childIndex="{{idx}}" data-id="{{item.categoryId}}" data-childid="{{item1.id}}" bindtap='onMenuTab'>
-                    {{item1.name}}
+    <!-- 滚动内容区 -->
+    <view class="main">
+        <!-- 左侧菜单start -->
+        <scroll-view scroll-y="true" class='leftmenu'>
+            <block wx:for='{{ categoryList}}' wx:key='item'>
+                <!--商品分类名称-->
+                <view class='menu-item {{selIndex==index?"active":""}} ' data-index="{{index}}" data-id="{{item.categoryId}}" bindtap='onMenuTab'>
+                    {{item.categoryName}}
                 </view>
-           </view>
-            
-        </view>
-      </block>
-    </scroll-view>
-    <!-- 左侧菜单end -->
 
-    <!-- 右侧内容start -->
-    <scroll-view scroll-y="true" class='rightcontent' scroll-into-view="{{toViewId}}">
-    <!-- <block wx:for='{{ productList}}' wx:key=''> -->
-      <view class='adver-map'>
-        <view class='item-a'>
-            <image src='{{categoryImg}}' mode='widthFix'></image>
-        </view>
-      </view>
-      <view class='cont-item'>
-        <block wx:for='{{productList}}' wx:key='item'>
-          <view class='show-item'  bindtap='toProdPage' data-prodid="{{item.prodId}}">
-            <view class='more-prod-pic'>
-              <image src='{{item.pic}}' class='more-pic'mode='widthFix'></image>
-            </view>
-            <view class='prod-text-right'>
-              <view class='prod-text more'>{{item.prodName}}</view>
-              <view class='cate-prod-info'>{{item.brief}}</view>
-              <view class="cate-prod-soldNum" wx:if="{{item.totalSales}}" style="color: #999;font-size: 22rpx;">已售:{{item.totalSales}}</view>
-              <view class='prod-price more spaceBetweenFlex' style="color:#f0901a; padding-right: 3vw;">
-                <view>
-                    <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text> 
-                </view>
-                <view class="singal-price">
-                    <text class='symbol'>￥</text><text class='small-num'>{{item.oriPrice}}</text>
-                </view>
-                <view style="font-size: 20rpx; color:#999">
-                    库存:{{item.totalStocks}}
-                </view>
-                <view style="padding-top: 1vw;"> 
-                    <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
-                </view>
-              </view>
-            </view>
-          </view>
-         
-        </block>
-      </view>
-     <!-- </block> -->
-    </scroll-view>
-    <!-- 右侧内容end -->
-    <!-- </block> -->
-     <!-- 规格弹窗 -->
-     <view class="pup-sku" wx:if="{{skuShow}}">
-        <view class="pup-sku-main">
-            <view class='pup-sku-header'>
-                <image class="pup-sku-img" src="{{defaultSku.pic?defaultSku.pic:pic}}"></image>
-                <view class="pup-sku-price" wx-if="{{findSku}}">
-                    ￥
-                    <text class="pup-sku-price-int">{{wxs.parsePrice(defaultSku.price)[0]}}</text> .{{wxs.parsePrice(defaultSku.price)[1]}}
-                </view>
-                <view class="pup-sku-singal-price" wx-if="{{findSku}}">
-                    ￥
-                    {{wxs.toPrice(defaultSku.oriPrice)}}
-                </view>
-                <view class="pup-sku-price" wx-if="{{!findSku}}">无货</view>
-                <view class='pup-sku-prop'>
-                    <text>已选</text> {{selectedProp.length>0?selectedProp+'，':selectedProp}}{{prodNum}}件
-                </view>
-                <view class='pup-sku-prop'>
-                    <text>库存</text> {{defaultSku.stocks}}
-                </view>
-                <view class='close' bindtap='closePopup'></view>
-            </view>
-            <view class='pup-sku-body'>
-                <!-- 规格选项 -->
-                <view class="pup-sku-area">
-                    <block wx:for="{{skuGroup}}" wx:for-index="key" wx:for-item="value" wx:key='*this'>
-                        <view class='sku-kind'>{{key}}</view>
-                        <view class='sku-choose'>
-                            <block wx:for="{{value}}" wx:key='*this'>
-                                <text class="sku-choose-item {{wxs.array_contain(selectedProp,item)?'active':''}} {{['dashed',''][wxs.props_contain(allProperties,selectedPropObj,key,item,propKeys)]}}" bindtap='toChooseItem' data-key="{{key}}" data-val="{{item}}">{{item}}</text>
-                            </block>
-                        </view>
-                    </block>
-                </view>
-                <!-- 选择数量+-的按钮  -->
-                <view class="pup-sku-count">
-                    <view class="num-wrap">
-                        <view class="minus" bindtap='onCountMinus'>
-                            <text class="row"></text>
-                        </view>
-                        <view class="text-wrap">
-                            <input type="number" value="{{prodNum}}" disabled />
-                        </view>
-                        <view class="plus" bindtap='onCountPlus'>
-                            <text class="row"></text>
-                            <text class="col"></text>
+                <!--商品二级分类名称-->
+                <view wx:if="{{selIndex==index && item.childNode && item.childNode.length > 0}}">
+                    <view wx:for='{{item.childNode}}' wx:key="item1" wx:for-index="idx" wx:for-item="item1">
+                        <view class="childMenu {{(selIndex==index && selChildIndex==idx)?'active':''}}" data-index="{{index}}" data-childIndex="{{idx}}" data-id="{{item1.categoryId}}" data-parentid="{{item.categoryId}}" bindtap='onMenuTab'>
+                            {{item1.categoryName}}
                         </view>
                     </view>
-                    <view class="count-name">数量</view>
+                </view>
+            </block>
+        </scroll-view>
+        <!-- 左侧菜单end -->
+
+        <!-- 右侧内容start -->
+        <scroll-view scroll-y="true" class='rightcontent' scroll-into-view="{{toViewId}}">
+            <!-- <block wx:for='{{ productList}}' wx:key=''> -->
+            <view class='adver-map'>
+                <view class='item-a'>
+                    <image src='{{categoryImg}}' mode='widthFix'></image>
                 </view>
             </view>
-            <!-- 加入购物车和立即购买按钮 -->
-            <view class='pup-sku-footer {{findSku?"":"gray"}}'>
-                <view class="btn cart" bindtap='addToCart'>加入购物车</view>
-                <!-- <view class="btn buy" bindtap='buyNow'>立即购买</view> -->
+            <view class='cont-item'>
+                <block wx:for='{{productList}}' wx:key='item'>
+                    <view class='show-item' bindtap='toProdPage' data-prodid="{{item.prodId}}">
+                        <view class='more-prod-pic'>
+                            <image src='{{item.pic}}' class='more-pic' mode='widthFix'></image>
+                        </view>
+                        <view class='prod-text-right'>
+                            <view class='prod-text more'>{{item.prodName}}</view>
+                            <view class='cate-prod-info'>{{item.brief}}</view>
+                            <view class="cate-prod-soldNum" wx:if="{{item.totalSales}}" style="color: #999;font-size: 22rpx;">已售:{{item.totalSales}}</view>
+                            <view class='prod-price more spaceBetweenFlex' style="color:#f0901a; padding-right: 3vw;">
+                                <view>
+                                    <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
+                                </view>
+                                <view class="singal-price">
+                                    <text class='symbol'>￥</text><text class='small-num'>{{item.oriPrice}}</text>
+                                </view>
+                                <view style="font-size: 20rpx; color:#999">
+                                    库存:{{item.totalStocks}}
+                                </view>
+                                <view style="padding-top: 1vw;">
+                                    <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+
+                </block>
+            </view>
+            <!-- </block> -->
+        </scroll-view>
+        <!-- 右侧内容end -->
+        <!-- </block> -->
+        <!-- 规格弹窗 -->
+        <view class="pup-sku" wx:if="{{skuShow}}">
+            <view class="pup-sku-main">
+                <view class='pup-sku-header'>
+                    <image class="pup-sku-img" src="{{defaultSku.pic?defaultSku.pic:pic}}"></image>
+                    <view class="pup-sku-price" wx-if="{{findSku}}">
+                        ￥
+                        <text class="pup-sku-price-int">{{wxs.parsePrice(defaultSku.price)[0]}}</text> .{{wxs.parsePrice(defaultSku.price)[1]}}
+                    </view>
+                    <view class="pup-sku-singal-price" wx-if="{{findSku}}">
+                        ￥
+                        {{wxs.toPrice(defaultSku.oriPrice)}}
+                    </view>
+                    <view class="pup-sku-price" wx-if="{{!findSku}}">无货</view>
+                    <view class='pup-sku-prop'>
+                        <text>已选</text> {{selectedProp.length>0?selectedProp+'，':selectedProp}}{{prodNum}}件
+                    </view>
+                    <view class='pup-sku-prop'>
+                        <text>库存</text> {{defaultSku.stocks}}
+                    </view>
+                    <view class='close' bindtap='closePopup'></view>
+                </view>
+                <view class='pup-sku-body'>
+                    <!-- 规格选项 -->
+                    <view class="pup-sku-area">
+                        <block wx:for="{{skuGroup}}" wx:for-index="key" wx:for-item="value" wx:key='*this'>
+                            <view class='sku-kind'>{{key}}</view>
+                            <view class='sku-choose'>
+                                <block wx:for="{{value}}" wx:key='*this'>
+                                    <text class="sku-choose-item {{wxs.array_contain(selectedProp,item)?'active':''}} {{['dashed',''][wxs.props_contain(allProperties,selectedPropObj,key,item,propKeys)]}}" bindtap='toChooseItem' data-key="{{key}}" data-val="{{item}}">{{item}}</text>
+                                </block>
+                            </view>
+                        </block>
+                    </view>
+                    <!-- 选择数量+-的按钮  -->
+                    <view class="pup-sku-count">
+                        <view class="num-wrap">
+                            <view class="minus" bindtap='onCountMinus'>
+                                <text class="row"></text>
+                            </view>
+                            <view class="text-wrap">
+                                <input type="number" value="{{prodNum}}" disabled />
+                            </view>
+                            <view class="plus" bindtap='onCountPlus'>
+                                <text class="row"></text>
+                                <text class="col"></text>
+                            </view>
+                        </view>
+                        <view class="count-name">数量</view>
+                    </view>
+                </view>
+                <!-- 加入购物车和立即购买按钮 -->
+                <view class='pup-sku-footer {{findSku?"":"gray"}}'>
+                    <view class="btn cart" bindtap='addToCart'>加入购物车</view>
+                    <!-- <view class="btn buy" bindtap='buyNow'>立即购买</view> -->
+                </view>
             </view>
         </view>
+        <!-- 规格弹窗end -->
     </view>
-    <!-- 规格弹窗end -->
-  </view>
 
 </view>
 <wxs module="wxs" src="../../wxs/number.wxs" />
