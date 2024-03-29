@@ -208,8 +208,8 @@ Page({
    */
   addToCart: function (event) {
     let index = event.currentTarget.dataset.index
-    // if (!this.orderItemDtos) {
-    //   console.log(1213)
+    console.log('add to cart  item index -> ', index);
+    // if (!this.data.orderItemDtos) {
     //   return;
     // }
     var ths = this;
@@ -233,9 +233,9 @@ Page({
           title: "加入购物车成功",
           icon: "none"
         })
-        wx.switchTab({
-          url: '/pages/basket/basket',
-        })
+        // wx.switchTab({
+        //   url: '/pages/basket/basket',
+        // })
       }
     };
     http.request(params);
@@ -308,7 +308,7 @@ Page({
           orderItemDtos: orderShop.orderItemDtos,
           createTime: orderShop.createTime,
           status: orderShop.status,
-          productTotalAmount: orderShop.orderItemDtos[0].productTotalAmount,
+          productTotalAmount: orderShop.actualTotal,
           transfee: orderShop.transfee,
           reduceAmount: orderShop.reduceAmount,
           actualTotal: orderShop.actualTotal,

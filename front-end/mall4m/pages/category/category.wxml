@@ -51,13 +51,20 @@
                                 <view>
                                     <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
                                 </view>
-                                <view class="singal-price">
+
+                                <view class="singal-price" wx:if="{{item.totalStocks > 0}}">
                                     <text class='symbol'>￥</text><text class='small-num'>{{item.oriPrice}}</text>
                                 </view>
-                                <view style="font-size: 20rpx; color:#999">
+
+                                <view style="font-size: 20rpx; color:#999" wx:if="{{item.totalStocks > 0}}">
                                     库存:{{item.totalStocks}}
                                 </view>
-                                <view style="padding-top: 1vw;">
+
+                                <view style="font-size: 20rpx; color:#999" wx:if="{{item.totalStocks == 0}}">
+                                    售罄
+                                </view>
+
+                                <view style="padding-top: 1vw;" wx:if="{{false}}">
                                     <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
                                 </view>
                             </view>

@@ -231,14 +231,14 @@ Page({
           paySign: res.sign,
           success: e => {
             console.log("wx.requestPayment支付成功", e);
-            _this.closePopupPayType();
+            //_this.closePopupPayType();
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
           },
           fail: err => {
             console.log("wx.requestPayment支付失败", err);
-            _this.closePopupPayType();
+            //_this.closePopupPayType();
             wx.navigateTo({
               url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
             })
