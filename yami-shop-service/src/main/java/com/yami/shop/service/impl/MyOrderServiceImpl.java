@@ -13,6 +13,7 @@ import com.yami.shop.bean.app.dto.OrderItemDto;
 import com.yami.shop.bean.app.dto.OrderShopDto;
 import com.yami.shop.bean.app.dto.UserAddrDto;
 import com.yami.shop.bean.model.*;
+import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.Arith;
 import com.yami.shop.common.util.PageAdapter;
 import com.yami.shop.dao.OrderMapper;
@@ -65,14 +66,13 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     @Override
     public OrderShopDto getMyOrderByOrderNumber(String userId, String orderNumber) {
         OrderShopDto orderShopDto = new OrderShopDto();
-
         Order order = orderService.getOrderByOrderNumber(orderNumber);
 
         if (order == null) {
-            throw new RuntimeException("该订单不存在");
+            throw new YamiShopBindException("该订单不存在");
         }
         if (!Objects.equals(order.getUserId(), userId)) {
-            throw new RuntimeException("你没有权限获取该订单信息");
+            throw new YamiShopBindException("没有权限获取该订单信息");
         }
 
         ShopDetail shopDetail = shopDetailService.getShopDetailByShopId(order.getShopId());
