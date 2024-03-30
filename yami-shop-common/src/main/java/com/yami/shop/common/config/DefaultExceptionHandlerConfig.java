@@ -65,6 +65,9 @@ public class DefaultExceptionHandlerConfig {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ServerResponseEntity<Object>> exceptionHandler(Exception e) {
+        /*if (e instanceof ResourceNotFoundException) {
+            return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.showFailMsg(e.getMessage()));
+        }*/
         log.error("exceptionHandler", e);
         return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.fail(ResponseEnum.EXCEPTION));
     }
