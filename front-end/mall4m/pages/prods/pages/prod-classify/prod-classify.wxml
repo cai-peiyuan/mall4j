@@ -1,14 +1,12 @@
-<!--pages/prod-classify/prod-classify.wxml-->
-
-<view class='container' style="min-height: 100vh; background:linear-gradient(#fff, #e98b11,  #fff)">
-  <!-- <view class='line-fix'></view>
+<view class='container' style="min-height: 100vh; background:linear-gradient(#fff, #ea9e3a,  #fff)">
+    <!-- <view class='line-fix'></view>
   <view class='tit-background'></view> -->
-  <view class="flex" style="flex-wrap: wrap; ">
-    <block wx:for="{{prodList}}" wx:key ="key">
-      <prod item="{{item}}" ></prod>
-    </block>
-  </view>
-  <view wx:if="{{!prodList.length}}" class="empty-list">
-    暂无商品
-  </view>
+    <view class="flex" style="flex-wrap: wrap; ">
+        <block wx:for="{{prodList}}" wx:key="key">
+            <prod item="{{item}}"></prod>
+        </block>
+    </view>
+    <view wx:if="{{!prodList.length}}" class="empty-list">
+        此类目下暂无商品
+    </view>
 </view>

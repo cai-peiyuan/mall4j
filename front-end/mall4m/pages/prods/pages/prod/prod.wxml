@@ -1,6 +1,7 @@
 <!-- 商品详情 -->
 <view class="container" style="height: 100vh; overflow: hidden;">
-    <view style="height:10vw; box-sizing: border-box; padding-top:3vw; position:fixed; top:0; width:100vw; z-index:10; background-color: #fff;">
+    <!-- 顶部导航 -->
+    <view style="height:10vw; box-sizing: border-box; padding-top:3vw; position:fixed; top:0; width:100vw; z-index:10; background-color: #fff;" wx:if="{{showComment}}">
         <view class="menu aroundFlex">
             <view bindtap="toTarget" data-val="1"> 商品简介 </view>
             <view bindtap="toTarget" data-val="2"> 商品详情 </view>
@@ -9,7 +10,8 @@
         <view class="activeBar" style="left:{{left}}">
         </view>
     </view>
-    <scroll-view class="scroll-view" bindscroll="scroll" scroll-with-animation scroll-into-view="{{toView}}" scroll-y style="height: calc(100vh - 10vw - 60px);margin-top:10vw;box-sizing: border-box; overflow: auto;">
+
+    <scroll-view class="scroll-view" bindscroll="scroll" scroll-with-animation scroll-into-view="{{toView}}" scroll-y style="height: calc(100vh - 100rpx); box-sizing: border-box; overflow: auto;">
         <!-- 轮播图 -->
         <view class="basicInfo" id="part1">
             <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" indicator-color="{{indicatorColor}}" interval="{{interval}}" duration="{{duration}}" indicator-active-color="{{indicatorActiveColor}}">
@@ -74,10 +76,8 @@
                     <text class="price">￥<text class="price-num">{{wxs.parsePrice(defaultSku.price)[0]}}</text>.{{wxs.parsePrice(defaultSku.price)[1]}}</text>
                     <text class="ori-price">￥{{wxs.toPrice(defaultSku.oriPrice)}}</text>
                     <text class="stocks">库存 {{defaultSku.stocks}}</text>
-                    <text class="sales">已售 {{'100+'}}</text>
+                    <text class="sales">{{totalSales!=null && totalSales>0?'已售 ' + totalSales:''}}</text>
                 </view>
-
-
 
             </view>
         </view>
@@ -108,7 +108,7 @@
             </view>
         </view>
         <!-- 评价 -->
-        <view class='cmt-wrap  commentsInfo' id="part3" style="{{left=='11.5%'?'display:none':''}}">
+        <view class='cmt-wrap  commentsInfo' id="part3" style="{{left=='11.5%'?'display:none':''}}" wx:if="{{showComment}}">
             <view class="cmt-tit" bindtap='showComment'>
                 <view class="cmt-t">
                     评价
@@ -167,11 +167,11 @@
             联系客服
             <button size="mini" type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>
         </view>
-        <view class="btn cart" bindtap='showSku'>
-            <text>加入购物车</text>
-        </view>
         <view class="btn buy" bindtap='buyNow'>
             <text>立即购买</text>
+        </view>
+        <view class="btn cart" bindtap='showSku'>
+            <text>加入购物车</text>
         </view>
     </view>
 
@@ -248,8 +248,8 @@
 
             <!-- 加入购物车和立即购买按钮 -->
             <view class='pup-sku-footer {{findSku?"":"gray"}}'>
-                <view class="btn cart" bindtap='addToCart'>加入购物车</view>
                 <view class="btn buy" bindtap='buyNow'>立即购买</view>
+                <view class="btn cart" bindtap='addToCart'>加入购物车</view>
             </view>
 
         </view>

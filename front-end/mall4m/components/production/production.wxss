@@ -1,67 +1,72 @@
 @import "../../app.wxss";
-prod{box-sizing: border-box;}
+
+prod {
+    box-sizing: border-box;
+}
+
 .prod-items {
-  width: 45.5vw;
-  background: #fff;
-  box-sizing: border-box;
-  /* border: solid 1px #eee; */
-  border-radius: 3vw;
-  overflow: hidden;
+    width: 45.5vw;
+    background: #fff;
+    box-sizing: border-box;
+    /* border: solid 1px #eee; */
+    border-radius: 3vw;
+    overflow: hidden;
 }
 
 prod:nth-child(2n-1) .prod-items {
-  margin:1.5vw 1.5vw 1.5vw 3vw;
+    margin: 1.5vw 1.5vw 1.5vw 3vw;
 }
 
 prod:nth-child(2n) .prod-items {
-  margin:1.5vw 3vw 1.5vw 1.5vw;
+    margin: 1.5vw 3vw 1.5vw 1.5vw;
 }
 
 .hot-imagecont .hotsaleimg {
-    width:100%;
-    height:45vw;
+    width: 100%;
+    height: 45vw;
     border-radius: 2vw 2vw 0 0;
 }
 
 .hot-text .hotprod-text {
-  font-size: 28rpx;
-  /* display: -webkit-box; */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* display: -webkit-box; */
-  /* -webkit-line-clamp: 2;
+    font-size: 28rpx;
+    /* display: -webkit-box; */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* display: -webkit-box; */
+    /* -webkit-line-clamp: 2;
   -webkit-box-orient: vertical; */
-  color: #000;
+    color: #000;
 }
 
 .prod-items .hot-imagecont {
-  border-radius: 8rpx;
-  text-align: center;
-  font-size: 0;
+    border-radius: 8rpx;
+    text-align: center;
+    font-size: 0;
 }
 
 .prod-items .hot-text {
     /* margin-top:20rpx; */
-    padding:20rpx;
+    padding: 20rpx;
 }
 
 .prod-items .hot-text .prod-info {
-  font-size: 20rpx;
-  color: #777;
-  margin-top: 8rpx;
+    font-size: 20rpx;
+    color: #777;
+    margin-top: 8rpx;
 }
 
 .prod-items .hot-text .prod-text-info {
-  position: relative;
-  margin-top: 3vw;
-  font-family: Arial;
+    position: relative;
+    margin-top: 3vw;
+    font-family: Arial;
 }
 
 .prod-items .hot-text .prod-text-info .price {
-  color: #f38d08;
+    color: #f38d08;
 }
-.deadline-price{
-  font-size: 22rpx;
-  margin-right: 5rpx;
+
+.deadline-price {
+    font-size: 22rpx;
+    margin-right: 5rpx;
 }

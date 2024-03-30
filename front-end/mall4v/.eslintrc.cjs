@@ -67,9 +67,9 @@ module.exports = {
     // 强制函数定义中最多允许的参数数量
     'max-params': ['error', { max: 5 }],
     // 强制每一行中所允许的最大语句数量
-    'max-statements-per-line': ['error', { max: 1 }],
+    'max-statements-per-line': ['warn', { max: 1 }],
     // 三目运算符换行
-    'multiline-ternary': ['error', 'never'],
+    'multiline-ternary': ['warn', 'never'],
     // 传值给组件时的使用 kebab-case
     'vue/v-on-event-hyphenation': ['warn', 'always', {
       autofix: true,

@@ -39,32 +39,37 @@
             </view>
             <view class='cont-item'>
                 <block wx:for='{{productList}}' wx:key='item'>
-                    <view class='show-item' bindtap='toProdPage' data-prodid="{{item.prodId}}">
-                        <view class='more-prod-pic'>
+                    <view class='show-item'>
+                        <view class='more-prod-pic' bindtap='toProdPage' data-prodid="{{item.prodId}}">
                             <image src='{{item.pic}}' class='more-pic' mode='widthFix'></image>
                         </view>
                         <view class='prod-text-right'>
-                            <view class='prod-text more'>{{item.prodName}}</view>
-                            <view class='cate-prod-info'>{{item.brief}}</view>
+                            <!--商品名称-->
+                            <view class='prod-text more' bindtap='toProdPage' data-prodid="{{item.prodId}}">{{item.prodName}}</view>
+                            <!--商品简介-->
+                            <view class='cate-prod-info' bindtap='toProdPage' data-prodid="{{item.prodId}}">{{item.brief}}</view>
+
+                            <!--商品已售-->
                             <view class="cate-prod-soldNum" wx:if="{{item.totalSales}}" style="color: #999;font-size: 22rpx;">已售:{{item.totalSales}}</view>
+                            <!--商品价格-->
                             <view class='prod-price more spaceBetweenFlex' style="color:#f0901a; padding-right: 3vw;">
                                 <view>
                                     <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
                                 </view>
 
-                                <view class="singal-price" wx:if="{{item.totalStocks > 0}}">
+                                <view class="singal-price" wx:if="{{item.totalStocks >= 0}}">
                                     <text class='symbol'>￥</text><text class='small-num'>{{item.oriPrice}}</text>
                                 </view>
 
-                                <view style="font-size: 20rpx; color:#999" wx:if="{{item.totalStocks > 0}}">
-                                    库存:{{item.totalStocks}}
+                                <view class="prod-stocks" wx:if="{{item.totalStocks > 0}}">
+                                    <text>库存：</text><text class='small-num'>{{item.totalStocks}}</text>
                                 </view>
 
-                                <view style="font-size: 20rpx; color:#999" wx:if="{{item.totalStocks == 0}}">
-                                    售罄
+                                <view class="prod-sales-out" wx:if="{{item.totalStocks == 0}}">
+                                    <text>售罄</text>
                                 </view>
 
-                                <view style="padding-top: 1vw;" wx:if="{{false}}">
+                                <view bindtap='showSku' data-prodid="{{item.prodId}}" class="prod-add-to-cart" wx:if="{{item.totalStocks > 0}}">
                                     <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
                                 </view>
                             </view>
@@ -73,10 +78,10 @@
 
                 </block>
                 <view class="centerFlex" wx:if="{{current >= pages && productList.length>0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
-                    就上面这些商品了，看看其他分类吧
+                    这个分类只有这些商品了，看看其他分类吧
                 </view>
-                <view class="centerFlex"  wx:if="{{productList.length==0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
-                    店家还未上架商品
+                <view class="centerFlex" wx:if="{{productList.length==0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
+                    这个分类下店家还未上架商品
                 </view>
             </view>
             <!-- </block> -->
