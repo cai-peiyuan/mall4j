@@ -175,7 +175,7 @@
                     <span v-else-if="order.payType == null">未支付</span>
                     <span v-else>其他支付方式 {{order.payType}}</span>
 
-                    
+
                     <span v-if="order.isPayed === 1">已支付</span>
                     <span v-if="order.refundSts === 1">退款正在处理</span>
                     <span v-if="order.refundSts === 2">退款已到账</span>
@@ -542,6 +542,8 @@ const getDataList = (pageParam, params, done) => {
     .then(({data}) => {
       dataList.value = data.records
       page.total = data.total
+      page.currentPage = data.current
+      page.pageSize = data.size
       if (done) done()
     })
 }

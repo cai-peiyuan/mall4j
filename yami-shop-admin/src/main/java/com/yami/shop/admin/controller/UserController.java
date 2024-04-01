@@ -36,7 +36,11 @@ public class UserController {
         IPage<User> userPage = userService.page(page, new LambdaQueryWrapper<User>()
                 .like(StrUtil.isNotBlank(user.getNickName()), User::getNickName, user.getNickName())
                 .like(StrUtil.isNotBlank(user.getUserMobile()), User::getUserMobile, user.getUserMobile())
-                .eq(user.getStatus() != null, User::getStatus, user.getStatus()));
+                .like(StrUtil.isNotBlank(user.getOpenId()), User::getOpenId, user.getOpenId())
+                .like(StrUtil.isNotBlank(user.getSex()), User::getSex, user.getSex())
+                .eq(user.getStatus() != null, User::getStatus, user.getStatus())
+                .eq(user.getIsStaff() != null, User::getIsStaff, user.getIsStaff())
+        );
         for (User userResult : userPage.getRecords()) {
             userResult.setNickName(userResult.getNickName() == null ? "" : userResult.getNickName());
         }

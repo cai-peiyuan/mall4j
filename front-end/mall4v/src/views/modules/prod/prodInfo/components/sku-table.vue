@@ -6,6 +6,7 @@
         border
         style="width: 100%; margin-top: 20px"
       >
+
         <el-table-column
           v-for="(leftTitle, index) in tableLeftTitles"
           :key="index"
@@ -15,16 +16,18 @@
             {{ scope.row.properties.split(';')[index].split(':')[1] }}
           </template>
         </el-table-column>
+
         <el-table-column
           v-if="tableLeftTitles.length"
           prop="pic"
           label="sku图片"
-          width="180"
+          width="140"
         >
           <template #default="scope">
             <pic-upload v-model="scope.row.pic" />
           </template>
         </el-table-column>
+
         <el-table-column
           v-if="tableLeftTitles.length"
           prop="prodName"
@@ -74,7 +77,7 @@
         <el-table-column
           prop="stocks"
           label="库存"
-          width="160"
+          width="150"
         >
           <template #default="scope">
             <el-input-number
@@ -87,9 +90,24 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="sales"
+          label="已售"
+          width="150"
+        >
+          <template #default="scope">
+            <el-input-number
+              v-model="scope.row.sales"
+              :min="0"
+              controls-position="right"
+              type="number"
+              :disabled="!scope.row.status"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="weight"
           label="商品重量(kg)"
-          width="210"
+          width="150"
         >
           <template #default="scope">
             <el-input-number
@@ -104,7 +122,7 @@
         <el-table-column
           prop="volume"
           label="商品体积(m³)"
-          width="210"
+          width="150"
         >
           <template #default="scope">
             <el-input-number
@@ -118,6 +136,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
+          width="150"
         >
           <template #default="scope">
             <el-button
@@ -218,6 +237,9 @@ const skuAddProdName = () => {
 </script>
 
 <style lang="scss" scoped>
+.el-input-number {
+  width: 120px;
+}
 .mod-prod-sku-table{
    :deep(.pic-uploader-component .el-upload) {
     border: 1px dashed #d9d9d9;

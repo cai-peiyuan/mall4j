@@ -7,7 +7,7 @@ export const tableOption = {
   indexLabel: '序号',
   stripe: true,
   menuAlign: 'center',
-  menuWidth: 350,
+  menuWidth: 200,
   align: 'center',
   refreshBtn: true,
   searchSize: 'small',
@@ -22,25 +22,33 @@ export const tableOption = {
   column: [{
     label: '产品名字',
     prop: 'prodName',
+    sortable: true,
     search: true
   }, {
     label: '商品原价',
-    prop: 'oriPrice'
+    prop: 'oriPrice',
+    sortable: true
   }, {
     label: '商品现价',
-    prop: 'price'
+    prop: 'price',
+    sortable: true
   }, {
     label: '商品库存',
-    prop: 'totalStocks'
+    prop: 'totalStocks',
+    sortable: true
+  }, {
+    label: '商品销量',
+    prop: 'totalSales',
+    sortable: true
   }, {
     label: '产品图片',
     prop: 'pic',
     type: 'upload',
     width: 150,
     listType: 'picture-img'
-
   }, {
     width: 150,
+    sortable: true,
     label: '状态',
     prop: 'status',
     search: true,

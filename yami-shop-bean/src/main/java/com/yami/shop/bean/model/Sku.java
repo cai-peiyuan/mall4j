@@ -90,6 +90,9 @@ public class Sku implements Serializable {
      */
     private String prodName;
 
+    /**
+     * 数据版本
+     */
     private Integer version;
 
     /**

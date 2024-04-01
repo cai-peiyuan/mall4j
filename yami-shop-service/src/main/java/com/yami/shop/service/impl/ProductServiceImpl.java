@@ -58,7 +58,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             skuMapper.insertBatch(product.getProdId(), product.getSkuList());
         }
         prodTagReferenceMapper.insertBatch(product.getShopId(), product.getProdId(), product.getTagList());
-
     }
 
     @Override

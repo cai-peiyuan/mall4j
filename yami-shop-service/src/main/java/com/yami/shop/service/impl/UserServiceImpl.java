@@ -245,10 +245,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
          */
         Integer errcode = getUserPhoneResult.getInteger("errcode");
         if (errcode == 0) {
-
             JSONObject phone_info = getUserPhoneResult.getJSONObject("phone_info");
             String phoneNumber = phone_info.getString("phoneNumber");
-
             /**
              * 手机号码更新到数据库中
              */
@@ -258,7 +256,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userMapper.updateById(user);
         } else {
             String errmsg = getUserPhoneResult.getString("errmsg");
-            throw new YamiShopBindException("绑定微信用户手机号失败" + errmsg);
+            throw new YamiShopBindException("绑定手机号失败" + errmsg);
         }
 
     }

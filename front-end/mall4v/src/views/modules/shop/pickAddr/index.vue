@@ -95,6 +95,8 @@ const getDataList = (pageParam, params, done) => {
     .then(({ data }) => {
       dataList.value = data.records
       page.total = data.total
+      page.currentPage = data.current
+      page.pageSize = data.size
       if (done) done()
     })
 }

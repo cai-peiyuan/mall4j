@@ -14,20 +14,24 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 自定义错误处理器
- *
- * @author LGH
  */
 @Slf4j
 @Controller
 @RestControllerAdvice
 public class DefaultExceptionHandlerConfig {
 
+    /**
+     * 指定错误处理器
+     * @param e
+     * @return
+     */
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public ResponseEntity<ServerResponseEntity<List<String>>> methodArgumentNotValidExceptionHandler(Exception e) {
         log.error("methodArgumentNotValidExceptionHandler", e);
@@ -39,22 +43,19 @@ public class DefaultExceptionHandlerConfig {
             fieldErrors = ((BindException) e).getBindingResult().getFieldErrors();
         }
         if (fieldErrors == null) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(ServerResponseEntity.fail(ResponseEnum.METHOD_ARGUMENT_NOT_VALID));
+            return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.fail(ResponseEnum.METHOD_ARGUMENT_NOT_VALID));
         }
 
         List<String> defaultMessages = new ArrayList<>(fieldErrors.size());
         for (FieldError fieldError : fieldErrors) {
             defaultMessages.add(fieldError.getField() + ":" + fieldError.getDefaultMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ServerResponseEntity.fail(ResponseEnum.METHOD_ARGUMENT_NOT_VALID, defaultMessages));
+        return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.fail(ResponseEnum.METHOD_ARGUMENT_NOT_VALID, defaultMessages));
     }
 
     @ExceptionHandler(YamiShopBindException.class)
     public ResponseEntity<ServerResponseEntity<?>> unauthorizedExceptionHandler(YamiShopBindException e) {
         log.error("mall4jExceptionHandler", e);
-
         ServerResponseEntity<?> serverResponseEntity = e.getServerResponseEntity();
         if (serverResponseEntity != null) {
             return ResponseEntity.status(HttpStatus.OK).body(serverResponseEntity);
@@ -65,10 +66,10 @@ public class DefaultExceptionHandlerConfig {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ServerResponseEntity<Object>> exceptionHandler(Exception e) {
+        log.error("exceptionHandler", e);
         if (e instanceof NoResourceFoundException) {
             return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.showFailMsg(e.getMessage()));
         }
-        log.error("exceptionHandler", e);
         return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.fail(ResponseEnum.EXCEPTION));
     }
 }

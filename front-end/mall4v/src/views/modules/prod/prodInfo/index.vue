@@ -70,6 +70,7 @@
           />
         </el-col>
       </el-form-item>
+
       <el-form-item
         label="产品卖点"
         prop="brief"
@@ -86,6 +87,21 @@
           />
         </el-col>
       </el-form-item>
+
+      <el-form-item
+        label="商品已售"
+        prop="totalSales"
+      >
+        <el-col :span="8">
+          <el-input
+            v-model="dataForm.totalSales"
+            type="number"
+            :disabled="true"
+            placeholder="商品已售"
+          />
+        </el-col>
+      </el-form-item>
+
       <el-form-item label="配送方式">
         <el-checkbox v-model="dataForm.deliveryMode.hasShopDelivery">
           商家配送
@@ -94,20 +110,24 @@
           用户自提
         </el-checkbox>
       </el-form-item>
+
       <prod-transport
         v-show="dataForm.deliveryMode.hasShopDelivery"
         v-model="dataForm.deliveryTemplateId"
       />
+
       <sku-tag
         ref="skuTagRef"
         :sku-list="dataForm.skuList"
         @change="skuTagChangeSkuHandler"
       />
+
       <sku-table
         ref="skuTableRef"
         v-model="dataForm.skuList"
         :prod-name="dataForm.prodName"
       />
+
       <el-form-item
         label="产品详情"
         prop="content"
@@ -155,6 +175,7 @@ const dataForm = ref({
   brief: '',
   pic: '',
   imgs: '',
+  totalSales: 0, //商品已售
   categoryId: 0,
   prodId: 0,
   skuList: [],
@@ -279,6 +300,8 @@ const onSubmit = Debounce(() => {
 })
 
 const paramSetPriceAndStocks = (param) => {
+  // 商品已售  重新根据sku计算销量
+  param.totalSales = 0
   // 商品库存
   param.totalStocks = 0
   // 商品价格
@@ -299,8 +322,13 @@ const paramSetPriceAndStocks = (param) => {
     if (param.price === element.price) {
       param.oriPrice = element.oriPrice ? Number.parseFloat(element.oriPrice) : 0
     }
+
+    // 商品实际库存
     param.totalStocks += element.stocks ? Number.parseInt(element.stocks) : 0
+    // 商品实际销量
+    param.totalSales += element.sales ? Number.parseInt(element.sales) : 0
   }
+
   // 如果sku没有商品名称，则使用商品的商品名称
   if (param.skuList.length === 1) {
     param.skuList[0].prodName = dataForm.value.prodName

@@ -104,6 +104,8 @@ const getDataList = (pageParam, params, done) => {
         }
       }
       page.total = data.total
+      page.currentPage = data.current
+      page.pageSize = data.size
       dataListLoading.value = false
       if (done) done()
     })

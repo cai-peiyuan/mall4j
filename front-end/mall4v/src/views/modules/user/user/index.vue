@@ -9,6 +9,8 @@
       @selection-change="selectionChange"
       @on-load="getDataList"
     >
+
+      <!-- 渲染到 pic头像列中的内容 -->
       <template #pic="scope">
         <span
           v-if="scope.row.pic"
@@ -19,6 +21,7 @@
         <span v-else>-</span>
       </template>
 
+      <!-- 渲染到 status状态列中的内容 -->
       <template #status="scope">
         <el-tag
           v-if="scope.row.status === 0"
@@ -31,6 +34,20 @@
         </el-tag>
       </template>
 
+      <!-- 渲染到 isStaff列中的内容 -->
+      <template #isStaff="scope">
+        <el-tag
+          v-if="scope.row.isStaff === 1"
+          type="danger"
+        >
+          内部
+        </el-tag>
+        <el-tag v-else>
+          会员
+        </el-tag>
+      </template>
+
+      <!-- 渲染到 menu菜单列中的内容 -->
       <template #menu="scope">
         <el-button
           v-if="isAuth('admin:user:update')"
@@ -41,6 +58,7 @@
           编辑
         </el-button>
       </template>
+
     </avue-crud>
 
     <!-- 弹窗, 新增 / 修改 -->
@@ -53,8 +71,8 @@
 </template>
 
 <script setup>
-import { isAuth } from '@/utils'
-import { tableOption } from '@/crud/user/user.js'
+import {isAuth} from '@/utils'
+import {tableOption} from '@/crud/user/user.js'
 import AddOrUpdate from './add-or-update.vue'
 
 const dataList = ref([])
@@ -85,9 +103,11 @@ const getDataList = (pageParam, params, done) => {
       )
     )
   })
-    .then(({ data }) => {
+    .then(({data}) => {
       dataList.value = data.records
       page.total = data.total
+      page.currentPage = data.current
+      page.pageSize = data.size
       dataListLoading.value = false
       picSrcList.value = []
       data.records.forEach((row, idx) => {
