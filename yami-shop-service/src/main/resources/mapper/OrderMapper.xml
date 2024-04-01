@@ -261,10 +261,10 @@
                 and status != 6
             </if>
             <if test="orderParam.startTime != null">
-                and create_time &gt; #{orderParam.startTime}
+                and create_time &gt;= #{orderParam.startTime}
             </if>
             <if test="orderParam.endTime != null">
-                and create_time &lt; #{orderParam.endTime}
+                and create_time &lt;= #{orderParam.endTime}
             </if>
         </where>
         ORDER BY update_time DESC

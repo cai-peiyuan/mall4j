@@ -70,7 +70,7 @@
         <el-table-column
           header-align="center"
           align="center"
-          width="450"
+          width="260"
           label="可配送区域"
         >
           <template #default="scope">
@@ -82,18 +82,21 @@
                 :key="city.areaId"
               >{{ city.areaName }}</el-tag>
             </span>
+            &nbsp;
             <el-button
               v-if="isAuth('shop:transfee:update') && scope.$index > 0"
-              type="primary"
-
+              type="info"
+              plain
+              size="small"
               @click="onAddOrUpdate(`${scope.$index}`)"
             >
               编辑
             </el-button>
             <el-button
               v-if="isAuth('shop:transfee:delete') && scope.$index > 0"
-              type="primary"
-
+              type="danger"
+              plain
+              size="small"
               @click="onDelete(`${scope.$index}`)"
             >
               删除
@@ -210,7 +213,7 @@
         <el-table-column
           header-align="center"
           align="center"
-          width="350"
+          width="250"
           label="指定区域"
         >
           <template #default="scope">
@@ -221,32 +224,38 @@
             >
               {{ city.areaName }}
             </el-tag>
+            &nbsp;
+            &nbsp;
             <el-button
               v-if="isAuth('shop:transfee:update')"
-              type="primary"
-
+              plain
+              size="small"
+              type="info"
               @click="addOrUpdateTransfeeFree(`${scope.$index}`)"
             >
               编辑
             </el-button>
             <el-button
               v-if="isAuth('shop:transfee:delete')"
-              type="primary"
-
+              plain
+              size="small"
+              type="danger"
               @click="deleteTransfeeFree(`${scope.$index}`)"
             >
               删除
             </el-button>
           </template>
         </el-table-column>
+
+        <!-- 设置包邮条件 -->
         <el-table-column
           header-align="center"
           align="center"
-          width="600"
+          width="350"
           label="设置包邮条件"
         >
           <template #default="scope">
-            <el-radio-group v-model="scope.row.freeType">
+            <el-radio-group v-model="scope.row.freeType" size="small" style="display: inline-grid">
               <el-radio :label="0">
                 满件/重量/体积包邮
               </el-radio>
@@ -259,6 +268,8 @@
             </el-radio-group>
           </template>
         </el-table-column>
+
+        <!-- 包邮门槛金额 件数  体积等 -->
         <el-table-column
           header-align="center"
           align="left"
@@ -270,10 +281,15 @@
               label-width="0px"
               :rules="[{ required: true, message: `不能为空`}]"
             >
-              满 <el-input
+              满
+              &nbsp;
+              <el-input-number
                 v-model="scope.row.amount"
-                style="width:100px"
-              /> 元包邮
+                controls-position="right"
+                :min="0"
+              />
+              &nbsp;
+              元包邮
             </el-form-item>
             <el-form-item
               v-if="scope.row.freeType == 0 || scope.row.freeType == 2"
@@ -281,13 +297,19 @@
               label-width="0px"
               :rules="[{ required: true, message: `不能为空`}]"
             >
-              满 <el-input
+              满
+              &nbsp;
+              <el-input-number
                 v-model="scope.row.piece"
-                style="width:100px"
-              /> 件/重量/体积包邮
+                controls-position="right"
+                :min="0"
+              />
+              &nbsp;
+              件/重量/体积包邮
             </el-form-item>
           </template>
         </el-table-column>
+
       </el-table>
       <div
         v-if="dataForm.isFreeFee == 0"
@@ -325,10 +347,11 @@
 </template>
 
 <script setup>
-import { isAuth } from '@/utils'
-import { ElMessage } from 'element-plus'
-import { Debounce } from '@/utils/debounce'
+import {isAuth} from '@/utils'
+import {ElMessage} from 'element-plus'
+import {Debounce} from '@/utils/debounce'
 import AddOrUpdate from './add-or-update.vue'
+
 const emit = defineEmits(['refreshDataList'])
 
 const hasFreeCondition = ref(0)
@@ -340,8 +363,8 @@ const dataForm = ref({
   chargeType: 0,
   transportId: 0,
   isFreeFee: 0,
-  transfees: [{ cityList: [], status: 1 }],
-  transfeeFrees: [{ freeCityList: [], freeType: 0 }]
+  transfees: [{cityList: [], status: 1}],
+  transfeeFrees: [{freeCityList: [], freeType: 0}]
 })
 const page = reactive({
   total: 0, // 总页数
@@ -380,8 +403,8 @@ const init = (id) => {
       chargeType: 0,
       transportId: 0,
       isFreeFee: 0,
-      transfees: [{ cityList: [], status: 1 }],
-      transfeeFrees: [{ freeCityList: [], freeType: 0 }]
+      transfees: [{cityList: [], status: 1}],
+      transfeeFrees: [{freeCityList: [], freeType: 0}]
     }
   })
   if (dataForm.value.transportId) {
@@ -390,7 +413,7 @@ const init = (id) => {
       url: http.adornUrl(`/shop/transport/info/${dataForm.value.transportId}`),
       method: 'get'
     })
-      .then(({ data }) => {
+      .then(({data}) => {
         if (data.isFreeFee) {
           data.transfees[0].status = 0
         } else {
@@ -401,7 +424,7 @@ const init = (id) => {
       })
   }
 }
-defineExpose({ init })
+defineExpose({init})
 
 const getDataList = (row, cityList, type) => {
   if (type === 0) {
@@ -416,7 +439,7 @@ const getDataList = (row, cityList, type) => {
  * 添加运费项
  */
 const addTransfee = () => {
-  dataForm.value.transfees.push({ cityList: [], status: 1 })
+  dataForm.value.transfees.push({cityList: [], status: 1})
 }
 
 /**
@@ -447,7 +470,7 @@ const onAddOrUpdate = (rowIndex) => {
  */
 const addTransfeeFree = () => {
   if (dataForm.value.hasFreeCondition) {
-    dataForm.value.transfeeFrees?.push({ freeCityList: [], freeType: 0 })
+    dataForm.value.transfeeFrees?.push({freeCityList: [], freeType: 0})
   }
 }
 
@@ -481,9 +504,16 @@ const changeFreeFee = (val) => {
   dataForm.value.hasFreeCondition = false
   if (val) {
     dataForm.value.chargeType = 0
-    dataForm.value.transfees = [{ cityList: [], status: 0, firstPiece: 1, firstFee: 0, continuousPiece: 1, continuousFee: 0 }]
+    dataForm.value.transfees = [{
+      cityList: [],
+      status: 0,
+      firstPiece: 1,
+      firstFee: 0,
+      continuousPiece: 1,
+      continuousFee: 0
+    }]
   } else {
-    dataForm.value.transfees = [{ cityList: [], status: 1 }]
+    dataForm.value.transfees = [{cityList: [], status: 1}]
   }
 }
 
@@ -563,6 +593,10 @@ const onSubmit = Debounce(() => {
 <style scoped>
 .transport-dialog .table-con :deep(.el-form-item) {
   margin-top: 16px;
-  margin-bottom: 16px!important;
+  margin-bottom: 16px !important;
+}
+
+.el-input-number {
+  width: 100px;
 }
 </style>

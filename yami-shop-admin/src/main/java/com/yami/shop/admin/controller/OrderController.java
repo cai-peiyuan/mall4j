@@ -37,7 +37,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author lgh on 2018/09/15.
+ *
+ * 后台管理订单接口
  */
 @Slf4j
 @RestController
@@ -74,9 +75,12 @@ public class OrderController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('order:order:page')")
     public ServerResponseEntity<IPage<Order>> page(OrderParam orderParam, PageParam<Order> page) {
+        //将用户锁定的自己的商店中 多租户使用
         Long shopId = SecurityUtils.getSysUser().getShopId();
         orderParam.setShopId(shopId);
+
         IPage<Order> orderPage = orderService.pageOrdersDetailByOrderParam(page, orderParam);
+
         return ServerResponseEntity.success(orderPage);
     }
 
@@ -328,7 +332,6 @@ public class OrderController {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
         response.setHeader("Content-Disposition", "attachment;filename=1.xls");
-
         ServletOutputStream servletOutputStream = null;
         try {
             servletOutputStream = response.getOutputStream();
