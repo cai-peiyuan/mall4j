@@ -30,31 +30,26 @@ public class OrderItem implements Serializable {
     /**
      * 订单sub_number
      */
-
     private String orderNumber;
 
     /**
      * 产品ID
      */
-
     private Long prodId;
 
     /**
      * 产品SkuID
      */
-
     private Long skuId;
 
     /**
-     * 购物车产品个数
+     * 商品个数
      */
-
     private Integer prodCount;
 
     /**
      * 产品名称
      */
-
     private String prodName;
 
     /**
@@ -75,7 +70,6 @@ public class OrderItem implements Serializable {
     /**
      * 用户Id
      */
-
     private String userId;
 
     /**
@@ -86,7 +80,6 @@ public class OrderItem implements Serializable {
     /**
      * 购物时间
      */
-
     private Date recTime;
 
     /**

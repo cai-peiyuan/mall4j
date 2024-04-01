@@ -16,7 +16,6 @@ import com.yami.shop.dao.SkuMapper;
 import com.yami.shop.service.SkuService;
 
 /**
- *
  * @author lgh on 2018/09/29.
  */
 @Service
@@ -25,25 +24,25 @@ public class SkuServiceImpl extends ServiceImpl<SkuMapper, Sku> implements SkuSe
     @Autowired
     private SkuMapper skuMapper;
 
-	@Override
-	@Cacheable(cacheNames = "skuList", key = "#prodId")
-	public List<Sku> listByProdId(Long prodId) {
-		return skuMapper.listByProdId(prodId);
-	}
+    @Override
+    @Cacheable(cacheNames = "skuList", key = "#prodId")
+    public List<Sku> listByProdId(Long prodId) {
+        return skuMapper.listByProdId(prodId);
+    }
 
-	@Override
-	@Cacheable(cacheNames = "sku", key = "#skuId")
-	public Sku getSkuBySkuId(Long skuId) {
-		return skuMapper.selectById(skuId);
-	}
+    @Override
+    @Cacheable(cacheNames = "sku", key = "#skuId")
+    public Sku getSkuBySkuId(Long skuId) {
+        return skuMapper.selectById(skuId);
+    }
 
-	@Override
-	@Caching(evict = {
-			@CacheEvict(cacheNames = "sku", key = "#skuId"),
-			@CacheEvict(cacheNames = "skuList", key = "#prodId")
-	})
-	public void removeSkuCacheBySkuId(Long skuId,Long prodId) {
+    @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "sku", key = "#skuId"),
+            @CacheEvict(cacheNames = "skuList", key = "#prodId")
+    })
+    public void removeSkuCacheBySkuId(Long skuId, Long prodId) {
 
-	}
+    }
 
 }

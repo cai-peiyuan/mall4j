@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yami.shop.bean.app.dto.UserAddrDto;
 import com.yami.shop.bean.model.Area;
 import com.yami.shop.bean.model.UserAddr;
+import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.dao.UserAddrMapper;
 import com.yami.shop.service.AreaService;
 import com.yami.shop.service.UserAddrService;
@@ -96,6 +97,9 @@ public class UserAddrServiceImpl extends ServiceImpl<UserAddrMapper, UserAddr> i
      */
     @Override
     public boolean validUserAddr(UserAddrDto userAddr) {
+        if (userAddr == null || !userAddr.validAddress()) {
+            throw new YamiShopBindException("请填写收货地址");
+        }
         List<Area> areas = areaService.listAreasByStatus(1);
         List<Area> provinceValid = areas.stream().filter(area -> area.getAreaName().equals(userAddr.getProvince())).collect(Collectors.toList());
         List<Area> cityValid = areas.stream().filter(area -> area.getAreaName().equals(userAddr.getCity())).collect(Collectors.toList());

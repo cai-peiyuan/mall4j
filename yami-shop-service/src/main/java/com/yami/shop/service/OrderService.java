@@ -151,4 +151,11 @@ public interface OrderService extends IService<Order> {
      * @date 2024/2/5 17:31 星期一
      */
     void orderArrive(Order order, DeliveryArriveParam deliveryArriveParam);
+
+    /**
+     * 根据订单数据 提取订单编号 使用逗号分割
+     * @param orders
+     * @return
+     */
+    String getOrderNumbers(List<Order> orders);
 }

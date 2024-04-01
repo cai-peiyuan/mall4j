@@ -156,10 +156,11 @@
     <view class='order-detail-footer' wx:if="{{status==5||status==6||true}}">
       <text class='dele-order' wx:if="{{status==6}}" bindtap="deleteOrder" data-ordernum="{{orderNumber}}">删除订单</text>
       <text class='dele-order' wx:if="{{status==1}}" bindtap="onCancelOrder" data-ordernum="{{orderNumber}}">取消订单</text>
-      <button wx:if="{{true}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
+      <button wx:if="{{false}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
       <view class='footer-box'>
-        <text class='apply-service'><button type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom" class="contact-btn">联系客服</button>联系客服
-        </text>
+        <view class='apply-service'>
+        <button type="default" plain="true" open-type="contact" bindcontact="handleContact" session-from="sessionFrom"  class="contact-btn">联系客服</button>联系客服
+        </view>
         <text class='buy-again' wx:if="{{order.status==1 && order.isPayed == 0}}" bindtap="showPayTypePopup" data-ordernum="{{orderNumber}}">付款</text>
         <text class='buy-again' wx:if="{{order.status==2 && order.isPayed == 1}}" bindtap="onRefund" data-ordernum="{{orderNumber}}">申请退款</text>
       </view>

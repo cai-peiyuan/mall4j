@@ -153,20 +153,24 @@ public class OrderController {
     @Operation(summary = "提交订单，返回支付流水号", description = "根据传入的参数判断是否为购物车提交订单，同时对购物车进行删除，用户开始进行支付")
     public ServerResponseEntity<OrderNumbersDto> submitOrders(@Valid @RequestBody SubmitOrderParam submitOrderParam) {
         String userId = SecurityUtils.getUser().getUserId();
-        ShopCartOrderMergerDto mergerOrder = orderService.getConfirmOrderCache(userId);
 
+        //查找订单数据
+        ShopCartOrderMergerDto mergerOrder = orderService.getConfirmOrderCache(userId);
         if (mergerOrder == null) {
             throw new YamiShopBindException("订单已过期，请重新下单");
         }
 
+        //验证地址合法性
         if (!userAddrService.validUserAddr(mergerOrder.getUserAddr())) {
             throw new YamiShopBindException("收货地址不在配送范围，请重新选择收货地址");
         }
 
+        //订单提交信息  订单备注等
         List<OrderShopParam> orderShopParams = submitOrderParam.getOrderShopParam();
 
+        //商品信息
         List<ShopCartOrderDto> shopCartOrders = mergerOrder.getShopCartOrders();
-        // 设置备注
+        // 设置备注 为对应的商店订单 设置备注
         if (CollectionUtil.isNotEmpty(orderShopParams)) {
             for (ShopCartOrderDto shopCartOrder : shopCartOrders) {
                 for (OrderShopParam orderShopParam : orderShopParams) {
@@ -177,14 +181,13 @@ public class OrderController {
             }
         }
 
+        //提交订单执行下单逻辑操作
         List<Order> orders = orderService.submit(userId, mergerOrder);
 
-        StringBuilder orderNumbers = new StringBuilder();
-        for (Order order : orders) {
-            orderNumbers.append(order.getOrderNumber()).append(",");
-        }
-        orderNumbers.deleteCharAt(orderNumbers.length() - 1);
+        //多个订单 生成多个订单编号 使用英文逗号分割
+        String orderNumbers = orderService.getOrderNumbers(orders);
 
+        //是否为购物车中的商品
         boolean isShopCartOrder = false;
         // 移除缓存
         for (ShopCartOrderDto shopCartOrder : shopCartOrders) {
@@ -194,17 +197,21 @@ public class OrderController {
                     if (basketId != null && basketId != 0) {
                         isShopCartOrder = true;
                     }
+                    //移除 商品和 商品的sku缓存
                     skuService.removeSkuCacheBySkuId(shopCartItem.getSkuId(), shopCartItem.getProdId());
                     productService.removeProductCacheByProdId(shopCartItem.getProdId());
                 }
             }
         }
-        // 购物车提交订单时(即有购物车ID时)
+        // 购物车提交订单时(即有购物车中的商品ID时)
         if (isShopCartOrder) {
             basketService.removeShopCartItemsCacheByUserId(userId);
         }
+
+        //移除订单预提交缓存
         orderService.removeConfirmOrderCache(userId);
-        return ServerResponseEntity.success(new OrderNumbersDto(orderNumbers.toString()));
+        //返回订单编号 是个英文逗号分割多个订单编号数组
+        return ServerResponseEntity.success(new OrderNumbersDto(orderNumbers));
     }
 
 }

@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
 import cn.hutool.core.bean.BeanUtil;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -59,18 +58,17 @@ public class OrderSubmitListener {
     private final BasketMapper basketMapper;
 
     /**
+     * 监听订单提交时的事件 来计算订单金额等
      * 计算订单金额
      */
     @EventListener(OrderSubmitEvent.class)
     @Order(SubmitOrderOrder.DEFAULT)
     public void orderSubmitEvent(OrderSubmitEvent event) {
         Date now = new Date();
-
         String userId = SecurityUtils.getUser().getUserId();
-
+        // 多个商品合并下单的订单信息
         ShopCartOrderMergerDto mergerOrder = event.getMergerOrder();
-
-        // 订单商品参数
+        // 订单商品集合
         List<ShopCartOrderDto> shopCartOrders = mergerOrder.getShopCartOrders();
 
         List<Long> basketIds = new ArrayList<>();
@@ -86,14 +84,15 @@ public class OrderSubmitListener {
         }
         userAddrOrder.setUserId(userId);
         userAddrOrder.setCreateTime(now);
+        //用户下单的地址单独存储  一个订单一条记录
         userAddrOrderService.save(userAddrOrder);
 
-        // 订单地址id
+        // 订单地址主键id
         Long addrOrderId = userAddrOrder.getAddrOrderId();
 
         // 每个店铺生成一个订单
         for (ShopCartOrderDto shopCartOrderDto : shopCartOrders) {
-            createOrder(event, now, userId, basketIds, skuStocksMap, prodStocksMap, addrOrderId, shopCartOrderDto);
+            createShopOrder(event, now, userId, basketIds, skuStocksMap, prodStocksMap, addrOrderId, shopCartOrderDto);
         }
 
         // 删除购物车的商品信息
@@ -121,6 +120,7 @@ public class OrderSubmitListener {
 
     /**
      * 每个店铺生成一个订单
+     *
      * @param event
      * @param now
      * @param userId
@@ -132,7 +132,7 @@ public class OrderSubmitListener {
      * @author peiyuan.cai
      * @date 2024/1/24 11:49 星期三
      */
-    private void createOrder(OrderSubmitEvent event, Date now, String userId, List<Long> basketIds, Map<Long, Sku> skuStocksMap, Map<Long, Product> prodStocksMap, Long addrOrderId, ShopCartOrderDto shopCartOrderDto) {
+    private void createShopOrder(OrderSubmitEvent event, Date now, String userId, List<Long> basketIds, Map<Long, Sku> skuStocksMap, Map<Long, Product> prodStocksMap, Long addrOrderId, ShopCartOrderDto shopCartOrderDto) {
         // 使用雪花算法生成的订单号
         String orderNumber = String.valueOf(snowflake.nextId());
         shopCartOrderDto.setOrderNumber(orderNumber);

@@ -184,12 +184,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return null;
     }
 
+    /**
+     * 根据用户编号删除订单预提交缓存
+     * 每个用户在提交订单之前添加一个缓存 下单后移除缓存
+     * 每个用户只有一份缓存数据
+     *
+     * @param userId
+     */
     @Override
     @CacheEvict(cacheNames = "ConfirmOrderCache", key = "#userId")
     public void removeConfirmOrderCache(String userId) {
     }
 
     /**
+     * 提交订单并且
      * 生成订单信息
      * @param userId
      * @param mergerOrder
@@ -201,9 +209,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<Order> orderList = new ArrayList<>();
         // 通过事务提交订单
         eventPublisher.publishEvent(new OrderSubmitEvent(mergerOrder, orderList));
-
-        // 插入订单
-        saveBatch(orderList);
+        // 批量写入插入订单
+        this.saveBatch(orderList);
+        // 取出所有订单项目
         List<OrderItem> orderItems = orderList.stream().flatMap(order -> order.getOrderItems().stream()).collect(Collectors.toList());
         // 插入订单项，返回主键
         orderItemMapper.insertBatch(orderItems);
@@ -538,7 +546,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         /**
          * 订单已支付并且是微信支付 或者余额支付
          */
-        if ( order.getPayType() == PayType.WECHATPAY.value() || order.getPayType() == PayType.BALANCE.value()) {
+        if (order.getPayType() == PayType.WECHATPAY.value() || order.getPayType() == PayType.BALANCE.value()) {
             OrderSettlement settlement = orderSettlementService.getOne(new LambdaQueryWrapper<OrderSettlement>().eq(OrderSettlement::getOrderNumber, order.getOrderNumber()));
 
             /**
@@ -661,5 +669,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 deliveryOrderService.updateById(deliveryOrder1);
             }
         }
+    }
+
+    /**
+     * 根据订单数据 提取订单编号 使用逗号分割
+     *
+     * @param orders
+     * @return
+     */
+    @Override
+    public String getOrderNumbers(List<Order> orders) {
+        //多个订单 生成多个订单编号 使用英文逗号分割
+        StringBuilder orderNumbers = new StringBuilder();
+        for (Order order : orders) {
+            orderNumbers.append(order.getOrderNumber()).append(",");
+        }
+        orderNumbers.deleteCharAt(orderNumbers.length() - 1);
+        return orderNumbers.toString();
     }
 }
