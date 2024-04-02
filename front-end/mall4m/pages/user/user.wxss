@@ -10,7 +10,7 @@ page {
 .avatar-wrapper {
   padding: 0;
   width: 66px !important;
-  border-radius: 33px;
+  border-radius: 10%;
   margin-left: 20px;
   margin-top: 0px;
   margin-bottom: 0px;
@@ -54,7 +54,7 @@ page {
 }
 
 .userinfo .userinfo-name {
-  font-size: 28rpx;
+  font-size: 30rpx;
   margin-top: 20rpx;
   display: flex;
   align-items: center;

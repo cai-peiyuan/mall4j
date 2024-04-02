@@ -179,6 +179,17 @@ Page({
     console.log('申请退款', e)
     var ordernum = e.currentTarget.dataset.ordernum;
     var ths = this;
+
+    wx.showModal({
+        title: '',
+        content: '已下单支付的订单请联系客服人员申请退款操作',
+        confirmColor: "#eba524",
+        success(res) {
+
+        }
+    });
+    return ;
+    
     wx.showModal({
       title: '',
       content: '尚未发货的订单支持无理由退款，是否申请退款？',

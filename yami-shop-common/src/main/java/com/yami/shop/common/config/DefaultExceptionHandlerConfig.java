@@ -29,6 +29,7 @@ public class DefaultExceptionHandlerConfig {
 
     /**
      * 指定错误处理器
+     *
      * @param e
      * @return
      */
@@ -70,6 +71,6 @@ public class DefaultExceptionHandlerConfig {
         if (e instanceof NoResourceFoundException) {
             return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.showFailMsg(e.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.fail(ResponseEnum.EXCEPTION));
+        return ResponseEntity.status(HttpStatus.OK).body(ServerResponseEntity.showFailMsg(e.getLocalizedMessage()));
     }
 }

@@ -133,7 +133,7 @@ Component({
     setInputValue: function (e) {
       console.log("写入：", e.detail.value);
       let newNickName = e.detail.value;
-      if (newNickName != '' && this.data.nick != newNickName) {
+      if (newNickName != '') {
         console.log("更新用户名称", newNickName);
         //通过接口更新用户名称
         this.updateNickName(newNickName);
@@ -151,7 +151,7 @@ Component({
         url: "/p/user/setUserInfo",
         method: "PUT",
         data: {
-          avatarUrl: avatarUrl,
+          // avatarUrl: avatarUrl,
           nickName: newNickName
         },
         callBack: function (res) {

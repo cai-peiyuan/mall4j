@@ -3,6 +3,7 @@ package com.yami.shop.api.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yami.shop.bean.app.dto.ProductDto;
+import com.yami.shop.bean.app.dto.SkuDto;
 import com.yami.shop.bean.app.dto.TagProductDto;
 import com.yami.shop.bean.model.Product;
 import com.yami.shop.bean.model.Sku;
@@ -49,9 +50,23 @@ public class ProdController {
     @Parameters({@Parameter(name = "categoryId", description = "分类ID", required = true),})
     public ServerResponseEntity<IPage<ProductDto>> prodList(@RequestParam(value = "categoryId") Long categoryId, PageParam<ProductDto> page) {
         IPage<ProductDto> productPage = prodService.pageByCategoryId(page, categoryId);
+        for (ProductDto record : productPage.getRecords()) {
+            // 查询商品的sku
+            List<Sku> skuList = skuService.listByProdId(record.getProdId());
+            // 启用的sku列表
+            List<Sku> useSkuList = skuList.stream().filter(sku -> sku.getStatus() == 1).collect(Collectors.toList());
+            List<SkuDto> skuDtoList = useSkuList.stream().map(sku -> BeanUtil.copyProperties(sku, SkuDto.class)).collect(Collectors.toList());
+            record.setSkuList(skuDtoList);
+        }
         return ServerResponseEntity.success(productPage);
     }
 
+    /**
+     * 根据商品id获取商品详细信息
+     *
+     * @param prodId
+     * @return
+     */
     @GetMapping("/prodInfo")
     @Operation(summary = "商品详情信息", description = "根据商品ID（prodId）获取商品信息")
     @Parameter(name = "prodId", description = "商品ID", required = true)

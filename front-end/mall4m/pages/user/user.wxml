@@ -8,7 +8,7 @@
       </button>
       <view style="color:#fff; padding-left: 7vw;">
         <view class='userinfo-name' style="margin-top: 0;">
-          <input type="nickname" style="color:#fff; text-align: left;" placeholder-style="color:#fff" class='userinfo-name' placeholder="点击获取微信昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
+          <input type="nickname" style="color:#fff; text-align: left;" placeholder-style="color:#fff" class='userinfo-name' placeholder="输入昵称" value="{{nickName}}" bindinput="syncInputValue" bindblur="setInputValue" />
         </view>
         <view wx:if="{{userMobile != null}}">
           <view class='userinfo-name' wx:if="{{userMobile != null}}" style="padding-right: 7vw; justify-content: flex-start;">
