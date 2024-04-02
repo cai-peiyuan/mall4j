@@ -215,7 +215,6 @@
                 <view class='close' bindtap='closePopup'></view>
             </view>
             <view class='pup-sku-body'>
-
                 <!-- 规格选项 -->
                 <view class="pup-sku-area">
                     <block wx:for="{{skuGroup}}" wx:for-index="key" wx:for-item="value" wx:key='*this'>
@@ -227,7 +226,6 @@
                         </view>
                     </block>
                 </view>
-
                 <!-- 选择数量+-的按钮  -->
                 <view class="pup-sku-count">
                     <view class="num-wrap">
@@ -245,13 +243,11 @@
                     <view class="count-name">数量</view>
                 </view>
             </view>
-
             <!-- 加入购物车和立即购买按钮 -->
             <view class='pup-sku-footer {{findSku?"":"gray"}}'>
                 <view class="btn buy" bindtap='buyNow'>立即购买</view>
                 <view class="btn cart" bindtap='addToCart'>加入购物车</view>
             </view>
-
         </view>
     </view>
     <!-- 评价弹窗 -->

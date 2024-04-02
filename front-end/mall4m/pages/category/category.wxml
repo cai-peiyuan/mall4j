@@ -56,26 +56,21 @@
                                 <view>
                                     <text class='symbol'>￥</text> <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text><text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text>
                                 </view>
-
                                 <view class="singal-price" wx:if="{{item.totalStocks >= 0}}">
                                     <text class='symbol'>￥</text><text class='small-num'>{{item.oriPrice}}</text>
                                 </view>
-
                                 <view class="prod-stocks" wx:if="{{item.totalStocks > 0}}">
                                     <text>库存：</text><text class='small-num'>{{item.totalStocks}}</text>
                                 </view>
-
                                 <view class="prod-sales-out" wx:if="{{item.totalStocks == 0}}">
                                     <text>售罄</text>
                                 </view>
-
                                 <view bindtap='showSku' data-prodid="{{item.prodId}}" class="prod-add-to-cart" wx:if="{{item.totalStocks > 0}}">
                                     <image src='{{imageUrl}}/icon/basket.png' class='basket-img' style="width:40rpx; height:40rpx"></image>
                                 </view>
                             </view>
                         </view>
                     </view>
-
                 </block>
                 <view class="centerFlex" wx:if="{{current >= pages && productList.length>0}}" style="color:#999; font-size:24rpx; line-height: 70rpx;">
                     这个分类只有这些商品了，看看其他分类吧
@@ -88,6 +83,7 @@
         </scroll-view>
         <!-- 右侧内容end -->
         <!-- </block> -->
+        
         <!-- 规格弹窗 -->
         <view class="pup-sku" wx:if="{{skuShow}}">
             <view class="pup-sku-main">

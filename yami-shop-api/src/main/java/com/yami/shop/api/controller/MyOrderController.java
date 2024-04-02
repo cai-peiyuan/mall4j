@@ -110,11 +110,11 @@ public class MyOrderController {
             throw new YamiShopBindException("订单没有付款，无法申请退款");
         }
 
+        //查询需要退款订单中的商品信息
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(orderNumber);
         order.setOrderItems(orderItems);
-        // 取消订单申请
+        // 申请订单退款
         orderService.refundApplyOrders(Collections.singletonList(order));
-
         // 清除缓存
         for (OrderItem orderItem : orderItems) {
             productService.removeProductCacheByProdId(orderItem.getProdId());

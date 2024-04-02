@@ -3,7 +3,7 @@
 <view class='container'>
   <view class="pageHead">
     <view class="cardNo">
-      <view class="cardNoLeft">No.{{userBalance.cardNumber}}</view>
+      <view class="cardNoLeft">会员卡号.{{userBalance.cardNumber}}</view>
       <view style="font-size: 12px;" bindtap="toUserBalanceDetailPage">明细</view>
     </view>
     <view style="margin-top: 2vw;">账户余额</view>

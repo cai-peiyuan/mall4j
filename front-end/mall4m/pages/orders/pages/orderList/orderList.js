@@ -207,14 +207,12 @@ Page({
             method: "PUT",
             data: {},
             callBack: function (res) {
-              //console.log(res);
               ths.loadOrderData(ths.data.sts, 1);
               wx.hideLoading();
             }
           };
           http.request(params);
         } else if (res.cancel) {
-          //console.log('用户点击取消')
         }
       }
     })
@@ -232,8 +230,6 @@ Page({
     this.showPayTypePopup();
     this.toOrderDetailPage(e);
   },
-
-
 
   /**
    * 显示支付方式
@@ -319,15 +315,14 @@ Page({
   onConfirmReceive: function (e) {
     var ths = this;
     wx.showModal({
-      title: '',
-      content: '我已收到货？',
+      title: '到货确认',
+      content: '确定已收到货？',
       confirmColor: "#f38d08",
       success(res) {
         if (res.confirm) {
           wx.showLoading({
             mask: true
           });
-
           var params = {
             url: "/p/myOrder/receipt/" + e.currentTarget.dataset.ordernum,
             method: "PUT",

@@ -97,15 +97,17 @@ page {
   vertical-align: middle;
 }
 
-.deliveryInfo .companyname, .deliveryInfo .expno {
+.deliveryInfo .companyname,
+.deliveryInfo .expno {
   line-height: 1;
   margin-left: 136rpx;
-  font-size: 28rpx;
+  font-size: 24rpx;
 }
 
-.deliveryInfo .companyname .key, .deliveryInfo .expno .key {
+.deliveryInfo .companyname .key,
+.deliveryInfo .expno .key {
   color: #666;
-  font-weight: bold;
+  font-weight: lighter
 }
 
 .deliveryInfo .expno {
@@ -166,7 +168,8 @@ page {
   margin-bottom: 39rpx;
 }
 
-.lastest .detail .desc, .lastest .detail .time {
+.lastest .detail .desc,
+.lastest .detail .time {
   color: #105c3e;
 }
 

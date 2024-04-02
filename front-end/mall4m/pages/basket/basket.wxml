@@ -14,7 +14,7 @@
                 <checkbox bindtap='onSelectedItem' data-scindex="{{scIndex}}" data-index="{{index}}" value="{{prod.prodId}}" checked="{{prod.checked}}" color="#105c3e" />
               </label>
             </view>
-            <view class='prodinfo' >
+            <view class='prodinfo'>
               <view class="pic" bindtap='toProdPage' data-prodid="{{prod.prodId}}">
                 <image src='{{prod.pic}}' />
               </view>
@@ -83,11 +83,13 @@
 
   <!-- 底部按钮 -->
   <view class="cart-footer" wx:if="{{shopCartItemDiscounts.length>0}}">
+  
     <view class="btn all">
       <label bindtap='onSelAll'>
-        <checkbox checked='{{allChecked}}' color='#f7d731;' />全选</label>
+        <checkbox checked='{{allChecked}}' color='#f7d731;' />全选
+      </label>
     </view>
-    <view class="btn del" bindtap='onDelBasket'>
+    <view class="btn del" bindtap='onDelBasket' wx:if="{{false && (finalMoney>0 || allChecked) }}">
       <text>删除</text>
     </view>
     <view class="btn total">
@@ -99,12 +101,15 @@
           <text class='small-num'>.{{wxs.parsePrice(finalMoney)[1]}}</text>
         </view>
       </view>
-      <view class="total-msg" wx:if="{{subtractMoney>0}}">
-        总额:￥{{wxs.toPrice(totalMoney)}} 立减:￥{{wxs.toPrice(subtractMoney)}}
+      <view class="total-msg" wx:if="{{subtractMoney>0|| true}}">
+        总额:￥{{wxs.toPrice(totalMoney)}} 优惠:￥{{wxs.toPrice(subtractMoney)}}
       </view>
     </view>
+    <view class="btn delete" bindtap='onDelBasket' wx:if="{{(finalMoney>0 || allChecked) }}">
+      <text>删除</text>
+    </view>
     <view class="btn settle" bindtap='toFirmOrder'>
-      <text>结算</text>
+      <text>下单</text>
     </view>
   </view>
   <!-- end 底部按钮 -->

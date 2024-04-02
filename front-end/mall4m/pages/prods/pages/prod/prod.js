@@ -759,6 +759,9 @@ Page({
         });
     },
 
+    /**
+     * 关闭弹窗
+     */
     closePopup: function () {
         this.setData({
             popupShow: false,
