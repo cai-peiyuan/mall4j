@@ -329,7 +329,7 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
   width: 100%;
   display: flex;
   flex-direction: row nowrap;
-  height: 98rpx;
+  height: 90rpx;
   border-top: 2rpx solid #f4f4f4;
   z-index: 999;
 }
@@ -358,17 +358,16 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
 }
 
 .cart-footer .btn.del {
-  color: #eba524;
+  color: red;
   width: 70rpx;
   font-size: 22rpx;
   text-align: left;
   display: block;
-  line-height: 102rpx;
-
+  line-height: 90rpx;
 }
 
 .cart-footer .btn.all {
-  width: 150rpx;
+  width: 90rpx;
   font-size: 26rpx;
 }
 
@@ -388,9 +387,16 @@ checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
   font-size: 30rpx;
 }
 
+.cart-footer .btn.delete {
+  width: 100rpx;
+  background: #f83333ea;
+  color: #fff;
+}
+
+
 .cart-footer .btn.settle {
-  width: 200rpx;
-  background: #eba524;
+  width: 100rpx;
+  background: #eba524d0;
   color: #fff;
 }
 

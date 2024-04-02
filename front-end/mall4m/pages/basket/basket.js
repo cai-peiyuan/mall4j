@@ -5,7 +5,6 @@ const Big = require("../../utils/big.min.js");
 const app = getApp()
 
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -16,6 +15,7 @@ Page({
     totalMoney: 0,
     subtractMoney: 0,
     allChecked: false,
+    basketIds: [],
     imageUrl:app.globalData.imageUrl,
   },
 
@@ -180,7 +180,6 @@ Page({
         }
       }
     }
-
     var ths = this;
     wx.showLoading();
     var params = {
@@ -197,7 +196,6 @@ Page({
       }
     };
     http.request(params);
-
   },
 
   /**
@@ -260,7 +258,6 @@ Page({
    */
   onDelBasket: function () {
     var ths = this;
-
     var shopCartItemDiscounts = this.data.shopCartItemDiscounts;
     var basketIds = [];
     for (var i = 0; i < shopCartItemDiscounts.length; i++) {
@@ -271,7 +268,9 @@ Page({
         }
       }
     }
-
+    this.setData({
+      basketIds: basketIds
+    });
     if (basketIds.length == 0) {
       wx.showToast({
         title: '请选择商品',
