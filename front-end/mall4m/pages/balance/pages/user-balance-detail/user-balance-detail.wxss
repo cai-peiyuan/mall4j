@@ -88,14 +88,51 @@
   background-color: #fff;
 }
 
-.consumeDate {
+.consumeLeft {
+  color: #000;
+  font-weight: lighter;
+  font-size: 12px;
+  line-height: 30px;
+}
+
+.consumeRight {
+  color: #000;
+  font-weight: lighter;
+  font-size: 12px;
+  line-height: 30px;
+}
+
+.consumeDescription {
   color: rgb(139, 138, 138);
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.consumeDate {
+  color: rgb(0, 0, 0);
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.consumeCost {
+  text-align: right;
+  color: rgb(139, 138, 138);
+  font-weight: lighter;
+  font-size: 12px;
+}
+
+.consumeBalacne {
   font-size: 14px;
 }
+
+.balance {
+  font-family: 'Times New Roman', Times, serif;
+}
+
 .red {
   color: #ff0000;
 }
 
 .green {
-  color: #00ff00;
+  color: green;
 }

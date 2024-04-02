@@ -151,7 +151,7 @@ Page({
   },
 
   /**
-   * 提交订单
+   * 提交订单唤起支付请求
    */
   toPay: function () {
     // 检查地址选择情况
@@ -179,6 +179,7 @@ Page({
    * 通过内部订单编号发起微信支付请求
    */
   submitOrder: function () {
+    let _this = this;
     wx.showLoading({
       mask: true
     });
@@ -187,18 +188,18 @@ Page({
       method: "POST",
       data: {
         orderShopParam: [{
-          remarks: this.data.remark,
+          remarks: _this.data.remark,
           shopId: 1
         }]
       },
       callBack: res => {
         wx.hideLoading();
-        if (this.data.payType == 1) {
+        if (_this.data.payType == 1) {
           // 发起微信支付，传入平台订单编号
-          this.calWeixinPay(res.orderNumbers);
+          _this.calWeixinPay(res.orderNumbers);
         } else if (this.data.payType == 0) {
           // 发起普通，传入平台订单编号
-          this.callNormalPay(res.orderNumbers);
+          _this.callNormalPay(res.orderNumbers);
         }
       }
     };
@@ -233,14 +234,14 @@ Page({
             console.log("wx.requestPayment支付成功", e);
             //_this.closePopupPayType();
             wx.navigateTo({
-              url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
+              url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + _this.data.orderType,
             })
           },
           fail: err => {
             console.log("wx.requestPayment支付失败", err);
             //_this.closePopupPayType();
             wx.navigateTo({
-              url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
+              url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + _this.data.orderType,
             })
           }
         })
@@ -271,13 +272,13 @@ Page({
           console.log("余额支付成功", res);
           _this.closePopupPayType();
           wx.reLaunch({
-            url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
+            url: '/pages/pay-result/pay-result?sts=1&orderNumbers=' + orderNumbers + "&orderType=" + _this.data.orderType,
           })
         } else {
           console.log("余额支付失败", res);
           _this.closePopupPayType();
           wx.reLaunch({
-            url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + this.data.orderType,
+            url: '/pages/pay-result/pay-result?sts=0&orderNumbers=' + orderNumbers + "&orderType=" + _this.data.orderType,
           })
         }
       }
