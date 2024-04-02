@@ -1,59 +1,60 @@
 /**app.wxss**/
 .container {
-    height: 100%;
-    box-sizing: border-box;
-    color: #333;
-    font-family: helvetica, 'Heiti SC', PingFangSC-Light;
+  height: 100%;
+  box-sizing: border-box;
+  color: #333;
+  font-family: helvetica, 'Heiti SC', PingFangSC-Light;
+  overflow-x: hidden;
 }
 
 .price {
-    font-family: Arial;
-    display: inline-block;
-    color: rgb(243, 141, 8);
-    padding-bottom: 0rpx;
-    padding-left: 0rpx;
+  font-family: Arial;
+  display: inline-block;
+  color: rgb(243, 141, 8);
+  padding-bottom: 0rpx;
+  padding-left: 0rpx;
 }
 
 .flex {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .spaceBetweenFlex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .aroundFlex {
-    display: flex;
-    justify-content: space-around;
-    align-items: center
+  display: flex;
+  justify-content: space-around;
+  align-items: center
 }
 
 .centerFlex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .columnFlex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* 价格数字显示不同大小 */
 
 .symbol {
-    font-size: 22rpx;
+  font-size: 22rpx;
 }
 
 .big-num {
-    font-size: 25rpx;
+  font-size: 25rpx;
 }
 
 .small-num {
-    font-size: 18rpx;
+  font-size: 18rpx;
 }

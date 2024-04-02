@@ -83,6 +83,7 @@
         </scroll-view>
         <!-- 右侧内容end -->
         <!-- </block> -->
+        
         <!-- 规格弹窗 -->
         <view class="pup-sku" wx:if="{{skuShow}}">
             <view class="pup-sku-main">
