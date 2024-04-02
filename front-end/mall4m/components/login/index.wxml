@@ -11,10 +11,10 @@
   <view class="nick-box">
     <van-field wx:if="{{false}}" model:value="{{ name }}" size="large" placeholder="请输入昵称" clearable type="nickname" />
   </view>
-  <view class="nick-box" style="padding: 25rpx 45rpx !important;">
-    <input type="nickname" placeholder-style="color:#fff" class='userinfo-name' placeholder="点击获取微信昵称" value="{{name}}" bindinput="syncInputValue" bindblur="setInputValue" />
+  <view class="nick-box" >
+    <input type="nickname" placeholder-style="color:#323233;font-size:30rpx;margin:auto;" class='userinfo-name' placeholder="请输入昵称" value="{{name}}" bindinput="syncInputValue" bindblur="setInputValue" />
   </view>
-  <view class="nick-box" style="padding: 25rpx 45rpx !important;" wx:if="{{false}}">
+  <view class="nick-box"  wx:if="{{false}}">
     <view class='binding-phone' style="color: #000000;">
       <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="getphone-btn"></button>
       <text class='show-tip'>请绑定手机号</text>
