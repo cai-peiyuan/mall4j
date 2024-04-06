@@ -45,6 +45,11 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     private DeliveryOrderService deliveryOrderService;
 
     @Autowired
+    private DeliveryService deliveryService;
+
+    @Autowired
+    private DeliveryUserService deliveryUserService;
+    @Autowired
     private UserBalanceService userBalanceService;
 
     @Override
@@ -65,7 +70,6 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
      */
     @Override
     public OrderShopDto getMyOrderByOrderNumber(String userId, String orderNumber) {
-        OrderShopDto orderShopDto = new OrderShopDto();
         Order order = orderService.getOrderByOrderNumber(orderNumber);
 
         if (order == null) {
@@ -74,11 +78,21 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
         if (!Objects.equals(order.getUserId(), userId)) {
             throw new YamiShopBindException("没有权限获取该订单信息");
         }
+        return getOrderShopDtoByOrder(order);
+    }
 
+    /**
+     * 根据数据库订单存储的数据组件订单数据
+     *
+     * @param order
+     * @return
+     */
+    private OrderShopDto getOrderShopDtoByOrder(Order order) {
+        OrderShopDto orderShopDto = new OrderShopDto();
         ShopDetail shopDetail = shopDetailService.getShopDetailByShopId(order.getShopId());
         UserAddrOrder userAddrOrder = userAddrOrderService.getById(order.getAddrOrderId());
         UserAddrDto userAddrDto = BeanUtil.copyProperties(userAddrOrder, UserAddrDto.class);
-        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(orderNumber);
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(order.getOrderNumber());
         List<OrderItemDto> orderItemList = BeanUtil.copyToList(orderItems, OrderItemDto.class);
 
         orderShopDto.setShopId(shopDetail.getShopId());
@@ -101,6 +115,7 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
         orderShopDto.setTotal(total);
         orderShopDto.setTotalNum(totalNum);
         return orderShopDto;
+
     }
 
     /**
@@ -108,18 +123,26 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
      *
      * @param userId
      * @param orderNumber
+     * @param isStaff
      * @return
      * @author peiyuan.cai
      * @date 2024/1/24 17:16 星期三
      */
     @Override
-    public JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber) {
+    public JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber, Integer isStaff) {
         JSONObject object = new JSONObject();
-        Order orderByOrderNumber = orderService.getOrderByOrderNumber(orderNumber);
-        DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, orderByOrderNumber.getDvyFlowId()));
-        object.put("orderShop", getMyOrderByOrderNumber(userId, orderNumber));
-        object.put("order", orderByOrderNumber);
+        Order order = orderService.getOrderByOrderNumber(orderNumber);
+        DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, order.getDvyFlowId()));
+        object.put("orderShop", getOrderShopDtoByOrder(order));
+        object.put("order", order);
         object.put("deliveryOrder", deliveryOrder);
+        if (isStaff != null && isStaff == 1) {
+            //附带 物流公司 和配送员信息
+            List<Delivery> deliveryList = deliveryService.list();
+            object.put("deliveryList", deliveryList);
+            List<DeliveryUser> deliveryUserList = deliveryUserService.list();
+            object.put("deliveryUserList", deliveryUserList);
+        }
         object.put("userBalance", userBalanceService.getUserBalanceByUserId(userId));
         return object;
     }

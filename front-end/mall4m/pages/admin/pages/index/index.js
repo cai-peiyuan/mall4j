@@ -91,7 +91,7 @@ const pageObject = {
         console.log(orderNumber)
         // 订单发货
         wx.navigateTo({
-            url: '/pages/admin/pages/order-delivery/order-delivery?orderNum=1753239988402786304'
+            url: '/pages/admin/pages/order-delivery/order-delivery?orderNum=1776631771111231488'
         })
     },
     /**

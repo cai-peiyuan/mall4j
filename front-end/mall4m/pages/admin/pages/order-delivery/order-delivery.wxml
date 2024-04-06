@@ -2,135 +2,135 @@
 
 <view class='container'>
 
-  <view class='order-detail'>
-    <view class='delivery-addr'>
-      <view class='user-info'>
-        <text class='item'>{{userAddrDto.receiver}}</text>
-        <text class='item'>{{userAddrDto.mobile}}</text>
-      </view>
-      <view class='addr'>{{userAddrDto.province}}{{userAddrDto.city}}{{userAddrDto.area}}{{userAddrDto.area}}{{userAddrDto.addr}}</view>
-    </view>
+    <view class='order-detail'>
+        <view class='delivery-addr'>
+            <view class='user-info'>
+                <text class='item'>{{userAddrDto.receiver}}</text>
+                <text class='item'>{{userAddrDto.mobile}}</text>
+            </view>
+            <view class='addr'>{{userAddrDto.province}}{{userAddrDto.city}}{{userAddrDto.area}}{{userAddrDto.area}}{{userAddrDto.addr}}</view>
+        </view>
 
-    <!-- 商品信息 -->
-    <view class='prod-item'>
-      <!-- <view class="order-num">
+        <!-- 商品信息 -->
+        <view class='prod-item'>
+            <!-- <view class="order-num">
         <view class='order-state'>
           <text class="order-sts  gray">{{status}}</text>
         </view>
       </view> -->
-      <block wx:for="{{orderItemDtos}}"  wx:for-index="index" wx:key='id'>
-        <view class='item-cont' bindtap='toProdPage' data-prodid="{{item.prodId}}">
-          <view class='prod-pic'>
-            <image src='{{item.pic}}'></image>
-          </view>
-          <view class='prod-info'>
-            <view class='prodname'>
-              {{item.prodName}}
-            </view>
-            <view class='prod-info-cont'>
-              <text class='number'>{{item.skuName}}</text>
-              <text class='info-item'>X{{item.prodCount}}</text>
-            </view>
-            <view class='price-nums clearfix'>
-              <text class='prodprice'><text class='symbol'>￥</text>
-              <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
-              <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
-              <view class='btn-box'>
-                <!-- <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
+            <block wx:for="{{orderItemDtos}}" wx:for-index="index" wx:key='id'>
+                <view class='item-cont' bindtap='toProdPage' data-prodid="{{item.prodId}}">
+                    <view class='prod-pic'>
+                        <image src='{{item.pic}}'></image>
+                    </view>
+                    <view class='prod-info'>
+                        <view class='prodname'>
+                            {{item.prodName}}
+                        </view>
+                        <view class='prod-info-cont'>
+                            <text class='number'>{{item.skuName}}</text>
+                            <text class='info-item'>X{{item.prodCount}}</text>
+                        </view>
+                        <view class='price-nums clearfix'>
+                            <text class='prodprice'><text class='symbol'>￥</text>
+                                <text class='big-num'>{{wxs.parsePrice(item.price)[0]}}</text>
+                                <text class='small-num'>.{{wxs.parsePrice(item.price)[1]}}</text></text>
+                            <view class='btn-box'>
+                                <!-- <text class='btn' wx:if="{{item.status!=1}}">申请售后</text>
                 <text class='btn' data-index='{{index}}' catchtap='addToCart'>加购物车</text> -->
-              </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+
+        </view>
+
+        <!-- 订单信息 -->
+        <view class='order-msg'>
+            <view class='msg-item'>
+                <view class='item'>
+                    <text class='item-tit'>订单编号：</text>
+                    <text class='item-txt'>{{orderNumber}}</text>
+                    <text class='copy-btn' bindtap='copyBtn'>复制</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>下单时间：</text>
+                    <text class='item-txt'>{{createTime}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>订单备注：</text>
+                    <text class='item-txt'>{{remarks}}</text>
+                </view>
             </view>
-          </view>
-        </view>
-      </block>
+            <view class='msg-item' wx:if="{{order.isPayed == 1}}">
+                <view class='item'>
+                    <text class='item-tit'>付款时间：</text>
+                    <text class='item-txt'>{{order.payTime}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>支付方式：</text>
+                    <text class='item-txt'>{{dict.getPayTypeName(order.payType)}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>发货状态：</text>
+                    <text class='item-txt'>{{order.dvyFlowId != '' ? '已发货': '未发货'}}</text>
+                </view>
+            </view>
 
-    </view>
+            <view class='msg-item' wx:if="{{order.dvyFlowId != ''}}">
+                <view class='item'>
+                    <text class='item-tit'>发货时间：</text>
+                    <text class='item-txt'>{{order.dvyTime}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>物流服务：</text>
+                    <text class='item-txt'>{{dict.getDvyNameById(order.dvyId)}}</text>
+                </view>
+                <view class='item'>
+                    <text class='item-tit'>运单号码：</text>
+                    <text class='item-txt'>{{order.dvyFlowId}}</text>
+                </view>
+            </view>
+        </view>
+        <view class='order-msg'>
+            <view class='msg-item'>
+                <view class='item'>
+                    <view class='item-tit'>订单总额：</view>
+                    <view class='item-txt price'>
+                        <text class='symbol'>￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(productTotalAmount)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(productTotalAmount)[1]}}</text>
+                    </view>
+                </view>
+                <view class='item'>
+                    <view class='item-tit'>运费：</view>
+                    <view class='item-txt price'>
+                        <text class='symbol'>￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(transfee)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(transfee)[1]}}</text>
+                    </view>
+                </view>
+                <view class='item'>
+                    <view class='item-tit'>优惠券：</view>
+                    <view class='item-txt price'>
+                        <text class='symbol'>-￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(reduceAmount)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(reduceAmount)[1]}}</text>
+                    </view>
+                </view>
+                <view class='item payment'>
+                    <view class='item-txt price'>
+                        实付款：
+                        <text class='symbol'>￥</text>
+                        <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
+                        <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
 
-    <!-- 订单信息 -->
-    <view class='order-msg'>
-      <view class='msg-item'>
-        <view class='item'>
-          <text class='item-tit'>订单编号：</text>
-          <text class='item-txt'>{{orderNumber}}</text>
-          <text class='copy-btn' bindtap='copyBtn'>复制</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>下单时间：</text>
-          <text class='item-txt'>{{createTime}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>订单备注：</text>
-          <text class='item-txt'>{{remarks}}</text>
-        </view>
-      </view>
-      <view class='msg-item' wx:if="{{order.isPayed == 1}}">
-        <view class='item'>
-          <text class='item-tit'>付款时间：</text>
-          <text class='item-txt'>{{order.payTime}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>支付方式：</text>
-          <text class='item-txt'>{{dict.getPayTypeName(order.payType)}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>发货状态：</text>
-          <text class='item-txt'>{{order.dvyFlowId != '' ? '已发货': '未发货'}}</text>
-        </view>
-      </view>
-
-      <view class='msg-item' wx:if="{{order.dvyFlowId != ''}}">
-        <view class='item'>
-          <text class='item-tit'>发货时间：</text>
-          <text class='item-txt'>{{order.dvyTime}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>物流服务：</text>
-          <text class='item-txt'>{{dict.getDvyNameById(order.dvyId)}}</text>
-        </view>
-        <view class='item'>
-          <text class='item-tit'>运单号码：</text>
-          <text class='item-txt'>{{order.dvyFlowId}}</text>
-        </view>
-    </view>
-    </view>
-    <view class='order-msg'>
-      <view class='msg-item'>
-        <view class='item'>
-          <view class='item-tit'>订单总额：</view>
-          <view class='item-txt price'>
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(productTotalAmount)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(productTotalAmount)[1]}}</text>
-          </view>
-        </view>
-        <view class='item'>
-          <view class='item-tit'>运费：</view>
-          <view class='item-txt price'>
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(transfee)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(transfee)[1]}}</text>
-          </view>
-        </view>
-        <view class='item'>
-          <view class='item-tit'>优惠券：</view>
-          <view class='item-txt price'>
-            <text class='symbol'>-￥</text>
-            <text class='big-num'>{{wxs.parsePrice(reduceAmount)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(reduceAmount)[1]}}</text>
-          </view>
-        </view>
-        <view class='item payment'>
-          <view class='item-txt price'>
-            实付款：
-            <text class='symbol'>￥</text>
-            <text class='big-num'>{{wxs.parsePrice(actualTotal)[0]}}</text>
-            <text class='small-num'>.{{wxs.parsePrice(actualTotal)[1]}}</text>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- <view class='prod-foot'>
+        <!-- <view class='prod-foot'>
         <view class='btn'>
           <button wx:if="{{order.status==1}}" class="button" bindtap="onCancelOrder" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>取消订单</button>
           <button wx:if="{{order.status==1}}" class="button warn" bindtap="onConfirmReceive" data-ordernum="{{order.primaryOrderNo}}" hover-class='none'>再次购买</button>
@@ -140,16 +140,70 @@
         </view>
       </view> -->
 
-    <!-- 底部栏 -->
-    <view class='order-detail-footer' wx:if="{{status==5||status==6 || true}}">
-      <text class='dele-order' bindtap="orderRefund" wx:if="{{order.refundSts == 0}}">订单退款</text>
-      <view class='footer-box'>
-        <text class='apply-service' bindtap="orderDelivery" wx:if="{{order.dvyFlowId == ''}}">订单发货</text>
-        <text class='buy-again' bingdtap="orderArrived" wx:if="{{order.status == ''}}">订单送达</text>
-      </view>
+        <!-- 底部栏 -->
+        <view class='order-detail-footer' wx:if="{{status==5||status==6 || true}}">
+            <text class='dele-order' bindtap="orderRefund" wx:if="{{order.refundSts == 0}}">订单退款</text>
+            <view class='footer-box'>
+                <text class='apply-service' bindtap="orderDelivery" wx:if="{{order.dvyFlowId == ''}}">订单发货</text>
+                <text class='buy-again' bingdtap="orderArrived" wx:if="{{order.status == ''}}">订单送达</text>
+            </view>
+        </view>
     </view>
 
-  </view>
+    <!-- 订单发货框 -->
+    <view wx:if="{{showOrderDeliverDialog}}" class="mask">
+        <view class="orderDialog">
+            <view bindtap="closeOrderDeliverDialog" class="close"></view>
+            <view class="flex">
+                <label class="labelName">快递公司</label>
+                <view style="position: relative;">
+                    <view bindtap="showSelectDeliveryFunc" style="border:solid 1px #eee; line-height: 40px; padding-left:3vw; font-size: 14px; width:60vw; height: 40px;border-radius: 2vw; margin-left: 3vw;">
+                        {{selectedDelivery.dvyId?selectedDelivery.dvyName:'请选择快递公司'}}
+                    </view>
+                    <view wx:if="{{showSelectDelivery}}" style="height: 30vw; width:63vw; overflow: auto; position: absolute; left:3vw; top:41px; border:solid 1px #eee; border-radius: 2vw; z-index: 999;    background: white;">
+                        <view bindtap="selectDeliveryFunc" data-value="{{item}}" wx:for="{{deliveryList}}" wx:key="item" style="height: 30px; line-height: 30px; padding-left: 3vw; font-size: 14px;">
+                            {{item.dvyName}}
+                        </view>
+                    </view>
+                </view>
+            </view>
+            <view class="flex" style="margin-top: 5vw;">
+                <label class="labelName">快递单号</label>
+                <view style="position: relative;flex-direction: row; display: contents;">
+                    <input style="margin: 3vw" value='{{dvyNumber}}' placeholder='填写物流单号' bindinput="onDvyNumberInput"></input>
+                    <view bindtap="scanDvyNumberByQRCode" wx:if="{{selectedDelivery.dvyId&&selectedDelivery.dvyId != 13}}" style="background: #ef9610;padding: 16rpx;border-radius: 1%;color: white;">扫码</view>
+
+                    <view bindtap="generateExpressNumber" wx:if="{{selectedDelivery.dvyId&&selectedDelivery.dvyId == 13}}" style="background: #ef9610;padding: 16rpx;border-radius: 1%;color: white;">生成</view>
+                </view>
+            </view>
+
+            <view class="flex" style="margin-top: 5vw;" wx:if="{{selectedDelivery.dvyId&&selectedDelivery.dvyId == 13}}">
+                <label class="labelName">配送人员</label>
+                <view style="position: relative;">
+                    <view bindtap="showSelectDeliveryUserFunc" style="border:solid 1px #eee; line-height: 40px; padding-left:3vw; font-size: 14px; width:60vw; height: 40px;border-radius: 2vw; margin-left: 3vw;">
+                        {{selectedDeliveryUser.id?selectedDeliveryUser.userName:'请选择配送人员'}}
+                    </view>
+                    <view wx:if="{{showSelectDeliveryUser}}" style="height: 30vw; width:63vw; overflow: auto; position: absolute; left:3vw; top:41px; border:solid 1px #eee; border-radius: 2vw; z-index: 999;    background: white;">
+                        <view bindtap="selectDeliveryUserFunc" data-value="{{item}}" wx:for="{{deliveryUserList}}" wx:key="item" style="height: 30px; line-height: 30px; padding-left: 3vw; font-size: 14px;">
+                            {{item.userName}}
+                        </view>
+                    </view>
+                </view>
+            </view>
+
+            <view class="aroundFlex" style="position: absolute; left:0; bottom:5vw; width:100vw; height: 20vw;">
+                <view bindtap="taggleShowOrderDialog" class="btnCancel centerFlex" style="background:#999; width:35vw; text-align: center;color:#fff; height: 10vw; border-radius: 5vw;">
+                    取消
+                </view>
+                <view wx:if="{{(selectedDelivery.dvyId && selectedDelivery.dvyId!=13 && dvyNumber != '')||(selectedDelivery.dvyId && selectedDelivery.dvyId==13 && dvyNumber != '' && selectedDeliveryUser.id)}}" bindtap="orderDeliverySubmit" class="btnSure centerFlex" style="background:#f38d08; width:35vw; text-align: center;color:#fff; height: 10vw; border-radius: 5vw;">
+                    提交
+                </view>
+            </view>
+        </view>
+    </view>
 </view>
+
+
+
 <wxs module="wxs" src="../../../../wxs/number.wxs" />
 <wxs module="dict" src="../../../../wxs/dict.wxs" />

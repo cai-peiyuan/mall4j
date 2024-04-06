@@ -269,7 +269,7 @@ page {
 .order-msg .msg-item .item {
   position: relative;
   display: flex;
-  padding: 16rpx 0;
+  padding: 24rpx 0;
   align-items: center;
 }
 

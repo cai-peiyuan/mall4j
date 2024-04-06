@@ -57,15 +57,14 @@
                         {{transport.hasFreeCondition===1?'满额免配送费':''}}
                     </view>
                     <!-- 运费说明 -->
-                    <view class="transport-p" wx:for="{{transport.transfees}}" wx:key="transfee.transfeeId" wx:for-index="idx" wx:for-item="transfee">
-                        <text wx:for="{{transfee.cityList}}" wx:key="city.areaId" wx:for-index="idx1" wx:for-item="city">{{city.areaName+ '  '}}</text>
+                    <view class="transport-p" wx:for="{{transport.transfees}}" wx:key="transfeeId" wx:for-index="idx" wx:for-item="transfee">
+                        <text wx:for="{{transfee.cityList}}" wx:key="areaId" wx:for-index="idx1" wx:for-item="city">{{city.areaName+' '}}</text>
                         <text>{{transfee.firstPiece+' 件起售 首件配送费 ' + transfee.firstFee + ' 元 每增加 '+ transfee.continuousPiece + ' 件增加配送费 '+ transfee.continuousFee + ' 元'}}</text>
                     </view>
 
                     <!-- 包邮条件显示 -->
-                    <view class="transport-p" wx:if="{{transport.hasFreeCondition === 1}}" wx:for="{{transport.transfeeFrees}}" wx:key="transfeeFree.transportId" wx:for-index="idx" wx:for-item="transfeeFree">
-                        <text wx:for="{{transfeeFree.freeCityList}}" wx:key="freeCity.areaId" wx:for-index="idx1" wx:for-item="freeCity">{{freeCity.areaName+ '  '}}</text>
-
+                    <view class="transport-p" wx:if="{{transport.hasFreeCondition === 1}}" wx:for="{{transport.transfeeFrees}}" wx:key="transportId" wx:for-index="idx" wx:for-item="transfeeFree">
+                        <text wx:for="{{transfeeFree.freeCityList}}" wx:key="areaId" wx:for-index="idx1" wx:for-item="freeCity">{{freeCity.areaName+ '  '}}</text>
                         <text wx:if="{{transfeeFree.freeType === 1}}">{{'满 '+transfeeFree.amount + ' 元 免配送费'}}</text>
                         <text wx:if="{{transfeeFree.freeType === 0}}">{{'满 '+transfeeFree.piece + ' 件 免配送费'}}</text>
                     </view>
@@ -87,7 +86,7 @@
         <view class="coupon" bindtap='showPopup' wx:if="{{couponList.length}}">
             <view class="coupon-tit">领券</view>
             <view class="coupon-con">
-                <text class="item" wx:for="{{couponList}}" wx:key="item.couponId">满{{item.cashCondition}}<block wx:if="{{item.couponType == 1}}">减{{item.reduceAmount}}</block>
+                <text class="item" wx:for="{{couponList}}" wx:key="couponId">满{{item.cashCondition}}<block wx:if="{{item.couponType == 1}}">减{{item.reduceAmount}}</block>
                     <block wx:if="{{item.couponType == 2}}">打{{item.couponDiscount}}折</block>
                 </text>
             </view>

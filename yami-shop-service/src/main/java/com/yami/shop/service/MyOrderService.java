@@ -37,11 +37,13 @@ public interface MyOrderService extends IService<Order> {
 
 	/**
 	 * 根据用户名和订单号码查询订单信息 v2
+	 *
 	 * @param userId
 	 * @param orderNumber
+	 * @param isStaff
 	 * @return
 	 * @author peiyuan.cai
 	 * @date 2024/1/24 17:16 星期三
 	 */
-	JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber);
+	JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber, Integer isStaff);
 }

@@ -167,6 +167,10 @@ swiper image {
     line-height: 30rpx;
 }
 
+
+.commentsInfo {
+    
+}
 /** end 商品信息 */
 
 /**优惠券*/

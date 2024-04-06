@@ -84,6 +84,10 @@
       <div class="content">
         <div class="tit">
           <el-row style="width:100%">
+<!--            <el-col :span="2">
+              <el-checkbox v-model="checkedAll"></el-checkbox>
+              <span class="item product">选择</span>
+            </el-col>-->
             <el-col :span="6">
               <span class="item product">商品</span>
             </el-col>
@@ -124,6 +128,12 @@
           </div>
           <div class="prod-cont">
             <el-row style="width:100%">
+
+<!--              <el-col :span="1">
+                <div class="item">
+                  <el-checkbox v-model="checkedMap[order.orderNumber]"> =</el-checkbox>
+                </div>
+              </el-col>-->
               <el-col :span="9">
                 <div class="prod-item">
                   <div
@@ -138,17 +148,22 @@
                         style="height:60px;width: 60px;"
                       >
                     </div>
+
                     <div class="prod-name">
                       <span>{{ orderItem.prodName }}</span>
                       <span class="prod-info">{{ orderItem.skuName }}</span>
                     </div>
+
                     <div class="prod-price">
                       <span>￥{{ orderItem.price }}</span>
                       <span>×{{ orderItem.prodCount }}</span>
                     </div>
+
                   </div>
                 </div>
               </el-col>
+
+              <!-- 支付金额 -->
               <el-col
                 :span="2"
                 style="height: 100%;"
@@ -159,8 +174,24 @@
                     <span v-if="order.freightAmount">（含运费：￥{{ order.freightAmount }}）</span>
                     <span>共{{ order.productNums }}件</span>
                   </div>
+
+                  <div>
+                    <span v-if="order.payType === 0">余额支付</span>
+                    <span v-else-if="order.payType === 1">微信支付</span>
+                    <span v-else-if="order.payType === 2">支付宝</span>
+                    <span v-else-if="order.payType === 3">储值余额</span>
+                    <span v-else-if="order.payType == null">未支付</span>
+                    <span v-else>其他支付方式 {{order.payType}}</span>
+
+
+                    <span v-if="order.isPayed === 1">已支付</span>
+                    <span v-if="order.refundSts === 1">退款正在处理</span>
+                    <span v-if="order.refundSts === 2">退款已到账</span>
+                  </div>
+
                 </div>
               </el-col>
+
               <!-- 支付方式 -->
               <el-col
                 :span="2"
@@ -179,9 +210,6 @@
                     <span v-if="order.isPayed === 1">已支付</span>
                     <span v-if="order.refundSts === 1">退款正在处理</span>
                     <span v-if="order.refundSts === 2">退款已到账</span>
-                  </div>
-                  <div>
-
                   </div>
                 </div>
               </el-col>
@@ -421,7 +449,9 @@ import {ElMessage} from 'element-plus'
 
 const resourcesUrl = import.meta.env.VITE_APP_RESOURCES_URL
 const dataForm = ref({})
+const checkedMap = ref({})
 const dateRange = ref([])
+const checkedAll = ref(false)
 const devyVisible = ref(false)
 const refundVisible = ref(false)
 const arriveVisible = ref(false)
@@ -723,6 +753,10 @@ const getSoldExcel = () => {
       border-right: 1px solid #dddee1;
       text-align: center;
       height: 100%;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      flex-direction: column;
 
       span {
         display: block;

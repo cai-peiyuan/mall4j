@@ -12,6 +12,7 @@ Page({
         actualTotal: 0,
         userAddrDto: null,
         orderNumber: "",
+        dvyNumber: "",
         createTime: "",
         status: 0,
         productTotalAmount: '',
@@ -19,9 +20,47 @@ Page({
         reduceAmount: '',
         shopId: '',
         prodid: '',
-        order: {}
+        order: {},
+        showOrderDeliverDialog: false,
+        selectedDelivery: {},
+        showSelectDelivery: false,
+        showSelectDeliveryUser: false,
+        deliveryList: [],
+        deliveryUserList: [],
     },
 
+
+    showSelectDeliveryFunc(e) {
+        this.setData({
+            showSelectDelivery: !this.data.showSelectDelivery
+        })
+    },
+
+
+    selectDeliveryFunc(e) {
+        console.log('delivery', e.target.dataset.value);
+        this.setData({
+            selectedDelivery: e.target.dataset.value
+        });
+        this.showSelectDeliveryFunc();
+    },
+
+
+
+    showSelectDeliveryUserFunc(e) {
+        this.setData({
+            showSelectDeliveryUser: !this.data.showSelectDeliveryUser
+        })
+    },
+
+
+    selectDeliveryUserFunc(e) {
+        console.log('delivery', e.target.dataset.value);
+        this.setData({
+            selectedDeliveryUser: e.target.dataset.value
+        });
+        this.showSelectDeliveryUserFunc();
+    },
     //跳转商品详情页
     toProdPage: function (e) {
         var prodid = e.currentTarget.dataset.prodid;
@@ -89,22 +128,66 @@ Page({
 
             },
             callBack: function (data) {
-                let res = data.orderShop;
+                let orderShop = data.orderShop;
                 let order = data.order;
+                let deliveryList = data.deliveryList || [{
+                        "dvyId": 13,
+                        "dvyName": "商家配送",
+                        "companyHomeUrl": "http://www.bhgk.cc",
+                        "recTime": "2024-01-24 18:09:22",
+                        "modifyTime": "2024-01-24 18:09:24",
+                        "queryUrl": "https://xdyx.bhgk.cc/delivery/info/{dvyFlowId}"
+                    },
+                    {
+                        "dvyId": 14,
+                        "dvyName": "顺丰快递公司",
+                        "companyHomeUrl": "http://www.sf-express.com",
+                        "recTime": "2015-08-20 11:58:03",
+                        "modifyTime": "2017-03-22 17:12:27",
+                        "queryUrl": "http://www.kuaidi100.com/query?type=shunfeng&postid={dvyFlowId}&id=11"
+                    }
+                ];
+                let deliveryUserList = data.deliveryUserList || [{
+                        "id": 1,
+                        "shopId": 1,
+                        "userName": "冯公子",
+                        "userPhone": "13833501400",
+                        "seq": 1,
+                        "status": 1
+                    },
+                    {
+                        "id": 2,
+                        "shopId": 1,
+                        "userName": "石璐璐",
+                        "userPhone": "18712746603",
+                        "seq": 0,
+                        "status": 1
+                    },
+                    {
+                        "id": 3,
+                        "shopId": 1,
+                        "userName": "崔美静",
+                        "userPhone": "13102523363",
+                        "seq": 2,
+                        "status": 1
+                    }
+                ];
                 ths.setData({
                     orderNumber: orderNum,
-                    actualTotal: res.actualTotal,
-                    userAddrDto: res.userAddrDto,
-                    remarks: res.remarks,
-                    orderItemDtos: res.orderItemDtos,
-                    createTime: res.createTime,
-                    status: res.status,
-                    productTotalAmount: res.orderItemDtos[0].productTotalAmount,
-                    transfee: res.transfee,
-                    reduceAmount: res.reduceAmount,
-                    actualTotal: res.actualTotal,
-                    shopId: res.shopId,
-                    order: order
+                    actualTotal: orderShop.actualTotal,
+                    userAddrDto: orderShop.userAddrDto,
+                    remarks: orderShop.remarks,
+                    orderItemDtos: orderShop.orderItemDtos,
+                    createTime: orderShop.createTime,
+                    status: orderShop.status,
+                    productTotalAmount: orderShop.orderItemDtos[0].productTotalAmount,
+                    transfee: orderShop.transfee,
+                    reduceAmount: orderShop.reduceAmount,
+                    actualTotal: orderShop.actualTotal,
+                    shopId: orderShop.shopId,
+                    order: order,
+                    deliveryUserList: deliveryUserList,
+                    deliveryList: deliveryList
                 });
                 wx.hideLoading();
             }
@@ -113,6 +196,49 @@ Page({
 
     },
 
+    /**
+     * 生成运单号码
+     */
+    generateExpressNumber() {
+        var ths = this;
+        wx.showLoading();
+        //加载订单详情
+        var params = {
+            url: "/p/myOrder/generateExpressNumber",
+            method: "GET",
+            data: {
+
+            },
+            callBack: function (data) {
+                ths.setData({
+                    dvyNumber: data
+                })
+                wx.hideLoading();
+            }
+        };
+        http.request(params);
+    },
+    /**
+     * 
+     * @param {扫描二维码读取物流单号} e 
+     */
+    scanDvyNumberByQRCode(e) {
+        // 允许从相机和相册扫码
+        /**
+         * {result: "1751226703902019584", rawData: "MTc1MTIyNjcwMzkwMjAxOTU4NA==", codeVersion: 1, errMsg: "scanCode:ok", scanType: "QR_CODE", …}
+         */
+        let _this = this;
+        wx.scanCode({
+            success(res) {
+                if (res.errMsg == 'scanCode:ok' && res.scanType == "QR_CODE") {
+                    const dvyNumber = res.result;
+                    _this.setData({
+                        dvyNumber: dvyNumber
+                    });
+                }
+            }
+        })
+    },
 
     /**
      * 生命周期函数--监听页面初次渲染完成
@@ -202,6 +328,59 @@ Page({
      */
     orderDelivery: function (e) {
         console.log(e)
+        this.setData({
+            showOrderDeliverDialog: true,
+        })
+    },
+
+    onDvyNumberInput: function (e) {
+        this.setData({
+          dvyNumber: e.detail.value
+        });
+      },
+    /**
+     * 发送订单发货数据
+     * @param {*} e 
+     */
+    orderDeliverySubmit: function (e) {
+        console.log(e)
+        var ths = this;
+        wx.showLoading();
+        //加载订单详情
+        var params = {
+            url: "/p/myOrder/delivery",
+            method: "PUT",
+            data: {
+                orderNumber: ths.data.orderNumber,
+                dvyId: ths.data.selectedDelivery.dvyId,
+                dvyFlowId: ths.data.dvyNumber,
+                deliveryUserId: ths.data.selectedDeliveryUser.id
+            },
+            callBack: function (data) {
+                wx.showToast({
+                    title: '订单发货成功',
+                });
+
+                ths.setData({
+                    showSelectDeliveryUser: false,
+                })
+
+                ths.loadOrderDetail(ths.data.orderNumber);
+                wx.hideLoading();
+            }
+        };
+        http.request(params);
+    },
+
+    /**
+     * 关闭发货对话框
+     * @param {*} e 
+     */
+    closeOrderDeliverDialog: function (e) {
+        console.log(e)
+        this.setData({
+            showOrderDeliverDialog: false,
+        })
     },
 
     /**

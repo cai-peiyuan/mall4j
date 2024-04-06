@@ -65,7 +65,7 @@
     <add-or-update
       v-if="addOrUpdateVisible"
       ref="addOrUpdateRef"
-      @refresh-data-list="getDataList"
+      @refresh-data-list="onSearch"
     />
   </div>
 </template>

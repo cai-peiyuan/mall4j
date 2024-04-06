@@ -8,6 +8,7 @@ import com.yami.shop.bean.app.dto.OrderShopDto;
 import com.yami.shop.bean.enums.OrderStatus;
 import com.yami.shop.bean.model.Order;
 import com.yami.shop.bean.model.OrderItem;
+import com.yami.shop.bean.param.DeliveryOrderParam;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
@@ -19,6 +20,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -44,6 +47,8 @@ public class MyOrderController {
     private final SkuService skuService;
 
     private final MyOrderService myOrderService;
+
+    private final DeliveryOrderService deliveryOrderService;
 
     private final ShopDetailService shopDetailService;
 
@@ -72,8 +77,23 @@ public class MyOrderController {
         if (user.getIsStaff() == 0) {
             throw new YamiShopBindException("你没有权限操作该订单");
         }
-        JSONObject orderInfo = myOrderService.getMyOrderDetailByOrderNumberV2(user.getUserId(), orderNumber);
+        JSONObject orderInfo = myOrderService.getMyOrderDetailByOrderNumberV2(user.getUserId(), orderNumber, user.getIsStaff());
         return ServerResponseEntity.success(orderInfo);
+    }
+
+
+    /**
+     * 订单详情信息接口
+     */
+    @GetMapping("/generateExpressNumber")
+    @Operation(summary = "生成订单号码", description = "生成订单号码")
+    public ServerResponseEntity<Object> generateExpressNumber() {
+        YamiUser user = SecurityUtils.getUser();
+        if (user.getIsStaff() == 0) {
+            throw new YamiShopBindException("你没有权限操作该接口");
+        }
+        String expressNumber = deliveryOrderService.generateExpressNumber();
+        return ServerResponseEntity.success(expressNumber);
     }
 
 
@@ -214,6 +234,33 @@ public class MyOrderController {
         String userId = SecurityUtils.getUser().getUserId();
         OrderCountData orderCountMap = orderService.getOrderCount(userId);
         return ServerResponseEntity.success(orderCountMap);
+    }
+
+
+    /**
+     * 订单发货
+     */
+    @PutMapping("/delivery")
+    public ServerResponseEntity<Void> delivery(@RequestBody DeliveryOrderParam deliveryOrderParam) {
+        YamiUser user = SecurityUtils.getUser();
+        if (user.getIsStaff() == 0) {
+            throw new YamiShopBindException("你没有权限操作该接口");
+        }
+
+        Order order = orderService.getOrderByOrderNumber(deliveryOrderParam.getOrderNumber());
+        /**
+         * 封装订单发货方法
+         */
+        orderService.orderDelivery(order, deliveryOrderParam.getDvyId(), deliveryOrderParam.getDvyFlowId(), deliveryOrderParam.getDeliveryUserId());
+        /**
+         * 删除订单所包含的商品缓存信息
+         */
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(deliveryOrderParam.getOrderNumber());
+        for (OrderItem orderItem : orderItems) {
+            productService.removeProductCacheByProdId(orderItem.getProdId());
+            skuService.removeSkuCacheBySkuId(orderItem.getSkuId(), orderItem.getProdId());
+        }
+        return ServerResponseEntity.success();
     }
 
 

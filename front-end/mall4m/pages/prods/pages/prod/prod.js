@@ -73,7 +73,7 @@ Page({
         console.log('商品详情页传递参数', options);
         this.setData({
             prodId: options.prodid,
-            fromUserId: options.fromUserId
+            fromUserId: options.fromUserId || null
         });
         this.observerBasicInfo = wx.createIntersectionObserver(this);
         this.observerDetailInfo = wx.createIntersectionObserver(this);
