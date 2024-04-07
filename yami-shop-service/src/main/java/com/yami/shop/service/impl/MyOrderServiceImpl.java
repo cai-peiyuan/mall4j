@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jfinal.kit.StrKit;
 import com.yami.shop.bean.app.dto.MyOrderDto;
 import com.yami.shop.bean.app.dto.OrderItemDto;
 import com.yami.shop.bean.app.dto.OrderShopDto;
@@ -132,10 +133,10 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
     public JSONObject getMyOrderDetailByOrderNumberV2(String userId, String orderNumber, Integer isStaff) {
         JSONObject object = new JSONObject();
         Order order = orderService.getOrderByOrderNumber(orderNumber);
-        DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, order.getDvyFlowId()));
-        object.put("orderShop", getOrderShopDtoByOrder(order));
-        object.put("order", order);
-        object.put("deliveryOrder", deliveryOrder);
+        if (order == null || ((isStaff == null || isStaff == 0) && !StrKit.equals(order.getUserId(), userId))) {
+            throw new YamiShopBindException("你没有权限操作该订单");
+        }
+
         if (isStaff != null && isStaff == 1) {
             //附带 物流公司 和配送员信息
             List<Delivery> deliveryList = deliveryService.list();
@@ -143,6 +144,15 @@ public class MyOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implemen
             List<DeliveryUser> deliveryUserList = deliveryUserService.list();
             object.put("deliveryUserList", deliveryUserList);
         }
+        //物流信息
+        DeliveryOrder deliveryOrder = deliveryOrderService.getOne(new LambdaQueryWrapper<DeliveryOrder>().eq(DeliveryOrder::getExpressNumber, order.getDvyFlowId()));
+        object.put("deliveryOrder", deliveryOrder);
+        //订单信息
+        object.put("orderShop", getOrderShopDtoByOrder(order));
+        //订单信息
+        object.put("order", order);
+
+        //用户余额
         object.put("userBalance", userBalanceService.getUserBalanceByUserId(userId));
         return object;
     }
