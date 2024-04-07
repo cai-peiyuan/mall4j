@@ -75,7 +75,7 @@ public class MyOrderController {
     public ServerResponseEntity<Object> orderDetailV2(@PathVariable(value = "orderNumber") String orderNumber) {
         YamiUser user = SecurityUtils.getUser();
         if (user.getIsStaff() == 0) {
-            throw new YamiShopBindException("你没有权限操作该订单");
+            // throw new YamiShopBindException("你没有权限操作该订单");
         }
         JSONObject orderInfo = myOrderService.getMyOrderDetailByOrderNumberV2(user.getUserId(), orderNumber, user.getIsStaff());
         return ServerResponseEntity.success(orderInfo);
