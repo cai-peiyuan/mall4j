@@ -165,6 +165,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return result;
     }
 
+    /**
+     * 根据订单编号获取订单信息
+     *
+     * @param orderNumber
+     * @return
+     * @author peiyuan.cai
+     * @date 2024/4/8 17:01 星期一
+     */
     @Override
     public Order getOrderByOrderNumber(String orderNumber) {
         return orderMapper.getOrderByOrderNumber(orderNumber);
@@ -539,13 +547,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public void refundOrder(Order order, OrderRefundParam refundForm) {
         Date now = new Date();
         if (Objects.equals(order.getStatus(), OrderStatus.CLOSE.value()) || order.getStatus() < OrderStatus.PADYED.value()) {
-            throw new YamiShopBindException("订单" + order.getOrderNumber() + " 状态不正确，没有付款，无法申请退款");
+            throw new YamiShopBindException("订单" + order.getOrderNumber() + " 退款失败：没有付款或订单已关闭");
         }
         if (order.getIsPayed() != 1) {
-            throw new YamiShopBindException("订单  " + order.getOrderNumber() + " 没有付款，无法申请退款");
+            throw new YamiShopBindException("订单  " + order.getOrderNumber() + " 退款失败：没有付款");
+        }
+        if (order.getRefundSts() != 0) {
+            throw new YamiShopBindException("订单  " + order.getOrderNumber() + " 退款失败：已经退款或正在退款");
         }
         /**
-         * 订单已支付并且是微信支付 或者余额支付
+         * 订单已支付 微信支付 或者余额支付
+         * 执行退款 或者 恢复余额
          */
         if (order.getPayType() == PayType.WECHATPAY.value() || order.getPayType() == PayType.BALANCE.value()) {
             OrderSettlement settlement = orderSettlementService.getOne(new LambdaQueryWrapper<OrderSettlement>().eq(OrderSettlement::getOrderNumber, order.getOrderNumber()));
@@ -569,6 +581,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 更新订单退款状态
+     *
      * @param orderId
      * @param status
      * @param closeType
@@ -597,6 +610,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     /**
      * 保存退款申请订单
+     *
      * @param order
      * @param settlement
      * @param refundForm

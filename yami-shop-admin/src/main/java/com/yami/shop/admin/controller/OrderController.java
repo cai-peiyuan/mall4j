@@ -37,7 +37,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
  * 后台管理订单接口
  */
 @Slf4j
@@ -135,6 +134,7 @@ public class OrderController {
         orderService.orderArrive(order, deliveryArriveParam);
         return ServerResponseEntity.success();
     }
+
     /**
      * 订单发货
      */
@@ -164,20 +164,23 @@ public class OrderController {
     }
 
     /**
-     * 订单退款
+     * 针对某个订单进行订单退款
      */
     @PutMapping("/refund")
     @PreAuthorize("@pms.hasPermission('order:order:refund')")
     public ServerResponseEntity<Void> refund(@RequestBody OrderRefundParam refundForm) {
         Long shopId = SecurityUtils.getSysUser().getShopId();
         Order order = orderService.getOrderByOrderNumber(refundForm.getOrderNumber());
-        if (!Objects.equal(shopId, order.getShopId())) {
+        //验证订单权限
+        if (order == null || !Objects.equal(shopId, order.getShopId())) {
             throw new YamiShopBindException("您没有权限修改该订单信息");
         }
+        //查询订单包含得商品信息
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrderNumber(refundForm.getOrderNumber());
         order.setOrderItems(orderItems);
+        //执行订单退款逻辑和流程
         orderService.refundOrder(order, refundForm);
-        // 清除缓存
+        // 清除缓存 保证下次查询的数据是数据库中的最新数据
         for (OrderItem orderItem : orderItems) {
             productService.removeProductCacheByProdId(orderItem.getProdId());
             skuService.removeSkuCacheBySkuId(orderItem.getSkuId(), orderItem.getProdId());
