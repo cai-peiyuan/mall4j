@@ -10,6 +10,7 @@ import com.yami.shop.service.UserBalanceOrderService;
 import com.yami.shop.service.UserService;
 import com.yami.shop.service.WxShipInfoService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,20 +19,19 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 后台管理接口
  * 充值订单查询
+ *
  * @author lgh
  */
 @RestController
 @RequestMapping("/admin/balance/order")
+@AllArgsConstructor
 public class UserBalanceOrderController {
 
-    @Autowired
-    private UserBalanceOrderService userBalanceOrderService;
+    private final UserBalanceOrderService userBalanceOrderService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private WxShipInfoService wxShipInfoService;
+    private final WxShipInfoService wxShipInfoService;
 
     /**
      * 分页获取

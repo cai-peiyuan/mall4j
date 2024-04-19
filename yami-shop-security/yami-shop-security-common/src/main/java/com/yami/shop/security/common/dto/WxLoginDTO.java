@@ -21,14 +21,14 @@ public class WxLoginDTO {
      * grantType
      */
     @NotBlank(message = "grantType不能为空")
-    @Schema(description = "grantType", required = true)
+    @Schema(description = "grantType", requiredMode = Schema.RequiredMode.REQUIRED)
     protected String grantType;
 
     /**
      * wxLoginCode
      */
     @NotBlank(message = "wxLoginCode不能为空")
-    @Schema(description = "wxLoginCode", required = true)
+    @Schema(description = "wxLoginCode", requiredMode = Schema.RequiredMode.REQUIRED)
     protected String wxLoginCode;
 
 }

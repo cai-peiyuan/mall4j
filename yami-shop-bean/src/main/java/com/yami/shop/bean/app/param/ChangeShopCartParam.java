@@ -13,19 +13,19 @@ import lombok.Data;
 @Data
 public class ChangeShopCartParam {
 
-    @Schema(description = "购物车ID" , required = true)
+    @Schema(description = "购物车ID" , requiredMode = Schema.RequiredMode.REQUIRED)
     private Long basketId;
 
     @NotNull(message = "商品ID不能为空")
-    @Schema(description = "商品ID" , required = true)
+    @Schema(description = "商品ID" , requiredMode = Schema.RequiredMode.REQUIRED)
     private Long prodId;
 
     @NotNull(message = "skuId不能为空")
-    @Schema(description = "skuId" , required = true)
+    @Schema(description = "skuId" , requiredMode = Schema.RequiredMode.REQUIRED)
     private Long skuId;
 
     @NotNull(message = "店铺ID不能为空")
-    @Schema(description = "店铺ID" , required = true)
+    @Schema(description = "店铺ID" , requiredMode = Schema.RequiredMode.REQUIRED)
     private Long shopId;
 
     @NotNull(message = "商品个数不能为空")

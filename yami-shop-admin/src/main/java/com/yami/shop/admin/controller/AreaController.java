@@ -4,17 +4,18 @@ package com.yami.shop.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.jfinal.kit.StrKit;
 import com.yami.shop.bean.enums.AreaLevelEnum;
 import com.yami.shop.bean.model.Area;
 import com.yami.shop.common.exception.YamiShopBindException;
+import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.service.AreaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.yami.shop.common.response.ServerResponseEntity;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,18 +24,23 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/admin/area")
+@AllArgsConstructor
 public class AreaController {
 
-    @Autowired
-    private AreaService areaService;
+    private final AreaService areaService;
 
     /**
      * 分页获取
      */
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('admin:area:page')")
-    public ServerResponseEntity<IPage<Area>> page(Area area,PageParam<Area> page) {
-        IPage<Area> sysUserPage = areaService.page(page, new LambdaQueryWrapper<Area>());
+    public ServerResponseEntity<IPage<Area>> page(Area area, PageParam<Area> page) {
+        LambdaQueryWrapper<Area> areaLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        areaLambdaQueryWrapper
+                .like(StrKit.notBlank(area.getAreaName()), Area::getAreaName, area.getAreaName())
+                .eq(area.getStatus() != null, Area::getStatus, area.getStatus())
+        ;
+        IPage<Area> sysUserPage = areaService.page(page, areaLambdaQueryWrapper);
         return ServerResponseEntity.success(sysUserPage);
     }
 
@@ -93,10 +99,10 @@ public class AreaController {
     public ServerResponseEntity<Void> update(@Valid @RequestBody Area area) {
         Area areaDb = areaService.getById(area.getAreaId());
         // 判断当前省市区级别，如果是1级、2级则不能修改级别，不能修改成别人的下级
-        if(Objects.equals(areaDb.getLevel(), AreaLevelEnum.FIRST_LEVEL.value()) && !Objects.equals(area.getLevel(),AreaLevelEnum.FIRST_LEVEL.value())){
+        if (Objects.equals(areaDb.getLevel(), AreaLevelEnum.FIRST_LEVEL.value()) && !Objects.equals(area.getLevel(), AreaLevelEnum.FIRST_LEVEL.value())) {
             throw new YamiShopBindException("不能改变一级行政地区的级别");
         }
-        if(Objects.equals(areaDb.getLevel(),AreaLevelEnum.SECOND_LEVEL.value()) && !Objects.equals(area.getLevel(),AreaLevelEnum.SECOND_LEVEL.value())){
+        if (Objects.equals(areaDb.getLevel(), AreaLevelEnum.SECOND_LEVEL.value()) && !Objects.equals(area.getLevel(), AreaLevelEnum.SECOND_LEVEL.value())) {
             throw new YamiShopBindException("不能改变二级行政地区的级别");
         }
         hasSameName(area);

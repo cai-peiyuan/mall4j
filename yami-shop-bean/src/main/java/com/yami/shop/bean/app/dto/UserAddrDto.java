@@ -12,19 +12,19 @@ import java.io.Serializable;
  */
 @Data
 public class UserAddrDto implements Serializable {
-    @Schema(description = "地址id", required = true)
+    @Schema(description = "地址id", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long addrId;
 
-    @Schema(description = "收货人", required = true)
+    @Schema(description = "收货人", requiredMode = Schema.RequiredMode.REQUIRED)
     private String receiver;
 
-    @Schema(description = "省", required = true)
+    @Schema(description = "省", requiredMode = Schema.RequiredMode.REQUIRED)
     private String province;
 
-    @Schema(description = "城市", required = true)
+    @Schema(description = "城市", requiredMode = Schema.RequiredMode.REQUIRED)
     private String city;
 
-    @Schema(description = "区", required = true)
+    @Schema(description = "区", requiredMode = Schema.RequiredMode.REQUIRED)
     private String area;
 
     @Schema(description = "地址", required = true)
