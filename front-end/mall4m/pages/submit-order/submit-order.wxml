@@ -85,8 +85,8 @@
           <text class='arrow'></text>
         </view>
         <view class='item'>
-          <text>买家留言：</text>
-          <input value='{{remarks}}' placeholder='给卖家留言' bindinput="onRemarksInput"></input>
+          <text>订单备注：</text>
+          <input value='{{remarks}}' placeholder='给卖家留言，下单后卖家可见' bindinput="onRemarksInput"></input>
         </view>
       </view>
     </view>

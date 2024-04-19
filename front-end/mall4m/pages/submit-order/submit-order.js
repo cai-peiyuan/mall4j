@@ -28,7 +28,7 @@ Page({
     totalCount: 0,
     transfee: 0,
     reduceAmount: 0,
-    remark: "",
+    remarks: "",
     couponIds: [],
     payType: 1,
     userBalance: {
@@ -188,7 +188,7 @@ Page({
       method: "POST",
       data: {
         orderShopParam: [{
-          remarks: _this.data.remark,
+          remarks: _this.data.remarks,
           shopId: 1
         }]
       },
