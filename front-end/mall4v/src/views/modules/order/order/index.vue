@@ -275,9 +275,9 @@
                 <div class="item">
                   <div>
                     <span>
-                      <div v-if="order.userInfo.pic != null">
+                      <div v-if="order.userInfo.pic != null && order.userInfo.pic != ''">
                         <img
-                          alt=""
+                          alt="会员头像"
                           :src="order.userInfo.pic"
                           style="height:60px;width: 60px;"
                         >
