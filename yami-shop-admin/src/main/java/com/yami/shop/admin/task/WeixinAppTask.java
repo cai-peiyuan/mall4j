@@ -3,14 +3,10 @@
 package com.yami.shop.admin.task;
 
 import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.jfinal.kit.HttpKit;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import com.yami.shop.sys.model.SysConfig;
-import com.yami.shop.sys.model.SysPrinter;
 import com.yami.shop.sys.service.SysConfigService;
-import com.yami.shop.sys.service.SysPrinterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static com.yami.shop.common.constants.Constant.KEY_SYS_CONFIG;
 

@@ -1,9 +1,11 @@
 <template>
+  <panel-group/>
   <el-row :gutter="20">
     <el-col :span="6">
       <img
         src="~@/assets/img/qrcode.jpeg"
         alt=""
+        style="width: 200px"
       >
     </el-col>
   </el-row>
@@ -28,6 +30,8 @@
 }
 </style>
 <script setup>
+
+import PanelGroup from "./components/panel-group.vue";
 
 const verifyRef = ref(null)
 const dataFormRef = ref(null)

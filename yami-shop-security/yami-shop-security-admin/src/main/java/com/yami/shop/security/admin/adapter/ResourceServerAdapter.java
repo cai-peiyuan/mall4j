@@ -20,6 +20,7 @@ public class ResourceServerAdapter extends DefaultAuthConfigAdapter {
             "/swagger-ui.html",
             "/swagger-resources/**",
             "/captcha/**",
+            "/jmreport/**",
             "/adminLogin",
             "/mall4j/img/**");
 

@@ -2,7 +2,7 @@
 
 package com.yami.shop.admin.task;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import com.yami.shop.sys.model.SysConfig;
 import com.yami.shop.sys.model.SysPrinter;
