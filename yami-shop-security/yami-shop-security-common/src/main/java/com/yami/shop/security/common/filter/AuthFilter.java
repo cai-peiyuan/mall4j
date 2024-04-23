@@ -1,4 +1,3 @@
-
 package com.yami.shop.security.common.filter;
 
 import cn.dev33.satoken.stp.StpUtil;
@@ -22,6 +21,7 @@ import org.springframework.util.AntPathMatcher;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -49,8 +49,7 @@ public class AuthFilter implements Filter {
     private String tokenName;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
@@ -63,6 +62,7 @@ public class AuthFilter implements Filter {
         if (CollectionUtil.isNotEmpty(excludePathPatterns)) {
             for (String excludePathPattern : excludePathPatterns) {
                 if (pathMatcher.match(excludePathPattern, requestUri)) {
+                    resp.setHeader("X-Frame-Options", "SAMEORIGIN");
                     chain.doFilter(req, resp);
                     return;
                 }
@@ -87,8 +87,7 @@ public class AuthFilter implements Filter {
                     return;
                 }
                 userInfoInToken = tokenStore.getUserInfoByAccessToken(accessToken, true);
-            }
-            else if (!mayAuth) {
+            } else if (!mayAuth) {
                 // 返回前端401
                 httpHandler.printServerResponseToWeb(ServerResponseEntity.fail(ResponseEnum.UNAUTHORIZED));
                 return;
@@ -98,7 +97,7 @@ public class AuthFilter implements Filter {
 
             chain.doFilter(req, resp);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             // 手动捕获下非controller异常
             if (e instanceof YamiShopBindException) {
                 httpHandler.printServerResponseToWeb((YamiShopBindException) e);

@@ -7,6 +7,7 @@
     <result column="sell_value" jdbcType="DECIMAL" property="sellValue" />
     <result column="sell_cnt" jdbcType="INTEGER" property="sellCnt" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="shop_id" jdbcType="BIGINT" property="shopId" />
   </resultMap>
 
 </mapper>

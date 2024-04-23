@@ -2,7 +2,7 @@
 
 package com.yami.shop.api.controller;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import com.qq.wechat.pay.config.WechatPaySign;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.common.response.ServerResponseEntity;

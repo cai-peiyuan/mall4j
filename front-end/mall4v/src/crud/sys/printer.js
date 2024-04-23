@@ -7,7 +7,7 @@ export const tableOption = {
   indexLabel: '序号',
   stripe: true,
   menuAlign: 'center',
-  menuWidth: 350,
+  menuWidth: 180,
   align: 'center',
   refreshBtn: true,
   searchSize: 'small',

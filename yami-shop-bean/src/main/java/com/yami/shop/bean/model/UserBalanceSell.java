@@ -43,4 +43,9 @@ public class UserBalanceSell implements Serializable {
      */
     private String status;
 
+
+    /**
+     * 店铺Id
+     */
+    private Long shopId;
 }

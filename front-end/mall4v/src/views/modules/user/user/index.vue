@@ -53,14 +53,14 @@
           v-if="isAuth('admin:user:update')"
           type="primary"
           icon="el-icon-edit"
+          plain
+          size="small"
           @click.stop="onAddOrUpdate(scope.row.userId)"
         >
           编辑
         </el-button>
       </template>
-
     </avue-crud>
-
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update
       v-if="addOrUpdateVisible"

@@ -1,52 +1,60 @@
 <template>
-  <div class="mod-printer">
+  <div class="mod-hotSearcch">
     <avue-crud
       ref="crudRef"
       :page="page"
       :data="dataList"
+      :table-loading="dataListLoading"
       :option="tableOption"
       @search-change="onSearch"
-      @selection-change="selectionChange"
       @on-load="getDataList"
+      @refresh-change="refreshChange"
+      @selection-change="selectionChange"
     >
       <template #menu-left>
         <el-button
-          v-if="isAuth('sys:printer:save')"
+          v-if="isAuth('shop:deliveryUser:save')"
           type="primary"
           icon="el-icon-plus"
-          plain
-          size="small"
-          @click.stop="onAddOrUpdate()"
+          @click="onAddOrUpdate()"
         >
           新增
         </el-button>
-
         <el-button
           type="danger"
-          plain
-          size="small"
           :disabled="dataListSelections.length <= 0"
-          @click="onDelete()"
+          @click.stop="onDeconste"
         >
           批量删除
         </el-button>
       </template>
+
+      <template #status="scope">
+        <el-tag
+          v-if="scope.row.status === 0"
+          type="danger"
+        >
+          未启用
+        </el-tag>
+        <el-tag v-else>
+          启用
+        </el-tag>
+      </template>
+
       <template #menu="scope">
         <el-button
+          v-if="isAuth('shop:deliveryUser:update')"
           type="primary"
           icon="el-icon-edit"
-          plain
-          size="small"
-          @click.stop="onAddOrUpdate(scope.row.id)"
+          @click="onAddOrUpdate(scope.row.id)"
         >
-          编辑
+          修改
         </el-button>
         <el-button
+          v-if="isAuth('shop:deliveryUser:deconste')"
           type="danger"
-          icon="el-icon-delete"
-          plain
-          size="small"
-          @click.stop="onDelete(scope.row.id)"
+          icon="el-icon-deconste"
+          @click.stop="onDeconste(scope.row,scope.index)"
         >
           删除
         </el-button>
@@ -65,62 +73,51 @@
 <script setup>
 import { isAuth } from '@/utils'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { tableOption } from '@/crud/sys/printer.js'
+import { tableOption } from '@/crud/shop/balanceSell.js'
 import AddOrUpdate from './add-or-update.vue'
-
 const dataList = ref([])
-const dataListLoading = ref(false)
-const dataListSelections = ref([])
-const addOrUpdateVisible = ref(false)
 const page = reactive({
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
 })
+const dataListLoading = ref(false)
 /**
  * 获取数据列表
  */
 const getDataList = (pageParam, params, done) => {
+  dataListLoading.value = true
   http({
-    url: http.adornUrl('/sys/printer/page'),
+    url: http.adornUrl('/shop/deliveryUser/page'),
     method: 'get',
-    params: http.adornParams(
-      Object.assign(
-        {
-          current: pageParam == null ? page.currentPage : pageParam.currentPage,
-          size: pageParam == null ? page.pageSize : pageParam.pageSize
-        },
-        params
-      )
-    )
+    params: http.adornParams(Object.assign({
+      current: pageParam ? pageParam.currentPage : 1,
+      size: pageParam ? pageParam.pageSize : 20
+    }, params))
   })
     .then(({ data }) => {
-      dataList.value = data.records
       page.total = data.total
-      page.currentPage = data.current
       page.pageSize = data.size
+      page.currentPage = data.current
+      dataList.value = data.records
       dataListLoading.value = false
       if (done) done()
     })
 }
+const dataListSelections = ref([])
 /**
- * 条件查询
+ * 多选回调
+ * @param list
  */
-const onSearch = (params, done) => {
-  getDataList(page, params, done)
+const selectionChange = (list) => {
+  dataListSelections.value = list
 }
 
-/**
- * 多选变化
- */
-const selectionChange = (val) => {
-  dataListSelections.value = val
-}
-
+const addOrUpdateVisible = ref(false)
 const addOrUpdateRef = ref(null)
-
 /**
  * 新增 / 修改
+ * @param id
  */
 const onAddOrUpdate = (id) => {
   addOrUpdateVisible.value = true
@@ -128,21 +125,29 @@ const onAddOrUpdate = (id) => {
     addOrUpdateRef.value?.init(id)
   })
 }
+
+/**
+ * 点击查询
+ */
+const onSearch = (params, done) => {
+  getDataList(page, params, done)
+}
+
 /**
  * 删除
  */
-const onDelete = (id) => {
-  const ids = id ? [id] : dataListSelections.value?.map(item => {
+const onDeconste = (row) => {
+  const ids = row.id ? [row.id] : dataListSelections.value?.map(item => {
     return item.id
   })
-  ElMessageBox.confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+  ElMessageBox.confirm(`确定进行[${row.id ? '删除' : '批量删除'}]操作?`, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(() => {
       http({
-        url: http.adornUrl('/sys/printer'),
+        url: http.adornUrl('/shop/deliveryUser'),
         method: 'delete',
         data: http.adornData(ids, false)
       })
@@ -158,4 +163,8 @@ const onDelete = (id) => {
         })
     }).catch(() => { })
 }
+const refreshChange = () => {
+  getDataList(page)
+}
+
 </script>

@@ -3,8 +3,21 @@
     v-model="visible"
     title="选择用户"
     :modal="false"
+    width="800"
     :close-on-click-modal="false"
   >
+    <el-form :model="dataForm" :inline="true">
+      <el-form-item label="手机号">
+        <el-input v-model="dataForm.userMobile"></el-input>
+      </el-form-item>
+      <el-form-item label="会员名称">
+        <el-input v-model="dataForm.nickName"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" plain size="small" @click="getDataList">查询</el-button>
+        <el-button type="info" plain size="small" @click="reload">重置</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       ref="userTableRef"
       v-loading="dataListLoading"
@@ -74,7 +87,7 @@
     </el-table>
     <el-pagination
       :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
+      :page-sizes="[5, 10, 20, 50, 100]"
       :page-size="pageSize"
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper"
@@ -94,7 +107,8 @@
 </template>
 
 <script setup>
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
+
 const emit = defineEmits(['refreshSelectUsers'])
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -112,7 +126,7 @@ const singleSelectUserId = ref(0)
 const selectUsers = ref([])
 const dataList = ref([])
 const pageIndex = ref(1)
-const pageSize = ref(10)
+const pageSize = ref(5)
 const totalPage = ref(0)
 const dataListLoading = ref(false)
 const dataListSelections = ref([])
@@ -136,9 +150,16 @@ const init = (selectUserParam) => {
   }
   getDataList()
 }
-defineExpose({ init })
+defineExpose({init})
 
 const userTableRef = ref(null)
+
+const reload = () => {
+  dataForm.userMobile = '';
+  dataForm.nickName = '';
+  getDataList();
+}
+
 const getDataList = () => {
   http({
     url: http.adornUrl('/admin/user/page'),
@@ -156,7 +177,7 @@ const getDataList = () => {
       )
     )
   })
-    .then(({ data }) => {
+    .then(({data}) => {
       dataList.value = data.records
       totalPage.value = data.total
       dataListLoading.value = false
@@ -164,7 +185,7 @@ const getDataList = () => {
         nextTick(() => {
           selectUsers.value?.forEach(row => {
             const index = dataList.value?.findIndex((user) => user.userId === row.userId)
-            if(index != -1){
+            if (index != -1) {
               userTableRef.value?.toggleRowSelection(dataList.value[index])
             }
           })
@@ -225,7 +246,8 @@ const submitUsers = () => {
       message: '请选择数据',
       type: 'error',
       duration: 1000,
-      onClose: () => {}
+      onClose: () => {
+      }
     })
     return
   }
@@ -233,12 +255,11 @@ const submitUsers = () => {
   dataListSelections.value.forEach(item => {
     const userIndex = users.findIndex((user) => user.userId === item.userId)
     if (userIndex === -1) {
-      users.push({ userId: item.userId, nickName: item.nickName, pic: item.pic })
+      users.push({userId: item.userId, nickName: item.nickName, pic: item.pic})
     }
   })
   emit('refreshSelectUsers', users)
   dataListSelections.value = []
   visible.value = false
 }
-
 </script>

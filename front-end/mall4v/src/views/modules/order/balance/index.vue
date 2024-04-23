@@ -9,9 +9,21 @@
           v-if="true"
           type="primary"
           icon="el-icon-plus"
+          plain
+          size="small"
           @click="selectUser()"
         >
           选择用户
+        </el-button>
+        <el-button
+          v-if="true"
+          type="primary"
+          icon="el-icon-refresh"
+          plain
+          size="small"
+          @click="clearUser()"
+        >
+          重新查询
         </el-button>
       </template>
 
@@ -36,6 +48,7 @@
           <template #default="scope">
             <img
               alt=""
+              v-if="scope.row.user.pic !=null && scope.row.user.pic != ''"
               :src="scope.row.user.pic"
               width="25"
               height="25"
@@ -57,15 +70,17 @@
       </template>
 
       <template #shipTowx="scope">
-        <el-tag
-          v-if="scope.row.shipTowx === 0"
-          type="danger"
-        >
-          未推送到账
-        </el-tag>
-        <el-tag v-else>
-          已推送到账
-        </el-tag>
+        <div v-if="scope.row.isPayed === 1">
+          <el-tag
+            v-if="scope.row.shipTowx === 0"
+            type="danger"
+          >
+            未推送到账
+          </el-tag>
+          <el-tag v-else>
+            已推送到账
+          </el-tag>
+        </div>
       </template>
 
       <template #menu="scope">
@@ -74,18 +89,23 @@
                        title="确定发送虚拟发货信息到腾讯公众平台" @confirm="orderDelivery(scope.row.orderNumber)"
                        @cancel="cancelEvent">
           <template #reference>
-            <el-button type="primary" icon="el-icon-edit" @click.stop="orderDelivery(scope.row.orderNumber)">
+            <el-button type="primary" icon="el-icon-edit"
+                       plain
+                       size="small"
+                       @click.stop="orderDelivery(scope.row.orderNumber)">
               手动发货
             </el-button>
           </template>
         </el-popconfirm>
-
         <el-popconfirm v-if="isAuth('order:balance:refund') && scope.row.isPayed == 1"
                        confirm-button-text="确定" cancel-button-text="取消" :icon="InfoFilled" icon-color="#626AEF"
                        title="确定退款" @confirm="confirmEvent(scope.row.orderNumber)"
                        @cancel="cancelEvent">
           <template #reference>
-            <el-button type="primary" icon="el-icon-edit" @click.stop="orderRefund(scope.row.orderNumber)">
+            <el-button type="primary" icon="el-icon-edit"
+                       plain
+                       size="small"
+                       @click.stop="orderRefund(scope.row.orderNumber)">
               订单退款
             </el-button>
           </template>
@@ -151,6 +171,10 @@ const selectUsersCallback = (users) => {
   onSearch(searchParam)
 }
 
+const clearUser = ()=>{
+  searchParam.userId = ''
+  onSearch(searchParam)
+}
 /**
  * 打开选择用户
  */

@@ -11,7 +11,6 @@
       label-width="80px"
       @keyup.enter="onSubmit()"
     >
-
       <el-form-item
         label="用户头像"
         prop="pic"
@@ -92,9 +91,13 @@
       <span
         class="dialog-footer"
       >
-        <el-button @click="visible = false">取消</el-button>
+        <el-button @click="visible = false"
+                   plain
+                   size="small">取消</el-button>
         <el-button
           type="primary"
+          plain
+          size="small"
           @click="onSubmit()"
         >确定</el-button>
       </span>

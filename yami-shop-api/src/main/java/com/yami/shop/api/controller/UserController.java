@@ -3,7 +3,7 @@
 package com.yami.shop.api.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yami.shop.bean.app.dto.OrderCountData;
 import com.yami.shop.bean.app.dto.UserDto;

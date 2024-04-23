@@ -84,10 +84,10 @@
       <div class="content">
         <div class="tit">
           <el-row style="width:100%">
-<!--            <el-col :span="2">
-              <el-checkbox v-model="checkedAll"></el-checkbox>
-              <span class="item product">选择</span>
-            </el-col>-->
+            <!--            <el-col :span="2">
+                          <el-checkbox v-model="checkedAll"></el-checkbox>
+                          <span class="item product">选择</span>
+                        </el-col>-->
             <el-col :span="6">
               <span class="item product">商品</span>
             </el-col>
@@ -129,11 +129,11 @@
           <div class="prod-cont">
             <el-row style="width:100%">
 
-<!--              <el-col :span="1">
-                <div class="item">
-                  <el-checkbox v-model="checkedMap[order.orderNumber]"> =</el-checkbox>
-                </div>
-              </el-col>-->
+              <!--              <el-col :span="1">
+                              <div class="item">
+                                <el-checkbox v-model="checkedMap[order.orderNumber]"> =</el-checkbox>
+                              </div>
+                            </el-col>-->
               <el-col :span="9">
                 <div class="prod-item">
                   <div
@@ -181,7 +181,7 @@
                     <span v-else-if="order.payType === 2">支付宝</span>
                     <span v-else-if="order.payType === 3">储值余额</span>
                     <span v-else-if="order.payType == null">未支付</span>
-                    <span v-else>其他支付方式 {{order.payType}}</span>
+                    <span v-else>其他支付方式 {{ order.payType }}</span>
 
 
                     <span v-if="order.isPayed === 1">已支付</span>
@@ -204,7 +204,7 @@
                     <span v-else-if="order.payType === 2">支付宝</span>
                     <span v-else-if="order.payType === 3">储值余额</span>
                     <span v-else-if="order.payType == null">未支付</span>
-                    <span v-else>其他支付方式 {{order.payType}}</span>
+                    <span v-else>其他支付方式 {{ order.payType }}</span>
 
 
                     <span v-if="order.isPayed === 1">已支付</span>
