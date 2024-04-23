@@ -30,6 +30,34 @@ public class PageParam<T> extends Page<T> {
     private long current = 1;
 
     /**
+     * 排序字段
+     */
+    @Schema(description = "排序字段")
+    private String orderField;
+
+    public String getOrderField() {
+        return orderField;
+    }
+
+    public void setOrderField(String orderField) {
+        this.orderField = orderField;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    /**
+     * 排序方法
+     */
+    @Schema(description = "排序方法")
+    private String order;
+
+    /**
      * 查询数据列表
      */
     @Hidden

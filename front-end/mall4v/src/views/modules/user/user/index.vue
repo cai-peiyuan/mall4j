@@ -7,6 +7,7 @@
       :option="tableOption"
       @search-change="onSearch"
       @selection-change="selectionChange"
+      @sort-change="sortChange"
       @on-load="getDataList"
     >
 
@@ -47,6 +48,18 @@
         </el-tag>
       </template>
 
+      <template #userRegtime="scope">
+        <el-tag>
+          {{ dayjs(scope.row.userRegtime).fromNow() }}
+        </el-tag>
+      </template>
+
+      <template #userLasttime="scope">
+        <el-tag>
+          {{ dayjs(scope.row.userLasttime).fromNow() }}
+        </el-tag>
+      </template>
+
       <!-- 渲染到 menu菜单列中的内容 -->
       <template #menu="scope">
         <el-button
@@ -71,6 +84,7 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs'
 import {isAuth} from '@/utils'
 import {tableOption} from '@/crud/user/user.js'
 import AddOrUpdate from './add-or-update.vue'
@@ -80,6 +94,8 @@ const dataListLoading = ref(false)
 const dataListSelections = ref([])
 const addOrUpdateVisible = ref(false)
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
@@ -97,7 +113,9 @@ const getDataList = (pageParam, params, done) => {
       Object.assign(
         {
           current: pageParam == null ? page.currentPage : pageParam.currentPage,
-          size: pageParam == null ? page.pageSize : pageParam.pageSize
+          size: pageParam == null ? page.pageSize : pageParam.pageSize,
+          orderField: pageParam == null ? page.orderField : pageParam.orderField,
+          order: pageParam == null ? page.order : pageParam.order
         },
         params
       )
@@ -141,6 +159,15 @@ const onSearch = (params, done) => {
  */
 const selectionChange = (val) => {
   dataListSelections.value = val
+}
+/**
+ * 排序变化
+ */
+const sortChange = ({column, prop, order}) => {
+  console.log('表格排序条件变化', column, prop, order)
+  page.orderField = prop;
+  page.order = order;
+  getDataList(page, {}, null)
 }
 </script>
 

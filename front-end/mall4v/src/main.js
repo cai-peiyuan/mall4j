@@ -15,6 +15,16 @@ import '@/styles/index.scss'
 // svg
 import 'virtual:svg-icons-register'
 import svgIcon from '@/icons/SvgIcon.vue'
+
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+// 扩展功能插件
+dayjs.extend(relativeTime)
+// 本地化语言
+dayjs.locale('zh-cn')
+
 moment.locale('zh-cn', {
   longDateFormat: {
     LT: 'HH:mm',
