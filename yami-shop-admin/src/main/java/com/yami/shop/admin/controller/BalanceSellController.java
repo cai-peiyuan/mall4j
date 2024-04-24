@@ -3,10 +3,13 @@ package com.yami.shop.admin.controller;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.jfinal.kit.StrKit;
 import com.yami.shop.bean.model.DeliveryUser;
 import com.yami.shop.bean.model.UserBalanceSell;
+import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.DeliveryUserService;
 import com.yami.shop.service.UserBalanceSellService;
@@ -35,7 +38,8 @@ public class BalanceSellController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('shop:balanceSell:page')")
     public ServerResponseEntity<IPage<UserBalanceSell>> page(UserBalanceSell userBalanceSell, PageParam<UserBalanceSell> page) {
-        LambdaQueryWrapper<UserBalanceSell> queryWrapper = new LambdaQueryWrapper<UserBalanceSell>().eq(UserBalanceSell::getShopId, SecurityUtils.getSysUser().getShopId()).eq(StrUtil.isNotBlank(userBalanceSell.getStatus()), UserBalanceSell::getStatus, userBalanceSell.getStatus()).orderByAsc(UserBalanceSell::getSellCnt);
+        LambdaQueryWrapper<UserBalanceSell> queryWrapper = new LambdaQueryWrapper<UserBalanceSell>().eq(UserBalanceSell::getShopId, SecurityUtils.getSysUser().getShopId()).eq(userBalanceSell.getStatus() != null, UserBalanceSell::getStatus, userBalanceSell.getStatus()).orderByAsc(UserBalanceSell::getSellCnt);
+        QueryUtil.pageOrder(page);
         IPage<UserBalanceSell> deliveryUserIPage = userBalanceSellService.page(page, queryWrapper);
         return ServerResponseEntity.success(deliveryUserIPage);
     }
@@ -66,6 +70,9 @@ public class BalanceSellController {
     @PutMapping
     @PreAuthorize("@pms.hasPermission('shop:balanceSell:update')")
     public ServerResponseEntity<Void> update(@RequestBody @Valid UserBalanceSell userBalanceSell) {
+        if (userBalanceSell.getShopId() != SecurityUtils.getSysUser().getShopId()) {
+            throw new YamiShopBindException("您没有权限操作该信息");
+        }
         userBalanceSellService.updateById(userBalanceSell);
         return ServerResponseEntity.success();
     }

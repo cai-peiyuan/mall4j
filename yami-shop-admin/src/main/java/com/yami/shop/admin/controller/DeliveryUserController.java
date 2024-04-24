@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yami.shop.bean.model.DeliveryUser;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.DeliveryUserService;
 import jakarta.validation.Valid;
@@ -33,6 +34,7 @@ public class DeliveryUserController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('shop:deliveryUser:page')")
     public ServerResponseEntity<IPage<DeliveryUser>> page(DeliveryUser deliveryUser, PageParam<DeliveryUser> page) {
+        QueryUtil.pageOrder(page);
         IPage<DeliveryUser> deliveryUserIPage = deliveryUserService.page(page, new LambdaQueryWrapper<DeliveryUser>().eq(DeliveryUser::getShopId, SecurityUtils.getSysUser().getShopId()).like(StrUtil.isNotBlank(deliveryUser.getUserName()), DeliveryUser::getUserName, deliveryUser.getUserName()).like(StrUtil.isNotBlank(deliveryUser.getUserPhone()), DeliveryUser::getUserPhone, deliveryUser.getUserPhone()).eq(deliveryUser.getStatus() != null, DeliveryUser::getStatus, deliveryUser.getStatus()).orderByAsc(DeliveryUser::getSeq));
         return ServerResponseEntity.success(deliveryUserIPage);
     }

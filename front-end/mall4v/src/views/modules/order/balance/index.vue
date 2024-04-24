@@ -3,7 +3,8 @@
     <avue-crud ref="crudRef" :page="page" :data="dataList" :option="tableOption"
                :search="searchParam"
                @search-change="onSearch"
-               @selection-change="selectionChange" @on-load="getDataList">
+               @selection-change="selectionChange"
+@sort-change="sortChange" @on-load="getDataList">
       <template #menu-left>
         <el-button
           v-if="true"
@@ -146,6 +147,8 @@ const dataListLoading = ref(false)
 const dataListSelections = ref([])
 const addOrUpdateVisible = ref(false)
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
@@ -267,6 +270,15 @@ const onSearch = (params, done) => {
  */
 const selectionChange = (val) => {
   dataListSelections.value = val
+}
+
+/**
+ * 排序变化
+ */
+const sortChange = ({column, prop, order}) => {
+  page.orderField = prop;
+  page.order = order;
+  getDataList(page, {}, null)
 }
 </script>
 

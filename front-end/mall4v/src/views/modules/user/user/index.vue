@@ -164,7 +164,6 @@ const selectionChange = (val) => {
  * 排序变化
  */
 const sortChange = ({column, prop, order}) => {
-  console.log('表格排序条件变化', column, prop, order)
   page.orderField = prop;
   page.order = order;
   getDataList(page, {}, null)

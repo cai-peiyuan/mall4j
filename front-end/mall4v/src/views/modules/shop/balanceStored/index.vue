@@ -10,10 +10,11 @@
       @on-load="getDataList"
       @refresh-change="refreshChange"
       @selection-change="selectionChange"
+      @sort-change="sortChange"
     >
       <template #menu-left>
         <el-button
-          v-if="isAuth('shop:deliveryUser:save')"
+          v-if="isAuth('shop:balanceStored:save')"
           type="primary"
           icon="el-icon-plus"
           @click="onAddOrUpdate()"
@@ -34,16 +35,25 @@
           v-if="scope.row.status === 0"
           type="danger"
         >
-          未启用
+          未销售
         </el-tag>
-        <el-tag v-else>
-          启用
+        <el-tag
+          v-if="scope.row.status === 1"
+          type="success"
+        >
+          可使用
+        </el-tag>
+        <el-tag
+          v-if="scope.row.status === 2"
+          type="danger"
+        >
+          已使用
         </el-tag>
       </template>
 
       <template #menu="scope">
         <el-button
-          v-if="isAuth('shop:deliveryUser:update')"
+          v-if="isAuth('shop:balanceStored:update')"
           type="primary"
           icon="el-icon-edit"
           @click="onAddOrUpdate(scope.row.id)"
@@ -51,10 +61,10 @@
           修改
         </el-button>
         <el-button
-          v-if="isAuth('shop:deliveryUser:deconste')"
+          v-if="isAuth('shop:balanceStored:delete')"
           type="danger"
           icon="el-icon-deconste"
-          @click.stop="onDeconste(scope.row,scope.index)"
+          @click.stop="onDelete(scope.row,scope.index)"
         >
           删除
         </el-button>
@@ -71,12 +81,15 @@
 </template>
 
 <script setup>
-import { isAuth } from '@/utils'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { tableOption } from '@/crud/shop/deliveryUser.js'
+import {isAuth} from '@/utils'
+import {ElMessage, ElMessageBox} from 'element-plus'
+import {tableOption} from '@/crud/shop/balanceStored.js'
 import AddOrUpdate from './add-or-update.vue'
+
 const dataList = ref([])
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
@@ -88,14 +101,16 @@ const dataListLoading = ref(false)
 const getDataList = (pageParam, params, done) => {
   dataListLoading.value = true
   http({
-    url: http.adornUrl('/shop/deliveryUser/page'),
+    url: http.adornUrl('/shop/balanceStored/page'),
     method: 'get',
     params: http.adornParams(Object.assign({
       current: pageParam ? pageParam.currentPage : 1,
-      size: pageParam ? pageParam.pageSize : 20
+      size: pageParam ? pageParam.pageSize : 20,
+      orderField: pageParam == null ? page.orderField : pageParam.orderField,
+      order: pageParam == null ? page.order : pageParam.order
     }, params))
   })
-    .then(({ data }) => {
+    .then(({data}) => {
       page.total = data.total
       page.pageSize = data.size
       page.currentPage = data.current
@@ -136,7 +151,7 @@ const onSearch = (params, done) => {
 /**
  * 删除
  */
-const onDeconste = (row) => {
+const onDelete = (row) => {
   const ids = row.id ? [row.id] : dataListSelections.value?.map(item => {
     return item.id
   })
@@ -147,7 +162,7 @@ const onDeconste = (row) => {
   })
     .then(() => {
       http({
-        url: http.adornUrl('/shop/deliveryUser'),
+        url: http.adornUrl('/shop/balanceStored'),
         method: 'delete',
         data: http.adornData(ids, false)
       })
@@ -161,10 +176,19 @@ const onDeconste = (row) => {
             }
           })
         })
-    }).catch(() => { })
+    }).catch(() => {
+  })
 }
 const refreshChange = () => {
   getDataList(page)
 }
-
+/**
+ * 排序变化
+ */
+const sortChange = ({column, prop, order}) => {
+  console.log('表格排序条件变化', column, prop, order)
+  page.orderField = prop;
+  page.order = order;
+  getDataList(page, {}, null)
+}
 </script>

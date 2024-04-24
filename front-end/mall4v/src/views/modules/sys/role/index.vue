@@ -7,6 +7,7 @@
       :option="tableOption"
       @search-change="onSearch"
       @selection-change="selectionChange"
+@sort-change="sortChange"
       @on-load="getDataList"
     >
       <template #menu-left>
@@ -67,6 +68,8 @@ import AddOrUpdate from './add-or-update.vue'
 const dataList = ref([])
 const dataListSelections = ref([])
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
@@ -110,6 +113,15 @@ const onSearch = (params, done) => {
  */
 const selectionChange = (val) => {
   dataListSelections.value = val
+}
+
+/**
+ * 排序变化
+ */
+const sortChange = ({column, prop, order}) => {
+  page.orderField = prop;
+  page.order = order;
+  getDataList(page, {}, null)
 }
 const addOrUpdateVisible = ref(false)
 const addOrUpdateRef = ref(null)

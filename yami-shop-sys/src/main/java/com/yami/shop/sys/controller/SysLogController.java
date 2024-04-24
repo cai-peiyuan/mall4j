@@ -4,6 +4,7 @@ package com.yami.shop.sys.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.sys.model.SysLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.yami.shop.common.response.ServerResponseEntity;
@@ -38,6 +39,7 @@ public class SysLogController {
 	@GetMapping("/page")
 	@PreAuthorize("@pms.hasPermission('sys:log:page')")
 	public ServerResponseEntity<IPage<SysLog>> page(SysLog sysLog,PageParam<SysLog> page){
+		QueryUtil.pageOrder(page);
 		IPage<SysLog> sysLogs = sysLogService.page(page,
 				new LambdaQueryWrapper<SysLog>()
 						.like(StrUtil.isNotBlank(sysLog.getUsername()),SysLog::getUsername, sysLog.getUsername())

@@ -42,7 +42,7 @@ public class UserBalanceStored implements Serializable {
     /**
      * 状态1可用2已使用0未销售
      */
-    private String status;
+    private Integer status;
 
     /**
      * 储值卡序列号
@@ -73,5 +73,10 @@ public class UserBalanceStored implements Serializable {
      * 使用时间
      */
     private Date storedTime;
+
+    /**
+     * 销售时间
+     */
+    private Date sellTime;
 
 }

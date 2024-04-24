@@ -22,24 +22,24 @@ export const tableOption = {
   column: [{
     label: '产品名字',
     prop: 'prodName',
-    sortable: true,
+    sortable: 'custom',
     search: true
   }, {
     label: '商品原价',
     prop: 'oriPrice',
-    sortable: true
+    sortable: 'custom'
   }, {
     label: '商品现价',
     prop: 'price',
-    sortable: true
+    sortable: 'custom'
   }, {
     label: '商品库存',
     prop: 'totalStocks',
-    sortable: true
+    sortable: 'custom'
   }, {
     label: '商品销量',
     prop: 'totalSales',
-    sortable: true
+    sortable: 'custom'
   }, {
     label: '产品图片',
     prop: 'pic',
@@ -48,7 +48,7 @@ export const tableOption = {
     listType: 'picture-img'
   }, {
     width: 150,
-    sortable: true,
+    sortable: 'custom',
     label: '状态',
     prop: 'status',
     search: true,

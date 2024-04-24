@@ -10,6 +10,7 @@ import com.yami.shop.bean.model.Area;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.service.AreaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class AreaController {
                 .like(StrKit.notBlank(area.getAreaName()), Area::getAreaName, area.getAreaName())
                 .eq(area.getStatus() != null, Area::getStatus, area.getStatus())
         ;
+        QueryUtil.pageOrder(page);
         IPage<Area> sysUserPage = areaService.page(page, areaLambdaQueryWrapper);
         return ServerResponseEntity.success(sysUserPage);
     }

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yami.shop.bean.model.HotSearch;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.HotSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,12 @@ public class HotSearchController {
     @GetMapping("/page")
 	@PreAuthorize("@pms.hasPermission('admin:hotSearch:page')")
 	public ServerResponseEntity<IPage<HotSearch>> page(HotSearch hotSearch,PageParam<HotSearch> page){
+		QueryUtil.pageOrder(page);
 		IPage<HotSearch> hotSearchs = hotSearchService.page(page,new LambdaQueryWrapper<HotSearch>()
 			.eq(HotSearch::getShopId, SecurityUtils.getSysUser().getShopId())
 			.like(StrUtil.isNotBlank(hotSearch.getContent()), HotSearch::getContent,hotSearch.getContent())
 				.like(StrUtil.isNotBlank(hotSearch.getTitle()), HotSearch::getTitle,hotSearch.getTitle())
 			.eq(hotSearch.getStatus()!=null, HotSearch::getStatus,hotSearch.getStatus())
-				.orderByAsc(HotSearch::getSeq)
 		);
 		return ServerResponseEntity.success(hotSearchs);
 	}

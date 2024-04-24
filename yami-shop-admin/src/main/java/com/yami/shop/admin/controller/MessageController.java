@@ -7,6 +7,7 @@ import java.util.List;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yami.shop.common.util.QueryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.yami.shop.common.response.ServerResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +46,7 @@ public class MessageController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('admin:message:page')")
     public ServerResponseEntity<IPage<Message>> page(Message message,PageParam<Message> page) {
+        QueryUtil.pageOrder(page);
         IPage<Message> messages = messageService.page(page, new LambdaQueryWrapper<Message>()
                 .like(StrUtil.isNotBlank(message.getUserName()), Message::getUserName, message.getUserName())
                 .eq(message.getStatus() != null, Message::getStatus, message.getStatus()));

@@ -8,6 +8,7 @@
       :option="tableOption"
       @search-change="onSearch"
       @selection-change="selectionChange"
+@sort-change="sortChange"
       @on-load="getDataList"
     >
       <template #menu-left>
@@ -175,5 +176,14 @@ const onSearch = (params, done) => {
  */
 const selectionChange = (val) => {
   dataListSelections.value = val
+}
+
+/**
+ * 排序变化
+ */
+const sortChange = ({column, prop, order}) => {
+  page.orderField = prop;
+  page.order = order;
+  getDataList(page, {}, null)
 }
 </script>

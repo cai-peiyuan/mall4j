@@ -8,6 +8,7 @@ import com.yami.shop.bean.model.IndexImg;
 import com.yami.shop.bean.model.Product;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.IndexImgService;
 import com.yami.shop.service.ProductService;
