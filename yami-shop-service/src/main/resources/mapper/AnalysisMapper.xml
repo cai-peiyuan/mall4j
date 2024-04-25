@@ -50,7 +50,7 @@
 
     <!--查询统计会员活跃信息-->
     <select id="queryUserActCountByDay" resultType="java.util.Map">
-        select DATE_FORMAT(user_lasttime, '%Y-%m-%d') day, count(*) as reg_user_cnt
+        select DATE_FORMAT(user_lasttime, '%Y-%m-%d') day, count(*) as act_user_cnt
         from tz_user
         where 1 = 1
           and user_lasttime &gt;= #{startTime}

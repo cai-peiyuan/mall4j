@@ -58,11 +58,23 @@ public class AnalysisServiceImpl implements AnalysisService {
          * 活跃用户
          */
         List<Map> userActCountByDay = analysisMapper.queryUserActCountByDay(startTime, endTime);
+        if (userActCountByDay != null) {
+            user.put("userActCountTotal",
+                    userActCountByDay.stream().mapToLong(map ->
+                            Long.valueOf(map.getOrDefault("act_user_cnt", "0").toString())
+                    ).sum());
+        }
         user.put("userActCountByDay", userActCountByDay);
         /**
          * 注册用户
          */
         List<Map> userRegCountByDay = analysisMapper.queryUserRegCountByDay(startTime, endTime);
+        if (userRegCountByDay != null) {
+            user.put("userRegCountTotal",
+                    userRegCountByDay.stream().mapToLong(map ->
+                            Long.valueOf(map.getOrDefault("reg_user_cnt", "0").toString())
+                    ).sum());
+        }
         user.put("userRegCountByDay", userRegCountByDay);
 
 
