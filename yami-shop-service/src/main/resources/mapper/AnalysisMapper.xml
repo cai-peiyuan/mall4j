@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yami.shop.dao.AnalysisMapper">
+
+    <!--查询所有储值卡余额-->
+    <select id="queryBalanceSum" resultType="java.lang.Double">
+        select sum(balance) as sum_balance
+        from tz_user_balance
+    </select>
+    <!--查询所有储值卡余额-->
+    <select id="queryBalanceCountAndSumByValue" resultType="java.util.Map">
+        select count(*) as balance_user_cnt, sum(balance) as sum_balance
+        from tz_user_balance
+        where balance &gt;=
+              #{minBalance}
+          and balance
+            &lt;
+              #{maxBalance}
+    </select>
+
+    <!--查询储值卡余额储值订单  包含退款余额退回-->
+    <select id="queryStoredBalanceDetailByDate" resultType="java.util.Map">
+        select count(*) as stored_balance_order_cnt, sum(use_balance) stored_balance_sum
+        from tz_user_balance_detail
+        where 1 = 1
+          and use_time &gt;= #{startTime}
+          and use_time &lt; #{endTime}
+          and use_balance &gt; 0
+    </select>
+    <!--查询储值卡余额消费订单-->
+    <select id="queryUsedBalanceDetailByDate" resultType="java.util.Map">
+        select count(*) as use_balance_order_cnt, sum(use_balance) use_balance_sum
+        from tz_user_balance_detail
+        where 1 = 1
+          and use_time &gt;= #{startTime}
+          and use_time &lt; #{endTime}
+          and use_balance &lt; 0
+    </select>
+
+    <!--查询统计新会员注册信息-->
+    <select id="queryUserRegCountByDay" resultType="java.util.Map">
+        select DATE_FORMAT(user_regtime, '%Y-%m-%d') day, count(*) as reg_user_cnt
+        from tz_user
+        where 1 = 1
+          and user_regtime &gt;= #{startTime}
+          and user_regtime &lt; #{endTime}
+        group by day
+        order by day
+    </select>
+
+    <!--查询统计会员活跃信息-->
+    <select id="queryUserActCountByDay" resultType="java.util.Map">
+        select DATE_FORMAT(user_lasttime, '%Y-%m-%d') day, count(*) as reg_user_cnt
+        from tz_user
+        where 1 = 1
+          and user_lasttime &gt;= #{startTime}
+          and user_lasttime &lt; #{endTime}
+        group by day
+        order by day
+    </select>
+
+
+    <!--查询订单数量 当日总订单数量和订单金额  包含未支付和已取消的订单-->
+    <select id="queryOrderCount" resultType="java.util.Map">
+        select count(*) as total_order, sum(actual_total) as total_order_actual, sum(product_nums) as
+        total_product_nums,sum(print_times) as total_print_times
+        from tz_order
+        where 1 = 1
+        and create_time &gt;= #{startTime}
+        and create_time &lt; #{endTime}
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="isPayed != null">
+            and is_payed = #{isPayed}
+        </if>
+        <if test="payType != null">
+            and pay_type = #{payType}
+        </if>
+        <if test="refundSts != null">
+            and refund_sts = #{refundSts}
+        </if>
+    </select>
+
+    <!--订单状态统计-->
+    <select id="queryOrderCountByStatus" resultType="java.util.Map">
+        select count(*) as total_order, status
+        from tz_order
+        where 1 = 1
+          and create_time &gt;= #{startTime}
+          and create_time &lt; #{endTime}
+        group by status
+    </select>
+
+</mapper>

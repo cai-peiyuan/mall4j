@@ -47,4 +47,6 @@ public class UserBalance implements Serializable {
      */
     private String cardNumber;
 
+
+    private Long shopId;
 }
