@@ -8,7 +8,6 @@ import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPayment
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.bean.model.WxPayRefund;
-import com.yami.shop.bean.model.WxPayRefund;
 
 /**
  * @author c'p'y

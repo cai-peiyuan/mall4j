@@ -7,7 +7,6 @@ import com.yami.shop.bean.model.UserBalanceStored;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
 import com.yami.shop.security.admin.util.SecurityUtils;
-import com.yami.shop.service.UserBalanceSellService;
 import com.yami.shop.service.UserBalanceStoredService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

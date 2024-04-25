@@ -3,7 +3,6 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yami.shop.bean.model.UserBalance;
 import com.yami.shop.bean.model.UserBalanceDetail;
 
 import java.util.List;

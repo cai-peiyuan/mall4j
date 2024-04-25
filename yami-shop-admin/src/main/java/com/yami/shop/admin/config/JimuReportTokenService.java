@@ -1,7 +1,5 @@
 package com.yami.shop.admin.config;
 
-import com.yami.shop.security.admin.model.YamiSysUser;
-import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.security.common.bo.UserInfoInTokenBO;
 import com.yami.shop.security.common.manager.TokenStore;
 import jakarta.servlet.http.HttpServletRequest;

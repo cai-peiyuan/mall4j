@@ -2,7 +2,6 @@
 
 package com.yami.shop.common.bean;
 
-import com.yami.shop.common.enums.QiniuZone;
 import lombok.Data;
 
 /**

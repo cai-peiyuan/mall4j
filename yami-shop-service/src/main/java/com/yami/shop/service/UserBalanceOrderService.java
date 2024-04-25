@@ -3,7 +3,6 @@
 package com.yami.shop.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qq.wechat.pay.config.WechatPaySign;
 import com.yami.shop.bean.model.UserBalanceOrder;
 
 /**

@@ -9,11 +9,8 @@ import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPayment
 import com.yami.shop.bean.app.param.PayParam;
 import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.bean.model.WxPayRefund;
-import com.yami.shop.bean.model.WxPayRefund;
 import com.yami.shop.common.util.Json;
-import com.yami.shop.dao.WxPayPrepayMapper;
 import com.yami.shop.dao.WxPayRefundMapper;
-import com.yami.shop.service.WxPayPrepayService;
 import com.yami.shop.service.WxPayRefundService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

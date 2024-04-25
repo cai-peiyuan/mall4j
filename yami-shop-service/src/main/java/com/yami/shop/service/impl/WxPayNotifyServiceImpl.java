@@ -3,19 +3,14 @@
 package com.yami.shop.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qq.wechat.pay.WeChatPayUtil;
-import com.wechat.pay.java.core.http.Constant;
 import com.wechat.pay.java.core.notification.Notification;
-import com.wechat.pay.java.core.notification.RequestParam;
 import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.refund.model.Refund;
 import com.yami.shop.bean.model.WxPayNotify;
 import com.yami.shop.common.util.Json;
 import com.yami.shop.dao.WxPayNotifyMapper;
 import com.yami.shop.service.WxPayNotifyService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

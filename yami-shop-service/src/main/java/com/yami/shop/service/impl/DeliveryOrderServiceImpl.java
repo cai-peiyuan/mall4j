@@ -5,13 +5,9 @@ package com.yami.shop.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yami.shop.bean.model.Delivery;
 import com.yami.shop.bean.model.DeliveryOrder;
-import com.yami.shop.dao.DeliveryMapper;
 import com.yami.shop.dao.DeliveryOrderMapper;
 import com.yami.shop.service.DeliveryOrderService;
-import com.yami.shop.service.DeliveryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

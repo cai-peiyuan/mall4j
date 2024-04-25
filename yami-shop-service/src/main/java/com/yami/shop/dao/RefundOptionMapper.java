@@ -3,7 +3,6 @@
 package com.yami.shop.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yami.shop.bean.model.DeliveryUser;
 import com.yami.shop.bean.model.RefundOption;
 
 /**

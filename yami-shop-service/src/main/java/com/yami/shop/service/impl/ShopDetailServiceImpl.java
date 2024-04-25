@@ -2,8 +2,6 @@
 
 package com.yami.shop.service.impl;
 
-import java.util.Objects;
-
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,9 +13,6 @@ import com.yami.shop.bean.model.ShopDetail;
 import com.yami.shop.dao.ShopDetailMapper;
 import com.yami.shop.service.AttachFileService;
 import com.yami.shop.service.ShopDetailService;
-
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 
 /**
  *

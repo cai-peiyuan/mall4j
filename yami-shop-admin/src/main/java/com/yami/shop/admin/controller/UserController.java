@@ -11,7 +11,6 @@ import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.yami.shop.common.response.ServerResponseEntity;
-import org.springframework.data.redis.core.query.QueryUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

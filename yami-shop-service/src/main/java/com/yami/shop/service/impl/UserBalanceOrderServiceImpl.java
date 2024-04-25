@@ -5,13 +5,9 @@ package com.yami.shop.service.impl;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qq.wechat.pay.WeChatPayUtil;
-import com.qq.wechat.pay.config.WechatPaySign;
-import com.wechat.pay.java.service.payments.jsapi.model.*;
 import com.yami.shop.bean.enums.PayType;
 import com.yami.shop.bean.model.UserBalanceOrder;
 import com.yami.shop.bean.model.UserBalanceSell;
-import com.yami.shop.bean.model.WxPayPrepay;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.Arith;
 import com.yami.shop.dao.UserBalanceOrderMapper;
@@ -23,8 +19,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-
-import static com.yami.shop.common.constants.Constant.ORDER_TYPE_BALANCE;
 
 /**
  * 微信储值订单

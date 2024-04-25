@@ -2,23 +2,17 @@
 
 package com.yami.shop.admin.controller;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yami.shop.bean.model.ProdComm;
 import com.yami.shop.common.annotation.SysLog;
-import com.yami.shop.common.util.Json;
 import com.yami.shop.service.ProdCommService;
 import lombok.AllArgsConstructor;
 
 import jakarta.validation.Valid;
 
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import com.yami.shop.common.response.ServerResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yami.shop.common.util.PageParam;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 

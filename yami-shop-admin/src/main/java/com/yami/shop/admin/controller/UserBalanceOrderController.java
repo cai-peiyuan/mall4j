@@ -11,7 +11,6 @@ import com.yami.shop.service.UserService;
 import com.yami.shop.service.WxShipInfoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

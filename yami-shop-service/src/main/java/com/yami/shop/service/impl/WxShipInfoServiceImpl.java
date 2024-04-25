@@ -11,7 +11,6 @@ import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.yami.shop.bean.model.*;
 import com.yami.shop.common.util.Json;
 import com.yami.shop.dao.WxShipInfoMapper;
-import com.yami.shop.service.OrderService;
 import com.yami.shop.service.UserBalanceOrderService;
 import com.yami.shop.service.WxPayPrepayService;
 import com.yami.shop.service.WxShipInfoService;
