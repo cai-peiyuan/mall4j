@@ -153,6 +153,8 @@ const dataForm = reactive({
   provinceId: null
 })
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条

@@ -35,7 +35,7 @@ public class UserBalanceController {
     private final UserBalanceDetailService userBalanceDetailService;
 
     /**
-     * 加载账户余额
+     * 加载账户余额和在售卡
      */
     @GetMapping("/userBalanceAndSell")
     @Operation(summary = "加载账户余额")

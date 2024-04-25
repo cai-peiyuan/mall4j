@@ -7,6 +7,7 @@ import com.yami.shop.bean.enums.ProdPropRule;
 import com.yami.shop.bean.model.ProdProp;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.ProdPropService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class AttributeController {
 	public ServerResponseEntity<IPage<ProdProp>> page(ProdProp prodProp,PageParam<ProdProp> page){
     	prodProp.setRule(ProdPropRule.ATTRIBUTE.value());
     	prodProp.setShopId(SecurityUtils.getSysUser().getShopId());
+		QueryUtil.pageOrder(page);
 		IPage<ProdProp> prodPropPage = prodPropService.pagePropAndValue(prodProp,page);
 		return ServerResponseEntity.success(prodPropPage);
 	}

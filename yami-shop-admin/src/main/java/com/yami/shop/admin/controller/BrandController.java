@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yami.shop.bean.model.Brand;
 import com.yami.shop.common.exception.YamiShopBindException;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.yami.shop.common.response.ServerResponseEntity;
@@ -36,6 +37,7 @@ public class BrandController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('admin:brand:page')")
     public ServerResponseEntity<IPage<Brand>> page(Brand brand,PageParam<Brand> page) {
+        QueryUtil.pageOrder(page);
         IPage<Brand> brands = brandService.page(page,
                 new LambdaQueryWrapper<Brand>()
                         .like(StrUtil.isNotBlank(brand.getBrandName()), Brand::getBrandName, brand.getBrandName()).orderByAsc(Brand::getFirstChar));

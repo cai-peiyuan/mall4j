@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yami.shop.bean.model.UserBalanceStored;
 import com.yami.shop.common.response.ServerResponseEntity;
 import com.yami.shop.common.util.PageParam;
+import com.yami.shop.common.util.QueryUtil;
 import com.yami.shop.security.admin.util.SecurityUtils;
 import com.yami.shop.service.UserBalanceStoredService;
 import jakarta.validation.Valid;
@@ -33,7 +34,8 @@ public class BalanceStoredController {
     @GetMapping("/page")
     @PreAuthorize("@pms.hasPermission('shop:balanceStored:page')")
     public ServerResponseEntity<IPage<UserBalanceStored>> page(UserBalanceStored userBalanceStored, PageParam<UserBalanceStored> page) {
-        LambdaQueryWrapper<UserBalanceStored> queryWrapper = new LambdaQueryWrapper<UserBalanceStored>().eq(UserBalanceStored::getShopId, SecurityUtils.getSysUser().getShopId()).eq(StrUtil.isNotBlank(userBalanceStored.getStatus()), UserBalanceStored::getStatus, userBalanceStored.getStatus()).orderByDesc(UserBalanceStored::getCreateTime);
+        LambdaQueryWrapper<UserBalanceStored> queryWrapper = new LambdaQueryWrapper<UserBalanceStored>().eq(UserBalanceStored::getShopId, SecurityUtils.getSysUser().getShopId()).eq(userBalanceStored.getStatus() != null, UserBalanceStored::getStatus, userBalanceStored.getStatus()).orderByDesc(UserBalanceStored::getCreateTime);
+        QueryUtil.pageOrder(page);
         IPage<UserBalanceStored> deliveryUserIPage = userBalanceStoredService.page(page, queryWrapper);
         return ServerResponseEntity.success(deliveryUserIPage);
     }

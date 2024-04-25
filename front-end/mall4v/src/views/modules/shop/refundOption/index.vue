@@ -10,6 +10,7 @@
       @on-load="getDataList"
       @refresh-change="refreshChange"
       @selection-change="selectionChange"
+@sort-change="sortChange"
     >
       <template #menu-left>
         <el-button
@@ -77,6 +78,8 @@ import { tableOption } from '@/crud/shop/refundOption.js'
 import AddOrUpdate from './add-or-update.vue'
 const dataList = ref([])
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条
@@ -92,7 +95,9 @@ const getDataList = (pageParam, params, done) => {
     method: 'get',
     params: http.adornParams(Object.assign({
       current: pageParam ? pageParam.currentPage : 1,
-      size: pageParam ? pageParam.pageSize : 20
+      size: pageParam ? pageParam.pageSize : 20,
+      orderField: pageParam == null ? page.orderField : pageParam.orderField,
+      order: pageParam == null ? page.order : pageParam.order
     }, params))
   })
     .then(({ data }) => {

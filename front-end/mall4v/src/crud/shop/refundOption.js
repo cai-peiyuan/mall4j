@@ -20,7 +20,7 @@ export const tableOption = {
     {
       label: '顺序',
       prop: 'seq',
-      sortable: true
+      sortable: 'custom'
     },
     {
       label: '启用状态',

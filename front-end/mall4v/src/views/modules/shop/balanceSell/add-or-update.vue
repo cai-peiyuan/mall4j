@@ -1,5 +1,5 @@
 <template>
-  <div class="mod-deliveryUser-add-or-update">
+  <div class="mod-balanceSell-add-or-update">
     <el-dialog
       v-model="visible"
       :title="!dataForm.id ? '新增' : '修改'"
@@ -13,42 +13,35 @@
         @keyup.enter="onSubmit()"
       >
         <el-form-item
-          label="姓名"
-          prop="userName"
+          label="储值金额"
+          prop="storedValue"
         >
-          <el-input
-            v-model="dataForm.userName"
-            controls-position="right"
+          <el-input-number
+            v-model="dataForm.storedValue"
             :min="0"
-            maxlength="50"
-            show-word-limit
-            label="标题"
+            label="储值金额"
           />
         </el-form-item>
 
         <el-form-item
-          label="手机号"
-          prop="userPhone"
+          label="售价"
+          prop="sellValue"
         >
-          <el-input
-            v-model="dataForm.userPhone"
-            controls-position="right"
-            type="textarea"
+          <el-input-number
+            v-model="dataForm.sellValue"
             :min="0"
-            maxlength="255"
-            show-word-limit
-            label="手机号"
+            label="sellValue"
           />
         </el-form-item>
         <el-form-item
-          label="排序号"
-          prop="seq"
+          label="已售"
+          prop="sellCnt"
         >
           <el-input-number
-            v-model="dataForm.seq"
+            v-model="dataForm.sellCnt"
             controls-position="right"
             :min="0"
-            label="排序号"
+            label="已售"
           />
         </el-form-item>
         <el-form-item
@@ -57,10 +50,13 @@
         >
           <el-radio-group v-model="dataForm.status">
             <el-radio :label="0">
-              禁用
+              未上架
             </el-radio>
             <el-radio :label="1">
-              启用
+              可销售
+            </el-radio>
+            <el-radio :label="2">
+              已售罄
             </el-radio>
           </el-radio-group>
         </el-form-item>
@@ -88,28 +84,21 @@ import { Debounce } from '@/utils/debounce'
 const emit = defineEmits(['refreshDataList'])
 const dataForm = ref({
   id: 0,
-  userName: '',
-  userPhone: '',
-  recDate: '',
-  seq: 0,
+  storedValue: 0,
+  sellValue: 0,
+  sellCnt: 0,
   status: 0
-})
-const page = reactive({
-  total: 0, // 总页数
-  currentPage: 1, // 当前页数
-  pageSize: 10 // 每页显示多少条
 })
 const visible = ref(false)
 const dataRule = {
-  userName: [
+  storedValue: [
     { required: true, message: '不能为空', trigger: 'blur' },
-    { min: 1, max: 50, message: '长度在1到50个字符内', trigger: 'blur' },
-    { pattern: /\s\S+|S+\s|\S/, message: '不能为空', trigger: 'blur' }
   ],
-  userPhone: [
+  sellValue: [
     { required: true, message: '不能为空', trigger: 'blur' },
-    { min: 1, max: 255, message: '长度在1到255个字符内', trigger: 'blur' },
-    { pattern: /\s\S+|S+\s|\S/, message: '不能为空', trigger: 'blur' }
+  ],
+  status: [
+    { required: true, message: '不能为空', trigger: 'blur' },
   ]
 }
 
@@ -121,7 +110,7 @@ const init = (id) => {
     dataFormRef.value?.resetFields()
     if (dataForm.value.id) {
       http({
-        url: http.adornUrl('/shop/deliveryUser/info/' + dataForm.value.id),
+        url: http.adornUrl('/shop/balanceSell/info/' + dataForm.value.id),
         method: 'get',
         params: http.adornParams()
       })
@@ -141,7 +130,7 @@ const onSubmit = Debounce(() => {
     if (valid) {
       const param = dataForm.value
       http({
-        url: http.adornUrl('/shop/deliveryUser'),
+        url: http.adornUrl('/shop/balanceSell'),
         method: param.id ? 'put' : 'post',
         data: http.adornData(param)
       })
@@ -152,7 +141,7 @@ const onSubmit = Debounce(() => {
             duration: 1500,
             onClose: () => {
               visible.value = false
-              emit('refreshDataList', page)
+              emit('refreshDataList')
             }
           })
         })

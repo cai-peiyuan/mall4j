@@ -8,6 +8,7 @@
       :permission="permission"
       @search-change="onSearch"
       @selection-change="selectionChange"
+@sort-change="sortChange"
       @on-load="getDataList"
     >
       <template #menu-left>
@@ -71,6 +72,8 @@ const permission = {
 const dataList = ref([])
 const dataListSelections = ref([])
 const page = reactive({
+  orderField: '',
+  order: '',
   total: 0, // 总页数
   currentPage: 1, // 当前页数
   pageSize: 10 // 每页显示多少条

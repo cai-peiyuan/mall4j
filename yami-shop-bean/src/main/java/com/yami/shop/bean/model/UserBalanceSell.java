@@ -41,7 +41,7 @@ public class UserBalanceSell implements Serializable {
     /**
      * 状态 状态1可用2已售完0不显示
      */
-    private String status;
+    private Integer status;
 
 
     /**
